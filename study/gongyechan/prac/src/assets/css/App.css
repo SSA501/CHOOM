@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+}
+
+header {
+  width: 100%;
+  height: 100px;
+  background-color: rgb(92, 189, 109);
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  background-color: gray;
+}
