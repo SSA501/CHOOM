@@ -1,0 +1,18 @@
+.app {
+  margin: 0;
+}
+#video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  visibility: hidden;
+  width: auto;
+  height: auto;
+}
+#main {
+  position: relative;
+  margin: 0;
+}
+#canvas-wrapper,
+#scatter-gl-container {
+  position: relative;
+}
