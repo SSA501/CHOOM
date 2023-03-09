@@ -147,7 +147,7 @@ export class Camera {
     camera.scatterGLEl.style = `width: ${videoWidth}px; height: ${videoHeight}px;`;
     camera.scatterGL.resize();
 
-    camera.scatterGLEl.style.display = params.STATE.modelConfig.render3D
+    camera.scatterGLEl.style.display = params.BLAZEPOSE_CONFIG.render3D
       ? "inline-block"
       : "none";
 
@@ -187,7 +187,7 @@ export class Camera {
       this.drawKeypoints(pose.keypoints);
       this.drawSkeleton(pose.keypoints, pose.id);
     }
-    if (pose.keypoints3D != null && params.STATE.modelConfig.render3D) {
+    if (pose.keypoints3D != null && params.BLAZEPOSE_CONFIG.render3D) {
       this.drawKeypoints3D(pose.keypoints3D);
     }
   }
@@ -222,7 +222,7 @@ export class Camera {
   drawKeypoint(keypoint) {
     // If score is null, just show the keypoint.
     const score = keypoint.score != null ? keypoint.score : 1;
-    const scoreThreshold = params.STATE.modelConfig.scoreThreshold || 0;
+    const scoreThreshold = params.BLAZEPOSE_CONFIG.scoreThreshold || 0;
 
     if (score >= scoreThreshold) {
       const circle = new Path2D();
@@ -239,7 +239,7 @@ export class Camera {
   drawSkeleton(keypoints, poseId) {
     // Each poseId is mapped to a color in the color palette.
     const color =
-      params.STATE.modelConfig.enableTracking && poseId != null
+      params.BLAZEPOSE_CONFIG.enableTracking && poseId != null
         ? COLOR_PALETTE[poseId % 20]
         : "White";
     this.ctx.fillStyle = color;
@@ -255,7 +255,7 @@ export class Camera {
         // If score is null, just show the keypoint.
         const score1 = kp1.score != null ? kp1.score : 1;
         const score2 = kp2.score != null ? kp2.score : 1;
-        const scoreThreshold = params.STATE.modelConfig.scoreThreshold || 0;
+        const scoreThreshold = params.BLAZEPOSE_CONFIG.scoreThreshold || 0;
 
         if (score1 >= scoreThreshold && score2 >= scoreThreshold) {
           this.ctx.beginPath();
@@ -267,7 +267,7 @@ export class Camera {
   }
 
   drawKeypoints3D(keypoints) {
-    const scoreThreshold = params.STATE.modelConfig.scoreThreshold || 0;
+    const scoreThreshold = params.BLAZEPOSE_CONFIG.scoreThreshold || 0;
     const pointsData = keypoints.map((keypoint) => [
       -keypoint.x,
       -keypoint.y,

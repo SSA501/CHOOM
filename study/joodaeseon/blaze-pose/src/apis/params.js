@@ -20,13 +20,13 @@ export const DEFAULT_LINE_WIDTH = 2;
 export const DEFAULT_RADIUS = 4;
 
 export const VIDEO_SIZE = {
-  "640 X 480": { width: 640, height: 480 },
+  "360 X 640": { width: 360, height: 640 },
   "640 X 360": { width: 640, height: 360 },
   "360 X 270": { width: 360, height: 270 },
 };
 export const STATE = {
   model: posedetection.SupportedModels.BlazePose,
-  camera: { targetFPS: 60, sizeOption: "640 X 480" },
+  camera: { targetFPS: 10, sizeOption: "360 X 640" },
   backend: "",
   flags: {},
   detectorConfig: {
@@ -34,15 +34,12 @@ export const STATE = {
     solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/pose",
     // or 'base/node_modules/@mediapipe/pose' in npm.
   },
-  modelConfig: {
-    scoreThreshold: 0.9,
-  },
 };
 export const BLAZEPOSE_CONFIG = {
   maxPoses: 1,
   type: "full",
-  scoreThreshold: 0.65,
-  render3D: true,
+  scoreThreshold: 0.5,
+  render3D: false,
 };
 export const POSENET_CONFIG = {
   maxPoses: 1,

@@ -12,7 +12,7 @@ import { setBackendAndEnvFlags } from "./apis/util";
 
 import "./App.css";
 
-export default function App() {
+export default function App(props) {
   const video = useRef();
   let camera, detector, rafId;
 
@@ -23,7 +23,11 @@ export default function App() {
   const init = async () => {
     camera = await Camera.setupCamera(STATE.camera);
     detector = await createDetector();
+  };
+
+  const handleStart = () => {
     renderPrediction();
+    video.current.style.visibility = "hidden";
   };
 
   async function createDetector() {
@@ -72,8 +76,18 @@ export default function App() {
     // The null check makes sure the UI is not in the middle of changing to a
     // different model. If during model change, the result is from an old model,
     // which shouldn't be rendered.
+    const similarity = require("cosine-similarity");
     if (poses && poses.length > 0) {
-      // console.log(poses);
+      let sum = 0;
+      const sums = [];
+      poses[0].keypoints.map((kpt, index) => {
+        const norm = Math.sqrt(kpt.x * kpt.x + kpt.y * kpt.y + kpt.z * kpt.z);
+        const kptNorm = { x: kpt.x / norm, y: kpt.y / norm, z: kpt.z / norm };
+        sum = similarity(props.poses[index], kptNorm);
+        sums.push({ sum: sum, name: kpt.name, score: kpt.score });
+      });
+      sum /= 33;
+      console.log(sums);
       camera.drawResults(poses);
     }
   }
@@ -121,6 +135,7 @@ export default function App() {
           </div>
           <div id="scatter-gl-container"></div>
         </div>
+        <button onClick={handleStart}>시작</button>
       </div>
     </div>
   );

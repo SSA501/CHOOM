@@ -1,12 +1,12 @@
 .app {
   margin: 0;
+  width: 50%;
+  float: left;
+  box-sizing: border-box;
 }
 #video {
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-  visibility: hidden;
-  width: auto;
-  height: auto;
+  position: absolute;
+  left: 0;
 }
 #main {
   position: relative;
