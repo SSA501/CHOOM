@@ -1,0 +1,21 @@
+.app {
+  margin: 0;
+  width: 50%;
+  float: left;
+  box-sizing: border-box;
+}
+#video {
+  position: absolute;
+  left: 0;
+}
+#main {
+  position: relative;
+  margin: 0;
+}
+#output {
+  transform: scaleX(-1);
+}
+#canvas-wrapper,
+#scatter-gl-container {
+  position: relative;
+}
