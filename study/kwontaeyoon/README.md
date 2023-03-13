@@ -19,4 +19,4 @@
 
 ### 23-03-13
 1. API 설계서 마무리
-![image (1).png](./image (1).png)
+![image__1_](/uploads/4a8fedcbe5cbf0732f22ec2bbf6aabd5/image__1_.png)
