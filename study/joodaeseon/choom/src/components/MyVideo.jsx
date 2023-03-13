@@ -107,6 +107,7 @@ export default function App(props) {
   ];
   const getSmularity = (pose1, pose2) => {
     let sum = 0;
+    let pose1ConfidenceSum = 0;
     joints.map((joint) => {
       const v1 = {
         x: pose1[0].keypoints[joint[0]].x - pose1[0].keypoints[joint[1]].x,
@@ -118,14 +119,20 @@ export default function App(props) {
         y: pose2[0].keypoints[joint[0]].y - pose2[0].keypoints[joint[1]].y,
         z: pose2[0].keypoints[joint[0]].z - pose2[0].keypoints[joint[1]].z,
       };
+      const pose1Confidence =
+        (pose1[0].keypoints[joint[0]].score +
+          pose1[0].keypoints[joint[1]].score) /
+        2;
+      pose1ConfidenceSum += pose1Confidence;
       const norm_v1 = l2_norm(v1);
       const norm_v2 = l2_norm(v2);
-      let s = similarity(norm_v1, norm_v2);
-      if (s <= 0) s = 0;
-      sum += s;
+      let tempSum = similarity(norm_v1, norm_v2) * pose1Confidence;
+      sum += tempSum;
       return sum;
     });
-    const avg = sum / 23;
+
+    let avg = sum / pose1ConfidenceSum;
+    if (avg < 0) avg = 0;
     console.log(Math.round(avg * 100));
     return Math.round(avg * 100);
   };
@@ -146,6 +153,7 @@ export default function App(props) {
           <div id="scatter-gl-container"></div>
         </div>
         <button onClick={handleStart}>시작</button>
+        <button>종료</button>
       </div>
     </div>
   );
