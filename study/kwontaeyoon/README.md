@@ -13,3 +13,10 @@
 
 ### 23-03-09
 1. ERD 설계
+
+### 23-03-10
+1. API 설계서 작성
+
+### 23-03-13
+1. API 설계서 마무리
+![image__1_](/uploads/4a8fedcbe5cbf0732f22ec2bbf6aabd5/image__1_.png)
