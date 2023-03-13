@@ -9,3 +9,9 @@
 
 :pushpin: 2023-03-09
 - ERD 설계
+
+:pushpin: 2023-03-10
+- API 설계중
+  
+:pushpin: 2023-03-13
+- API 설계 완료
