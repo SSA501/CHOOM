@@ -1,4 +1,4 @@
-package com.choom.domain.like.entity;
+package com.choom.domain.bookmark.entity;
 
 import com.choom.domain.common.BaseTimeEntity;
 import javax.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like extends BaseTimeEntity {
+public class Bookmark extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
