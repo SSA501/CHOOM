@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mediapipe/pose": "^0.5.1675469404",
     "@reduxjs/toolkit": "^1.9.3",
+    "@tensorflow-models/pose-detection": "^2.0.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.2.0",
+    "@tensorflow/tfjs-backend-webgpu": "^0.0.1-alpha.17",
+    "@tensorflow/tfjs-core": "^4.2.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -11,6 +16,8 @@
     "@types/node": "^16.18.15",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/styled-components": "^5.1.26",
+    "cosine-similarity": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
@@ -20,13 +27,7 @@
     "scatter-gl": "^0.0.13",
     "styled-components": "^5.3.9",
     "styled-reset": "^4.4.5",
-    "web-vitals": "^2.1.4",
-    "@mediapipe/pose": "^0.5.1675469404",
-    "@tensorflow-models/pose-detection": "^2.0.0",
-    "@tensorflow/tfjs-backend-webgl": "^4.2.0",
-    "@tensorflow/tfjs-backend-webgpu": "^0.0.1-alpha.17",
-    "@tensorflow/tfjs-core": "^4.2.0",
-    "cosine-similarity": "^1.0.1"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
