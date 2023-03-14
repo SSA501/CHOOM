@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import MainPage from "./pages/MainPage/MainPage";
 
 function App() {
   return (
-    <div className="App">
-      '바보야'
-    </div>
+    <Routes>
+      <Route index element={<MainPage />} />
+    </Routes>
   );
 }
 
