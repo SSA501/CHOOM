@@ -1,6 +1,9 @@
 # queryDSL folder
 ./build/generated/querydsl
 
+# application.yml
+*.yml
+
 # Created by https://www.toptal.com/developers/gitignore/api/java,intellij,git,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,git,gradle
 
