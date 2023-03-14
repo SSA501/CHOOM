@@ -2,7 +2,13 @@
 ./build/generated/querydsl
 
 # application.yml
-*.yml
+application.yml
+
+# application-local.yml
+application-local.yml
+
+# application-aws.yml
+application-aws.yml
 
 # Created by https://www.toptal.com/developers/gitignore/api/java,intellij,git,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,git,gradle
