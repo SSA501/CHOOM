@@ -1,6 +1,9 @@
 package com.choom.domain.mydance.entity;
 
 import com.choom.domain.common.BaseTimeEntity;
+import com.choom.domain.coordinate.entity.Coordinate;
+import com.choom.domain.originaldance.entity.OriginalDance;
+import com.choom.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +18,6 @@ public class MyDance extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
-    private Long userId;
-
-    @Column
-    private Long originalDanceId;
 
     @Column(nullable = false)
     private int score;
@@ -45,4 +42,12 @@ public class MyDance extends BaseTimeEntity {
 
     @Column(length = 2083)
     private String tiktokUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORIGINALDANCE_ID")
+    private OriginalDance originalDance;
 }

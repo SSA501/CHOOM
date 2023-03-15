@@ -1,11 +1,16 @@
 package com.choom.domain.originaldance.entity;
 
+import com.choom.domain.bookmark.entity.Bookmark;
 import com.choom.domain.common.BaseTimeEntity;
+import com.choom.domain.coordinate.entity.Coordinate;
+import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -30,4 +35,14 @@ public class OriginalDance extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int status;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COORDINATE_ID", unique = true)
+    private Coordinate coordinate;
+
+    @OneToMany(mappedBy = "originalDance", cascade = CascadeType.ALL)
+    private List<Bookmark> bookmarkList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "originalDance", cascade = CascadeType.ALL)
+    private List<MyDance> myDanceList = new ArrayList<>();
 }
