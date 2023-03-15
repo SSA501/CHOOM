@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const BtnLogin = styled.button<{ loginType?: "kakao" | "google" | "tiktok" }>`
+const LoginBtn = styled.button<{ loginType?: "kakao" | "google" | "tiktok" }>`
     width: 115px;
     height: 108px;
     margin-inline: 13px;
@@ -17,7 +17,7 @@ const Icon = styled.img`
     margin-bottom: 20px;
 `;
 
-const BtnNomal = styled.button<{ background?: "blue" | "yellow"}>`
+const NomalBtn = styled.button<{ background?: "blue" | "yellow"}>`
     width: 184px;
     height: 67px;
     font-family: 'Inter';
@@ -30,4 +30,4 @@ const BtnNomal = styled.button<{ background?: "blue" | "yellow"}>`
     background-color: var(--${(props) => props.background}-color);
 `;
 
-export { BtnLogin, Icon, BtnNomal }
+export { LoginBtn, Icon, NomalBtn }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BtnLogin, Icon, BtnNomal } from './style';
+import { LoginBtn, Icon, NomalBtn } from './style';
 
 type BtnProps = {
     login?: boolean;
@@ -12,14 +12,14 @@ type BtnProps = {
 function Btn(props: BtnProps) {
     return (
         props.login ?
-            <BtnLogin loginType={props.loginType} onClick={props.handleClick} >
+            <LoginBtn loginType={props.loginType} onClick={props.handleClick} >
                 <Icon src={`/assets/icon_${props.loginType}.png`} alt="이미지" height="22px"/>
                 <p>
                     {props.loginType === "kakao" ? "카카오 " : props.loginType === "google" ? "구글 " : "틱톡 "}
                     로그인
                 </p>
-            </BtnLogin >
-            : <BtnNomal background={props.background} onClick={props.handleClick} >{props.children}</BtnNomal >
+            </LoginBtn >
+            : <NomalBtn background={props.background} onClick={props.handleClick} >{props.children}</NomalBtn >
             );
 };
     
