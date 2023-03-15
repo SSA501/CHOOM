@@ -1,0 +1,45 @@
+import React, { useRef, useEffect} from 'react'
+import { Modal, ModalContent, BtnDiv, AcceptBtn, CancelBtn, LogoImg } from './style';
+import { RxSlash } from 'react-icons/rx';
+
+function NormalModal(props: { setNormalModalOpen: (normalModalOpen: boolean) => void, acceptModal: () => void; }) {
+    const closeModal = () => {
+        props.setNormalModalOpen(false);
+    };
+
+    const acceptModal = () => {
+        props.acceptModal();
+    }
+
+    const modalRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            const target = e.target as Node;
+            if (modalRef.current && !modalRef.current.contains(target)) {
+              props.setNormalModalOpen(false);
+            }
+          };
+
+        document.addEventListener('mousedown', handler);
+        
+        return () => {
+            document.removeEventListener('mousedown', handler);
+        };
+    });
+    
+
+    return (
+        <Modal ref={modalRef} width={400} height={300}>
+            <ModalContent>정말 탈퇴할까요?</ModalContent>
+            <BtnDiv>
+                <CancelBtn onClick={closeModal}>No</CancelBtn>
+                <RxSlash fontSize={"20px"}/>
+                <AcceptBtn onClick={acceptModal}>Yes</AcceptBtn>
+            </BtnDiv>
+            <LogoImg src="/assets/logo.png" alt="로고이미지"/>
+        </Modal>
+    );
+}
+
+export default NormalModal;
