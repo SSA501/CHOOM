@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ActiveBar, NavBtnLink, NavContainer, NavLi } from "./style";
+import LoginModal from '../Modal/LoginModal';
+import NormalModal from '../Modal/NormalModal';
+import { ActiveBar, NavBtnLink, NavContainer, NavLi, Background } from "./style";
 
 function NavBar() {
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [normalModalOpen, setNormalModalOpen] = useState(false);
+
+  const showLoginModal = () => {
+    setLoginModalOpen(true);
+  };
+
+  const showNormalModal = () => {
+    setNormalModalOpen(true);
+  };
+
   const navigate = useNavigate();
   return (
     <NavContainer>
@@ -17,7 +30,7 @@ function NavBar() {
         </Link>
       </div>
       <ul>
-        <NavLi style={{ marginRight: "2em" }}>
+        <NavLi>
           <NavBtnLink to="/challenge">
             <ActiveBar challenge />
             챌린지
@@ -29,7 +42,20 @@ function NavBar() {
             프로필
           </NavBtnLink>
         </NavLi>
+        <NavLi>
+          <NavBtnLink to="" onClick={showLoginModal}>
+            로그인
+          </NavBtnLink>
+        </NavLi>
+        <NavLi>
+          <NavBtnLink to="" onClick={showNormalModal}>
+            탈퇴하기
+          </NavBtnLink>
+        </NavLi>
       </ul>
+      {(loginModalOpen||normalModalOpen) && <Background />}
+      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+      {normalModalOpen && <NormalModal setNormalModalOpen={setNormalModalOpen} acceptModal={() => alert("탈퇴하기!!")} />}
     </NavContainer>
   );
 }
