@@ -1,7 +1,6 @@
 package com.choom.domain.mydance.entity;
 
-import com.choom.domain.common.BaseTimeEntity;
-import com.choom.domain.coordinate.entity.Coordinate;
+import com.choom.global.common.BaseTimeEntity;
 import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.user.entity.User;
 import lombok.AccessLevel;

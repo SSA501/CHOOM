@@ -1,4 +1,4 @@
-package com.choom.domain.common;
+package com.choom.global.common;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;

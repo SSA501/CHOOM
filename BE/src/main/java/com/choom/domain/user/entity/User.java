@@ -1,10 +1,9 @@
 package com.choom.domain.user.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
-import com.choom.domain.common.BaseTimeEntity;
+import com.choom.global.common.BaseTimeEntity;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.search.entity.Search;
-import com.choom.domain.user.entity.SocialType;
 
 import javax.persistence.*;
 

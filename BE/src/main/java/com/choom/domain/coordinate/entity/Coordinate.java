@@ -1,6 +1,6 @@
 package com.choom.domain.coordinate.entity;
 
-import com.choom.domain.common.BaseTimeEntity;
+import com.choom.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
 
