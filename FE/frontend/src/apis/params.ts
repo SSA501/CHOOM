@@ -1,6 +1,6 @@
 import * as poseDetection from "@tensorflow-models/pose-detection";
 
-export const DEFAULT_LINE_WIDTH = 2;
+export const DEFAULT_LINE_WIDTH = 10;
 export const DEFAULT_RADIUS = 4;
 
 export const STATE = {

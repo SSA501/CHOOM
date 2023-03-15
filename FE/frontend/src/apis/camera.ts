@@ -78,16 +78,16 @@ export class Camera {
     this.ctx.clearRect(0, 0, this.video.videoWidth, this.video.videoHeight);
   }
 
-  drawResults(poses: any[]) {
+  drawResults(poses: any[], color: string) {
     for (const pose of poses) {
-      this.drawResult(pose);
+      this.drawResult(pose, color);
     }
   }
 
-  drawResult(pose: { keypoints: [] }) {
+  drawResult(pose: { keypoints: [] }, color: string) {
     if (pose.keypoints != null) {
-      this.drawKeypoints(pose.keypoints);
-      this.drawSkeleton(pose.keypoints);
+      // this.drawKeypoints(pose.keypoints);
+      this.drawSkeleton(pose.keypoints, color);
     }
   }
 
@@ -136,9 +136,9 @@ export class Camera {
    * Draw the skeleton of a body on the video.
    * @param keypoints A list of keypoints.
    */
-  drawSkeleton(keypoints: any) {
+  drawSkeleton(keypoints: any, color: string) {
     // Each poseId is mapped to a color in the color palette.
-    const color = "White";
+
     this.ctx.fillStyle = color;
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = params.DEFAULT_LINE_WIDTH;
@@ -154,12 +154,40 @@ export class Camera {
         const score2 = kp2.score != null ? kp2.score : 1;
         const scoreThreshold = params.BLAZEPOSE_CONFIG.scoreThreshold || 0;
 
-        if (score1 >= scoreThreshold && score2 >= scoreThreshold) {
+        if (
+          score1 >= scoreThreshold &&
+          score2 >= scoreThreshold &&
+          i > 10 &&
+          j > 10
+        ) {
+          if (i === 16) console.log(this.ctx.lineWidth);
           this.ctx.beginPath();
           this.ctx.moveTo(kp1.x, kp1.y);
           this.ctx.lineTo(kp2.x, kp2.y);
           this.ctx.stroke();
         }
       });
+
+    // 얼굴그리기
+    const left = Math.sqrt(
+      Math.pow(keypoints[0].x - keypoints[8].x, 2) +
+        Math.pow(keypoints[0].y - keypoints[8].y, 2) +
+        Math.pow(keypoints[0].z - keypoints[8].z, 2)
+    );
+    const right = Math.sqrt(
+      Math.pow(keypoints[0].x - keypoints[7].x, 2) +
+        Math.pow(keypoints[0].y - keypoints[7].y, 2) +
+        Math.pow(keypoints[0].z - keypoints[7].z, 2)
+    );
+    const circle = new Path2D();
+    circle.arc(
+      (keypoints[0].x + keypoints[7].x + keypoints[8].x) / 3,
+      (keypoints[0].y + keypoints[7].y + keypoints[8].y) / 3,
+      (left + right) / 2,
+      0,
+      2 * Math.PI
+    );
+    this.ctx.fill(circle);
+    this.ctx.stroke(circle);
   }
 }

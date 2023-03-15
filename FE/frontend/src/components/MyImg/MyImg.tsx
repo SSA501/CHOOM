@@ -7,7 +7,20 @@ import "@mediapipe/pose";
 import { STATE } from "../../apis/params";
 import { DanceImg } from "./style";
 
-function MyImg(props: { setTitle: (title: string) => void }) {
+interface Kpt {
+  x: number;
+  y: number;
+  z: number;
+  score: number;
+}
+interface Pose {
+  keypoints: Kpt[];
+}
+
+function MyImg(props: {
+  setTitle: (title: string) => void;
+  setPoses: (poses: Pose[]) => void;
+}) {
   const [imageSrc, setImageSrc] = useState<string>("");
 
   const encodeFileToBase64 = (fileBlob: File) => {
@@ -43,7 +56,19 @@ function MyImg(props: { setTitle: (title: string) => void }) {
 
     if (poses && poses.length > 0) {
       alert("분석완료");
-      console.log(poses);
+      const newKpts: Kpt[] = [];
+
+      poses[0].keypoints.map((kpt: Kpt) => {
+        newKpts.push({
+          x: (kpt.x * 270) / img.naturalWidth,
+          y: (kpt.y * 480) / img.naturalHeight,
+          z: kpt.z,
+          score: kpt.score,
+        });
+        return newKpts;
+      });
+      let newPoses: Pose[] = [{ keypoints: newKpts }];
+      props.setPoses(newPoses);
     }
   }
   return (
