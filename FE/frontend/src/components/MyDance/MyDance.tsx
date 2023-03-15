@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-core";
@@ -8,20 +8,70 @@ import "@mediapipe/pose";
 import { Camera } from "../../apis/camera";
 import { STATE } from "../../apis/params";
 
+import { MyVideo, MyCanvas, StartBtn } from "./style";
+
 function MyDance() {
-  const camera = Camera.setupCamera(STATE.camera);
+  const video = useRef<HTMLVideoElement>(null);
+  let camera: Camera, detector: any;
+
+  useEffect(() => {
+    init();
+  });
+
+  const init = async () => {
+    camera = await Camera.setupCamera(STATE.camera);
+    detector = await createDetector();
+  };
+  const handleStart = (): void => {
+    renderPrediction();
+    if (video.current) {
+      video.current.style.visibility = "hidden";
+    }
+  };
+  async function createDetector() {
+    return poseDetection.createDetector(STATE.model, STATE.detectorConfig);
+  }
+
+  async function renderPrediction() {
+    await renderResult();
+    requestAnimationFrame(renderPrediction);
+  }
+
+  async function renderResult(): Promise<void> {
+    if (camera.video.readyState < 2) {
+      await new Promise<void>((resolve) => {
+        camera.video.onloadeddata = () => {
+          resolve();
+        };
+      });
+    }
+
+    let poses: any;
+
+    if (detector != null) {
+      try {
+        poses = await detector.estimatePoses(camera.video, {
+          enableSmoothing: true,
+        });
+      } catch (error) {
+        detector.dispose();
+        detector = null;
+        alert(error);
+      }
+    }
+
+    camera.drawCtx();
+
+    if (poses && poses.length > 0) {
+      camera.drawResults(poses);
+    }
+  }
 
   return (
     <div>
-      <div className="container">
-        <div className="canvas-wrapper">
-          <canvas id="output"></canvas>
-          <video id="video" playsInline></video>
-        </div>
-        <div id="scatter-gl-container"></div>
-      </div>
-      <button>시작</button>
-      <button>종료</button>
+      <MyCanvas id="output"></MyCanvas>
+      <MyVideo id="video" playsInline ref={video}></MyVideo>
+      <StartBtn onClick={handleStart}>시작</StartBtn>
     </div>
   );
 }

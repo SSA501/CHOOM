@@ -7,7 +7,7 @@ export const STATE = {
   model: poseDetection.SupportedModels.BlazePose,
   camera: { targetFPS: 5, sizeOption: { width: 270, height: 480 } },
   detectorConfig: {
-    runtime: "mediapipe",
+    runtime: "mediapipe" as "mediapipe",
     solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/pose",
     // or 'base/node_modules/@mediapipe/pose' in npm.
   },

@@ -45,23 +45,21 @@ export class Camera {
 
     camera.video.play();
 
-    const videoWidth = camera.video.videoWidth;
-    const videoHeight = camera.video.videoHeight;
+    const videoWidth = 360;
+    const videoHeight = 640;
     // Must set below two lines, otherwise video element doesn't show.
     camera.video.width = videoWidth;
     camera.video.height = videoHeight;
 
     camera.canvas.width = videoWidth;
     camera.canvas.height = videoHeight;
-    const canvasContainer = document.querySelector(
-      ".canvas-wrapper"
-    ) as HTMLDivElement;
-    canvasContainer.style.width = `${videoWidth}px`;
-    canvasContainer.style.height = `${videoHeight}px`;
 
     // Because the image from camera is mirrored, need to flip horizontally.
-    camera.ctx.translate(camera.video.videoWidth, 0);
-    camera.ctx.scale(-1, 1);
+    camera.ctx.translate(videoWidth, 0);
+    camera.ctx.scale(
+      -videoWidth / camera.video.videoWidth,
+      videoHeight / camera.video.videoHeight
+    );
 
     return camera;
   }
