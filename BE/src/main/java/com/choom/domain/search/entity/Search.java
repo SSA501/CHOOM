@@ -1,11 +1,11 @@
 package com.choom.domain.search.entity;
 
 import com.choom.domain.common.BaseTimeEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+
+import com.choom.domain.originaldance.entity.OriginalDance;
+import com.choom.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +21,8 @@ public class Search extends BaseTimeEntity {
 
     @Column(length = 2083, nullable = false)
     private String keyword;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 }

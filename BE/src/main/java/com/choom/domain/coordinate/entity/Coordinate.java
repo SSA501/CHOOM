@@ -1,11 +1,10 @@
 package com.choom.domain.coordinate.entity;
 
 import com.choom.domain.common.BaseTimeEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+
+import com.choom.domain.originaldance.entity.OriginalDance;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +20,7 @@ public class Coordinate extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     String result;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinate", cascade = CascadeType.ALL)
+    private OriginalDance originalDance;
 }
