@@ -3,6 +3,7 @@ package com.choom.domain.search.entity;
 import com.choom.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import com.choom.domain.user.entity.User;
 import lombok.AccessLevel;
@@ -18,7 +19,8 @@ public class Search extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 2083, nullable = false)
+    @NotNull
+    @Column(length = 2083)
     private String keyword;
 
     @ManyToOne(fetch = FetchType.LAZY)

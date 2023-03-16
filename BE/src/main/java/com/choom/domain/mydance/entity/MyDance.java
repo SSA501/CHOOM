@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Entity
@@ -18,22 +19,24 @@ public class MyDance extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column
     private int score;
 
-    @Column(length = 2, nullable = false)
-    private String grade;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     private String matchRate;
 
-    @Column(length = 2083, nullable = false, unique = true)
+    @NotNull
+    @Column(length = 2083, unique = true)
     private String videoPath;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column
     private double videoLength;
 
-    @Column(length = 100, nullable = false)
+    @NotNull
+    @Column(length = 100)
     private String title;
 
     @Column(length = 2083)

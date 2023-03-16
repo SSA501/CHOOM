@@ -7,11 +7,15 @@ import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@DynamicInsert
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,19 +25,28 @@ public class OriginalDance extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @NotNull
+    @Column(length = 100)
     private String title;
 
-    @Column(length = 2083, nullable = false, unique = true)
+    @NotNull
+    @Column(length = 2083, unique = true)
     private String url;
 
     @Column(length = 2083, unique = true)
     private String videoPath;
 
-    @Column(nullable = false)
+    @Column(length = 2083, unique = true)
+    private String thumbnailPath;
+
+    @NotNull
+    @Column
+    @ColumnDefault("0")
     private int userCount;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column
+    @ColumnDefault("0")
     private int status;
 
     @OneToOne(fetch = FetchType.LAZY)

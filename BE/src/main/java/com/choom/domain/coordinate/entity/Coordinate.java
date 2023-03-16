@@ -3,6 +3,7 @@ package com.choom.domain.coordinate.entity;
 import com.choom.global.common.BaseTimeEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import com.choom.domain.originaldance.entity.OriginalDance;
 import lombok.AccessLevel;
@@ -18,7 +19,8 @@ public class Coordinate extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     String result;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinate", cascade = CascadeType.ALL)

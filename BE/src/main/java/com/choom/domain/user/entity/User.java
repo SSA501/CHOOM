@@ -6,6 +6,7 @@ import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.search.entity.Search;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,17 +24,21 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200, nullable = false)
+    @NotNull
+    @Column(length = 200)
     private String identifier;
 
-    @Column(length = 10, nullable = false)
+    @NotNull
+    @Column(length = 10)
     private String nickname;
 
-    @Column(length = 2083, nullable = false)
+    @NotNull
+    @Column(length = 2083)
     private String profileImage;
 
+    @NotNull
+    @Column
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SocialType socialType;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
