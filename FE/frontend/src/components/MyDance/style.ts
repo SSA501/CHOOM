@@ -4,7 +4,7 @@ const MyVideo = styled.video`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotateY(180deg);
+  transform: translate(-50%, -50%);
 `;
 const MyCanvas = styled.canvas`
   position: absolute;

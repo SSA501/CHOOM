@@ -63,9 +63,8 @@ export class Camera {
     camera.canvas.height = videoHeight;
 
     // Because the image from camera is mirrored, need to flip horizontally.
-    camera.ctx.translate(videoWidth, 0);
     camera.ctx.scale(
-      -videoWidth / camera.video.videoWidth,
+      videoWidth / camera.video.videoWidth,
       videoHeight / camera.video.videoHeight
     );
 
@@ -125,6 +124,7 @@ export class Camera {
   drawScore(score: number): void {
     this.ctx.font = "italic bold 24px Arial, sans-serif";
     this.ctx.fillText(score.toString(), 10, 50);
+    this.ctx.restore();
   }
 
   drawKeypoint(keypoint: any) {
