@@ -14,7 +14,12 @@ function MainPage() {
     <div>
       메인페이지
       {videoData.map(({ id, videoSrc, thumbnailSrc }) => (
-        <Video id={id} videoSrc={videoSrc} thumbnailSrc={thumbnailSrc} />
+        <Video
+          id={id}
+          videoSrc={videoSrc}
+          thumbnailSrc={thumbnailSrc}
+          bgFrame="blue"
+        />
       ))}
     </div>
   );

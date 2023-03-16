@@ -8,6 +8,7 @@ interface VideoProps {
   thumbnailSrc: string;
   playbackRate?: number; // 유튜브만 적용됨, 틱톡은 따로 코드 추가해야함
   volume?: number;
+  bgFrame?: string; // 테두리 색상, 적용안하면 비디오만 표시
 }
 
 function Video({
@@ -16,6 +17,7 @@ function Video({
   videoSrc,
   playbackRate,
   volume,
+  bgFrame,
 }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
 
@@ -24,6 +26,7 @@ function Video({
       key={videoSrc}
       onMouseEnter={(): void => setPlayingVideoId(id)}
       onMouseLeave={(): void => setPlayingVideoId(null)}
+      bgFrame={bgFrame}
     >
       {playingVideoId === id ? (
         <ReactPlayer
