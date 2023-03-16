@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import LoginModal from '../Modal/LoginModal';
-import NormalModal from '../Modal/NormalModal';
-import { ActiveBar, NavBtnLink, NavContainer, NavLi, Background } from "./style";
+import LoginModal from "../Modal/LoginModal";
+import NormalModal from "../Modal/NormalModal";
+import {
+  ActiveBar,
+  NavBtnLink,
+  NavContainer,
+  NavLi,
+  Background,
+} from "./style";
 
 function NavBar() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -53,9 +59,14 @@ function NavBar() {
           </NavBtnLink>
         </NavLi>
       </ul>
-      {(loginModalOpen||normalModalOpen) && <Background />}
+      {(loginModalOpen || normalModalOpen) && <Background />}
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
-      {normalModalOpen && <NormalModal setNormalModalOpen={setNormalModalOpen} acceptModal={() => alert("탈퇴하기!!")} />}
+      {normalModalOpen && (
+        <NormalModal
+          setNormalModalOpen={setNormalModalOpen}
+          acceptModal={() => alert("탈퇴하기!!")}
+        />
+      )}
     </NavContainer>
   );
 }

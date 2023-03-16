@@ -6,7 +6,7 @@ const NavContainer = styled.nav`
   min-height: 80px;
   padding: 1em 2em 0.5em;
   border-top: 0.8em solid black;
-  display: flex;s
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -40,14 +40,14 @@ const ActiveBar = styled.div<{ challenge?: boolean }>`
 `;
 
 const Background = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    opacity: 0.5;
-    overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.5;
+  overflow: hidden;
 `;
 
 export { NavContainer, NavLi, NavBtnLink, ActiveBar, Background };
