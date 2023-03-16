@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const MyVideo = styled.video`
+const VideoContainer = styled.video`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -19,4 +19,4 @@ const StartBtn = styled.button`
   left: 0;
 `;
 
-export { MyVideo, StartBtn, MyCanvas };
+export { VideoContainer, StartBtn, MyCanvas };

@@ -5,19 +5,11 @@ export class Camera {
   video: HTMLVideoElement;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  source: HTMLSourceElement;
 
   constructor() {
     this.video = document.getElementById("video") as HTMLVideoElement;
     this.canvas = document.getElementById("output") as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d")!;
-
-    // video
-    this.source = document.getElementById("currentVID") as HTMLSourceElement;
-    const stream = this.canvas.captureStream();
-    const options = { mimeType: "video/webm; codecs=vp9" };
-    // this.mediaRecorder = new MediaRecorder(stream, options);
-    // this.mediaRecorder.ondataavailable = this.handleDataAvailable;
   }
 
   static async setupCamera(cameraParam: {
@@ -63,8 +55,9 @@ export class Camera {
     camera.canvas.height = videoHeight;
 
     // Because the image from camera is mirrored, need to flip horizontally.
+    camera.ctx.translate(videoWidth, 0);
     camera.ctx.scale(
-      videoWidth / camera.video.videoWidth,
+      -videoWidth / camera.video.videoWidth,
       videoHeight / camera.video.videoHeight
     );
 
@@ -124,7 +117,6 @@ export class Camera {
   drawScore(score: number): void {
     this.ctx.font = "italic bold 24px Arial, sans-serif";
     this.ctx.fillText(score.toString(), 10, 50);
-    this.ctx.restore();
   }
 
   drawKeypoint(keypoint: any) {
@@ -168,6 +160,7 @@ export class Camera {
           i > 10 &&
           j > 10
         ) {
+          if (i === 16) console.log(this.ctx.lineWidth);
           this.ctx.beginPath();
           this.ctx.moveTo(kp1.x, kp1.y);
           this.ctx.lineTo(kp2.x, kp2.y);
