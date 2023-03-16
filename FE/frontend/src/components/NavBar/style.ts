@@ -39,15 +39,4 @@ const ActiveBar = styled.div<{ challenge?: boolean }>`
   right: calc(50% - 1.6em);
 `;
 
-const Background = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: black;
-  opacity: 0.5;
-  overflow: hidden;
-`;
-
-export { NavContainer, NavLi, NavBtnLink, ActiveBar, Background };
+export { NavContainer, NavLi, NavBtnLink, ActiveBar };
