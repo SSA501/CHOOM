@@ -20,3 +20,6 @@
 ### 23-03-13
 1. API 설계서 마무리
 ![image__1_](/uploads/4a8fedcbe5cbf0732f22ec2bbf6aabd5/image__1_.png)
+
+## 23-03-16
+1. 프로젝트 설정 완료
