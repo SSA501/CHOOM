@@ -1,4 +1,4 @@
-package com.choom.domain.user.controller;
+package com.choom.domain.search.controller;
 
 import com.choom.global.common.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/search")
 @Slf4j
-public class UserController {
+public class SearchController {
 
 //  test
-    @GetMapping()
+    @GetMapping
     public BaseResponse test(){
         log.info("INFO");
         log.debug("DEBUG");
