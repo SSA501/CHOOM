@@ -51,6 +51,10 @@ dependencies {
 	// guava
 	implementation 'com.google.guava:guava:29.0-jre'
 	annotationProcessor 'com.google.guava:guava:29.0-jre'
+
+	// gson
+	implementation'com.google.code.gson:gson:2.8.7'
+
 }
 
 tasks.named('test') {
