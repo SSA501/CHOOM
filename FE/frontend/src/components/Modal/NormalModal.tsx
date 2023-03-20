@@ -8,7 +8,6 @@ import {
   CancelBtn,
   LogoImg,
 } from "./style";
-import { RxSlash } from "react-icons/rx";
 
 function NormalModal(props: {
   setNormalModalOpen: (normalModalOpen: boolean) => void;
@@ -46,7 +45,7 @@ function NormalModal(props: {
         <ModalContent>정말 탈퇴할까요?</ModalContent>
         <BtnDiv>
           <CancelBtn onClick={closeModal}>No</CancelBtn>
-          <RxSlash fontSize={"20px"} />
+          <span>/</span>
           <AcceptBtn onClick={acceptModal}>Yes</AcceptBtn>
         </BtnDiv>
         <LogoImg src="/assets/logo.png" alt="로고이미지" />
