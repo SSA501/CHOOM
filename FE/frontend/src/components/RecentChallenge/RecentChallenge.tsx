@@ -13,17 +13,15 @@ interface RecentChallengeProps {
 }
 
 function RecentChallenge({ videoData }: RecentChallengeProps) {
+  let flowText = "";
+  for (let i = 0; i < 15; i++) {
+    flowText += "Recent Challenges ✨ ";
+  }
+
   return (
     <RecentChallengeContainer>
       <FlowTextContainer>
-        <FlowText>
-          Recent Challenges ✨ Recent Challenges ✨ Recent Challenges ✨ Recent
-          Challenges ✨ Recent Challenges ✨ Recent Challenges ✨ Recent
-          Challenges ✨ Recent Challenges ✨ Recent Challenges ✨ Recent
-          Challenges ✨ Recent Challenges ✨ Recent Challenges ✨ Recent
-          Challenges ✨ Recent Challenges ✨ Recent Challenges ✨ Recent
-          Challenges ✨
-        </FlowText>
+        <FlowText>{flowText}</FlowText>
       </FlowTextContainer>
       <RecentVideosContainer>
         {videoData?.map(({ id, videoSrc, thumbnailSrc }) => (
