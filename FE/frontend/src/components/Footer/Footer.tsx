@@ -4,7 +4,7 @@ import { FooterContainer } from "./style";
 function Footer() {
   return (
     <FooterContainer>
-      <p>Copyright © 2023 C#OOM All rights reserved.</p>
+      <p>Copyright &copy; 2023 C#OOM All rights reserved.</p>
     </FooterContainer>
   );
 }
