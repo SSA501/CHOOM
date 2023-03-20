@@ -14,7 +14,7 @@ export const STATE = {
 };
 
 export const BLAZEPOSE_CONFIG = {
-  maxPoses: 1,
+  maxposeList: 1,
   type: "full",
   scoreThreshold: 0.1,
   render3D: false,

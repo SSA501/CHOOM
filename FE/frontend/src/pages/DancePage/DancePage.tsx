@@ -12,15 +12,15 @@ interface Pose {
   keypoints: Kpt[];
 }
 function DancePage() {
-  const [poses, setPoses] = useState<Pose[]>(
+  const [poseList, setPoseList] = useState<Pose[]>(
     JSON.parse(localStorage.getItem("poseList") || "[]")
   );
 
   return (
     <DancePageContainer>
       <TitleContainer>Hype Boy - New Jeans</TitleContainer>
-      <DanceVideo setPoses={setPoses} />
-      <DanceCam poses={poses} />
+      <DanceVideo setPoseList={setPoseList} />
+      <DanceCam poseList={poseList} />
     </DancePageContainer>
   );
 }

@@ -25,7 +25,12 @@ interface Pose {
   keypoints: Kpt[];
 }
 
-function DanceCam(props: { poses: Pose[] }) {
+const pallete = {
+  red: "rgba(255, 0, 0, 0.5)",
+  green: "rgba(0,255,0,0.5)",
+};
+
+function DanceCam(props: { poseList: Pose[] }) {
   const video = useRef<HTMLVideoElement>(null);
 
   let camera: Camera, detector: any;
@@ -58,7 +63,7 @@ function DanceCam(props: { poses: Pose[] }) {
     await renderResult(countFrame);
     countFrame++;
 
-    if (countFrame < props.poses.length)
+    if (countFrame < props.poseList.length)
       requestAnimationFrame(renderPrediction);
   }
 
@@ -71,11 +76,11 @@ function DanceCam(props: { poses: Pose[] }) {
       });
     }
 
-    let poses: any;
+    let poseList: any;
 
     if (detector != null) {
       try {
-        poses = await detector.estimatePoses(camera.video, {
+        poseList = await detector.estimateposes(camera.video, {
           enableSmoothing: true,
         });
       } catch (error) {
@@ -87,14 +92,14 @@ function DanceCam(props: { poses: Pose[] }) {
 
     camera.drawCtx();
 
-    if (poses && poses.length > 0) {
-      camera.drawResults(poses, "rgba(255,0,0,0.5)");
+    if (poseList && poseList.length > 0) {
+      camera.drawResults(poseList, pallete.red);
 
-      const videoPose = [props.poses[countFrame]];
+      const videoPose = [props.poseList[countFrame]];
 
       if (videoPose[0].keypoints !== undefined) {
-        camera.drawResults(videoPose, "rgba(0,255,0,0.5)");
-        const score = getSmularity(videoPose, poses);
+        camera.drawResults(videoPose, pallete.green);
+        const score = getSmularity(videoPose, poseList);
         camera.drawScore(score);
       }
     }

@@ -93,8 +93,8 @@ export class Camera {
     this.ctx.clearRect(0, 0, this.video.videoWidth, this.video.videoHeight);
   }
 
-  drawResults(poses: any[], color: string) {
-    for (const pose of poses) {
+  drawResults(poseList: any[], color: string) {
+    for (const pose of poseList) {
       this.drawResult(pose, color);
     }
   }

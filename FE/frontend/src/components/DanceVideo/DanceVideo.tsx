@@ -20,7 +20,7 @@ interface Pose {
   keypoints: Kpt[];
 }
 
-function DanceVideo(props: { setPoses: (poses: Pose[]) => void }) {
+function DanceVideo(props: { setPoseList: (poseList: Pose[]) => void }) {
   let camera: Camera, detector: any;
   let poseList: Pose[];
 
@@ -85,7 +85,7 @@ function DanceVideo(props: { setPoses: (poses: Pose[]) => void }) {
     if (camera.video.paused) {
       // video has finished.
       console.log(poseList);
-      props.setPoses(poseList);
+      props.setPoseList(poseList);
       localStorage.setItem("poseList", JSON.stringify(poseList));
       return;
     }
@@ -96,16 +96,16 @@ function DanceVideo(props: { setPoses: (poses: Pose[]) => void }) {
   }
 
   async function renderResult() {
-    let poses: any;
+    let poseList: any;
 
-    // FPS only counts the time it takes to finish estimatePoses.
-    poses = await detector.estimatePoses(camera.video, {
+    // FPS only counts the time it takes to finish estimateposeList.
+    poseList = await detector.estimatePoses(camera.video, {
       enableSmoothing: true,
     });
-    if (poses.length > 0) {
+    if (poseList.length > 0) {
       const newKpts: Kpt[] = [];
 
-      poses[0].keypoints.map((kpt: Kpt) => {
+      poseList[0].keypoints.map((kpt: Kpt) => {
         newKpts.push({
           x: kpt.x / 2,
           y: kpt.y / 2,
