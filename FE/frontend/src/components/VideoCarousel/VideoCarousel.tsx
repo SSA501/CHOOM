@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowBtn, InnerContainer, SwiperContainer } from "./style";
+import { ArrowBtn, CarouselContainer, SwiperContainer } from "./style";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import Video from "../../components/Video/Video";
@@ -12,17 +12,19 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 interface VideoCarouselProps {
   videoData: videoData[];
+  title: string;
+  titleAlign?: string;
 }
 
-function VideoCarousel({ videoData }: VideoCarouselProps) {
+function VideoCarousel({ videoData, title, titleAlign }: VideoCarouselProps) {
   const [swiper, setSwiper] = useState<any>();
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
 
   return (
-    <SwiperContainer>
-      <h2>요즘 인기있는 챌린지 🔥</h2>
-      <InnerContainer>
+    <CarouselContainer titleAlign={titleAlign}>
+      <h2>{title}</h2>
+      <SwiperContainer>
         <ArrowBtn onClick={() => swiper?.slidePrev()} disabled={reachingFirst}>
           <MdKeyboardArrowLeft fill={reachingFirst ? "#D4D2D9" : "#08439D"} />
         </ArrowBtn>
@@ -57,8 +59,8 @@ function VideoCarousel({ videoData }: VideoCarouselProps) {
         <ArrowBtn onClick={() => swiper?.slideNext()} disabled={reachingEnd}>
           <MdKeyboardArrowRight fill={reachingEnd ? "#D4D2D9" : "#08439D"} />
         </ArrowBtn>
-      </InnerContainer>
-    </SwiperContainer>
+      </SwiperContainer>
+    </CarouselContainer>
   );
 }
 

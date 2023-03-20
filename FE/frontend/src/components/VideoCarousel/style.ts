@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
-const SwiperContainer = styled.div`
+const CarouselContainer = styled.div<{ titleAlign?: string }>`
   padding: 5em;
   width: 80%;
   margin: 0 auto;
   h2 {
-    text-align: center;
+    text-align: ${(props) => props.titleAlign || ""};
     font-weight: 600;
     font-size: 1.7em;
-    padding: 1.2em 1em;
+    padding: 1.2em 0 1em;
   }
 `;
 
-const InnerContainer = styled.div`
+const SwiperContainer = styled.div`
   display: flex;
   gap: 1em;
 `;
@@ -21,4 +21,4 @@ const ArrowBtn = styled.button`
   font-size: 2em;
 `;
 
-export { SwiperContainer, InnerContainer, ArrowBtn };
+export { SwiperContainer, CarouselContainer, ArrowBtn };

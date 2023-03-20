@@ -43,7 +43,11 @@ function MainPage() {
 
   return (
     <>
-      <VideoCarousel videoData={videoData} />
+      <VideoCarousel
+        title={"요즘 인기있는 챌린지 🔥"}
+        titleAlign={"center"}
+        videoData={videoData}
+      />
     </>
   );
 }
