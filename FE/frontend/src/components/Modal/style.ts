@@ -56,6 +56,10 @@ const BtnDiv = styled.div`
   width: 100%;
   margin: auto;
   text-align: center;
+
+  & > span {
+    font-size: 26px;
+  }
 `;
 
 const AcceptBtn = styled.button`

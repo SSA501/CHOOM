@@ -16,7 +16,7 @@ const LeftDiv = styled.div`
 const RightDiv = styled.div`
   width: 70%;
   height: 100%;
-  padding-inline: 35px;
+  padding-inline: 40px;
   float: left;
 `;
 

@@ -14,8 +14,8 @@ import {
   VideoList,
   VideoItem,
 } from "./style";
-import { FiSettings } from "react-icons/fi";
-import { TbTriangle, TbTriangleInverted, TbLetterI } from "react-icons/tb";
+import { CgShapeTriangle } from "react-icons/cg";
+import { TbSettings } from "react-icons/tb";
 import Video from "../../components/Video/Video";
 
 function ProfilePage() {
@@ -171,7 +171,7 @@ function ProfilePage() {
         <Header>My Profile</Header>
         <ProfileCard>
           <SettingBtn onClick={showSmallMenu}>
-            <FiSettings fontSize={"29px"} />
+            <TbSettings fontSize={"29px"} />
           </SettingBtn>
           {smallMenuOpen && (
             <SmallMenu
@@ -199,8 +199,13 @@ function ProfilePage() {
             Likes
           </ListHeaderBtn>
           <DropBtn onClick={showDropMenu}>
-            {dropMenuOpen && <TbTriangle fontSize={"14px"} />}
-            {!dropMenuOpen && <TbTriangleInverted fontSize={"14px"} />}
+            {dropMenuOpen && <CgShapeTriangle fontSize={"18px"} />}
+            {!dropMenuOpen && (
+              <CgShapeTriangle
+                style={{ transform: "scaleY(-1)" }}
+                fontSize={"18px"}
+              />
+            )}
             {" " + selectedDropMenu}
           </DropBtn>
           {dropMenuOpen && (
