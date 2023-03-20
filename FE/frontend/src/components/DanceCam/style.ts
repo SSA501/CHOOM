@@ -1,12 +1,19 @@
 import styled from "styled-components";
 
-const VideoContainer = styled.video`
+const DanceVideoContainer = styled.div`
+  width: 50%;
+  height: calc(100% - 127px);
+  float: right;
+  position: relative;
+`;
+
+const CamContainer = styled.video`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
-const MyCanvas = styled.canvas`
+const CanvasContainer = styled.canvas`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -19,4 +26,4 @@ const StartBtn = styled.button`
   left: 0;
 `;
 
-export { VideoContainer, StartBtn, MyCanvas };
+export { DanceVideoContainer, CamContainer, StartBtn, CanvasContainer };

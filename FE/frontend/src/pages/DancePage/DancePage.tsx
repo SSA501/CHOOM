@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import MyDance from "../../components/MyDance/MyDance";
-import MyImg from "../../components/MyImg/MyImg";
-import { MyDanceContainer, DancePageContainer, TitleContainer } from "./style";
+import DanceCam from "../../components/DanceCam/DanceCam";
+import DanceVideo from "../../components/DanceVideo/DanceVideo";
+import { DancePageContainer, TitleContainer } from "./style";
 interface Kpt {
   x: number;
   y: number;
@@ -12,20 +12,15 @@ interface Pose {
   keypoints: Kpt[];
 }
 function DancePage() {
-  const [title, setTitle] = useState<string>("이미지가 없습니다");
-  const [poses, setPoses] = useState<Pose[]>([]);
+  const [poses, setPoses] = useState<Pose[]>(
+    JSON.parse(localStorage.getItem("poseList") || "[]")
+  );
+
   return (
     <DancePageContainer>
-      <TitleContainer>{title}</TitleContainer>
-      <MyDanceContainer type="left">
-        <MyImg
-          setTitle={(title: string) => setTitle(title)}
-          setPoses={(poses: Pose[]) => setPoses(poses)}
-        />
-      </MyDanceContainer>
-      <MyDanceContainer type="right">
-        <MyDance poses={poses} />
-      </MyDanceContainer>
+      <TitleContainer>Hype Boy - New Jeans</TitleContainer>
+      <DanceVideo setPoses={setPoses} />
+      <DanceCam poses={poses} />
     </DancePageContainer>
   );
 }

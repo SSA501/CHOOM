@@ -5,7 +5,7 @@ import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/pose";
 
 import { STATE } from "../../apis/params";
-import { DanceImg } from "./style";
+import { MyImg } from "./style";
 
 interface Kpt {
   x: number;
@@ -17,7 +17,7 @@ interface Pose {
   keypoints: Kpt[];
 }
 
-function MyImg(props: {
+function DanceImg(props: {
   setTitle: (title: string) => void;
   setPoses: (poses: Pose[]) => void;
 }) {
@@ -83,7 +83,7 @@ function MyImg(props: {
         />
 
         {imageSrc && (
-          <DanceImg
+          <MyImg
             src={imageSrc}
             id="img"
             alt="preview-img"
@@ -96,4 +96,4 @@ function MyImg(props: {
   );
 }
 
-export default MyImg;
+export default DanceImg;
