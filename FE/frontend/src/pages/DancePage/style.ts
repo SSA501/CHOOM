@@ -1,20 +1,19 @@
 import styled from "styled-components";
 
 const DancePageContainer = styled.div`
-  width: calc(100% - 100px);
-  height: calc(100vh - 100px);
-  margin: 50px;
+  height: calc(100vh - 150px);
+  margin-inline: 200px;
+  margin-top: 35px;
   border: 3px solid black;
 `;
 
 const TitleContainer = styled.div`
   border-bottom: 3px solid black;
-  font-size: 48px;
+  font-size: 32px;
   padding-bottom: 16px;
-  width: 62.5%;
-  margin-left: 100px;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  width: 40%;
+  margin: 16px auto;
+  text-align: center;
 `;
 
 const DanceVideoContainer = styled.div<{ type: "left" | "right" }>`
