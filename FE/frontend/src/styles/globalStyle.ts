@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
     --yellow-color: #FFE550;
     --pink-color: #F7B5CE;
     --orange-color: #EB6D15;
-    --red-color: #EB6D15;
+    --red-color: #CE2222;
   }
   
   *, *::before, *::after {

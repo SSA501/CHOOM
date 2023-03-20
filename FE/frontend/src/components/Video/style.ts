@@ -11,7 +11,11 @@ const VideoContainer = styled.div<VideoContainerProps>`
     position: relative;
     width: 100%;
     /* height: ${frameColor ? "626px" : "594px"}; */
-    border: ${frameColor ? `14px solid var(--${frameColor}-color)` : null};
+    border: ${frameColor
+      ? frameColor === "black"
+        ? "14px solid black"
+        : `14px solid var(--${frameColor}-color)`
+      : null};
     padding-top: ${ratio
       ? `${ratio}%`
       : "56.25%"}; /* default aspect ratio is 16:9 */

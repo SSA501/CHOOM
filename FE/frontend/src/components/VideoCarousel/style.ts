@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const CarouselContainer = styled.div<{ titleAlign?: string }>`
-  padding: 5em;
+  padding: 3em 1em;
   width: 90%;
   margin: 0 auto;
   h2 {
@@ -17,8 +17,14 @@ const SwiperContainer = styled.div`
   gap: 1em;
 `;
 
+const ArrowBtnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const ArrowBtn = styled.button`
   font-size: 2em;
 `;
 
-export { SwiperContainer, CarouselContainer, ArrowBtn };
+export { SwiperContainer, CarouselContainer, ArrowBtnContainer, ArrowBtn };
