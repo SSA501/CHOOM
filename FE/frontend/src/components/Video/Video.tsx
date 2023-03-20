@@ -23,7 +23,7 @@ function Video({
   frameColor,
 }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
-  const initial = 333;
+  const initial = 300;
   const borderSize = 14;
   const width = frameColor ? initial + borderSize * 2 : initial;
   const height = frameColor ? initial * 1.7 + borderSize * 2 : initial * 1.7;

@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { ArrowBtn, CarouselContainer, SwiperContainer } from "./style";
+import {
+  ArrowBtn,
+  ArrowBtnContainer,
+  CarouselContainer,
+  SwiperContainer,
+} from "./style";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import Video from "../../components/Video/Video";
-import { VideoData } from "../../pages/MainPage/MainPage";
+import { VideoDataProps } from "../../pages/MainPage/MainPage";
 import SwiperCore from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -11,7 +16,7 @@ import "swiper/css/navigation";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 interface VideoCarouselProps {
-  videoData: VideoData[];
+  videoData: VideoDataProps[];
   title: string;
   titleAlign?: string;
 }
@@ -25,26 +30,29 @@ function VideoCarousel({ videoData, title, titleAlign }: VideoCarouselProps) {
     <CarouselContainer titleAlign={titleAlign}>
       <h2>{title}</h2>
       <SwiperContainer>
-        <ArrowBtn onClick={() => swiper?.slidePrev()} disabled={reachingFirst}>
-          <MdKeyboardArrowLeft fill={reachingFirst ? "#D4D2D9" : "#08439D"} />
-        </ArrowBtn>
+        <ArrowBtnContainer>
+          <ArrowBtn
+            onClick={() => swiper?.slidePrev()}
+            disabled={reachingFirst}
+          >
+            <MdKeyboardArrowLeft fill={reachingFirst ? "#D4D2D9" : "#08439D"} />
+          </ArrowBtn>
+        </ArrowBtnContainer>
         <Swiper
           modules={[Navigation, A11y]}
+          width={1200}
           // loop={true}
           spaceBetween={50}
           slidesPerView={3}
           // navigation
-          onBeforeInit={(swipper: SwiperCore): void => {
-            setSwiper(swipper);
-            console.log(swipper);
-          }}
+          onBeforeInit={(swipper: SwiperCore): void => setSwiper(swipper)}
           onSlideChange={(e) => {
             e.isEnd ? setReachingEnd(true) : setReachingEnd(false);
             e.isBeginning ? setReachingFirst(true) : setReachingFirst(false);
           }}
         >
           <div>
-            {videoData.map(({ id, videoSrc, thumbnailSrc, frameColor }) => (
+            {videoData?.map(({ id, videoSrc, thumbnailSrc, frameColor }) => (
               <SwiperSlide key={id}>
                 <Video
                   id={id}
@@ -56,9 +64,11 @@ function VideoCarousel({ videoData, title, titleAlign }: VideoCarouselProps) {
             ))}
           </div>
         </Swiper>
-        <ArrowBtn onClick={() => swiper?.slideNext()} disabled={reachingEnd}>
-          <MdKeyboardArrowRight fill={reachingEnd ? "#D4D2D9" : "#08439D"} />
-        </ArrowBtn>
+        <ArrowBtnContainer>
+          <ArrowBtn onClick={() => swiper?.slideNext()} disabled={reachingEnd}>
+            <MdKeyboardArrowRight fill={reachingEnd ? "#D4D2D9" : "#08439D"} />
+          </ArrowBtn>
+        </ArrowBtnContainer>
       </SwiperContainer>
     </CarouselContainer>
   );
