@@ -1,4 +1,5 @@
 import React from "react";
+import MainBanner from "../../components/MainBanner/MainBanner";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { pickRandomColor } from "../../utils/colors";
 
@@ -49,6 +50,7 @@ function MainPage() {
 
   return (
     <>
+      <MainBanner />
       <VideoCarousel
         title={"요즘 인기있는 챌린지 🔥"}
         titleAlign={"center"}
