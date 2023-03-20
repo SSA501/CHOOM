@@ -17,8 +17,14 @@ const SwiperContainer = styled.div`
   gap: 1em;
 `;
 
+const ArrowBtnContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const ArrowBtn = styled.button`
   font-size: 2em;
 `;
 
-export { SwiperContainer, CarouselContainer, ArrowBtn };
+export { SwiperContainer, CarouselContainer, ArrowBtnContainer, ArrowBtn };
