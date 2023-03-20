@@ -16,7 +16,7 @@ import java.util.Set;
 @Slf4j
 public class MyDanceServiceImpl implements MyDanceService {
     @Override
-    public String calculateSimilarity(Long originalDanceId, String myDance) throws ParseException {
+    public String calculateSimilarity(Long originalDanceId, String myDanceCoordinate) throws ParseException {
         ArrayList<Double> matchRates = new ArrayList<Double>();
 
         /*
@@ -25,7 +25,7 @@ public class MyDanceServiceImpl implements MyDanceService {
          */
 
         // 현재는 그냥 더미 데이터로 테스트
-        String originalDance = "[\n" +
+        String originalDanceCoordinate = "[\n" +
                 "{\n" +
                 "\"idx\": 0,\n" +
                 "\"keypoints\":\n" +
@@ -1212,7 +1212,7 @@ public class MyDanceServiceImpl implements MyDanceService {
                 "]\n" +
                 "}\n" +
                 "]\n";
-        myDance = "[\n" +
+        myDanceCoordinate = "[\n" +
                 "{\n" +
                 "\"idx\": 0,\n" +
                 "\"keypoints\":\n" +
@@ -2165,8 +2165,8 @@ public class MyDanceServiceImpl implements MyDanceService {
 
         // String -> Object
         JSONParser parser = new JSONParser();
-        Object originalObj = parser.parse(originalDance);
-        Object myObj = parser.parse(myDance);
+        Object originalObj = parser.parse(originalDanceCoordinate);
+        Object myObj = parser.parse(myDanceCoordinate);
 
         // Object -> JSONArray
         JSONArray originalResult = (JSONArray) originalObj;
@@ -2222,7 +2222,7 @@ public class MyDanceServiceImpl implements MyDanceService {
         };
 
         double sum = 0;
-        double confidenceSum = 0;
+        double accuracySum = 0;
 
         for (int[] joint : joints) {
             JSONObject originalKeypoint1 = (JSONObject) originalKeypoints.get(joint[0]);
@@ -2243,21 +2243,21 @@ public class MyDanceServiceImpl implements MyDanceService {
                     "z", (double) myKeypoint1.get("z") - (double) myKeypoint2.get("z")
             );
 
-            double confidence = ((double) originalKeypoint1.get("score") + (double) originalKeypoint2.get("score")) / 2;
+            double accuracy = ((double) originalKeypoint1.get("score") + (double) originalKeypoint2.get("score")) / 2;
 
-            confidenceSum += confidence;
+            accuracySum += accuracy;
 
             // 벡터 정규화
             Map<String, Double> originalNorm = normalization(originalVector);
             Map<String, Double> myNorm = normalization(myVector);
 
             // 코사인 유사도 계산
-            double result = cosineSimilarity(originalNorm, myNorm) * confidence;
+            double result = cosineSimilarity(originalNorm, myNorm) * accuracy;
             sum += result;
 
         }
 
-        double avg = sum / confidenceSum;
+        double avg = sum / accuracySum;
         if (avg < 0)
             return 0;
         else
