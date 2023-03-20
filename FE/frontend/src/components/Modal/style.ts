@@ -9,6 +9,7 @@ const Background = styled.div`
   background: black;
   opacity: 0.5;
   overflow: hidden;
+  z-index: 999;
 `;
 
 const Modal = styled.div<{ width: number; height: number }>`
@@ -55,6 +56,10 @@ const BtnDiv = styled.div`
   width: 100%;
   margin: auto;
   text-align: center;
+
+  & > span {
+    font-size: 26px;
+  }
 `;
 
 const AcceptBtn = styled.button`

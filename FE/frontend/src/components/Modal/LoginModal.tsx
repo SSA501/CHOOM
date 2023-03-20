@@ -8,7 +8,7 @@ import {
   BtnDiv,
   LogoImg,
 } from "./style";
-import { IoCloseSharp } from "react-icons/io5";
+import { CgClose } from "react-icons/cg";
 
 function LoginModal(props: {
   setLoginModalOpen: (loginModalOpen: boolean) => void;
@@ -49,7 +49,7 @@ function LoginModal(props: {
       <Background />
       <Modal ref={modalRef} width={500} height={400}>
         <CloseBtn onClick={closeModal}>
-          <IoCloseSharp fontSize="30px" />
+          <CgClose fontSize="30px" />
         </CloseBtn>
         <ModalTitle>LOGIN</ModalTitle>
         <BtnDiv>
