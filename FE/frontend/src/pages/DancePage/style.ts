@@ -17,11 +17,11 @@ const TitleContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-const MyDanceContainer = styled.div<{ type: "left" | "right" }>`
+const DanceVideoContainer = styled.div<{ type: "left" | "right" }>`
   width: 50%;
   height: calc(100% - 127px);
   float: ${(props) => (props.type === "left" ? "left" : "right")};
   position: relative;
 `;
 
-export { MyDanceContainer, DancePageContainer, TitleContainer };
+export { DanceVideoContainer, DancePageContainer, TitleContainer };

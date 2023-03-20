@@ -8,7 +8,12 @@ import "@mediapipe/pose";
 import { Camera } from "../../apis/camera";
 import { STATE } from "../../apis/params";
 
-import { MyVideo, MyCanvas, StartBtn } from "./style";
+import {
+  DanceVideoContainer,
+  CamContainer,
+  CanvasContainer,
+  StartBtn,
+} from "./style";
 
 interface Kpt {
   x: number;
@@ -20,20 +25,31 @@ interface Pose {
   keypoints: Kpt[];
 }
 
-function MyDance(props: { poses: Pose[] }) {
+const pallete = {
+  red: "rgba(255, 0, 0, 0.5)",
+  green: "rgba(0,255,0,0.5)",
+};
+
+function DanceCam(props: { poseList: Pose[] }) {
   const video = useRef<HTMLVideoElement>(null);
 
   let camera: Camera, detector: any;
-
   useEffect(() => {
     init();
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      console.log(devices);
+    });
   });
 
   const init = async () => {
     camera = await Camera.setupCamera(STATE.camera);
     detector = await createDetector();
   };
+
+  let countFrame: number;
+
   const handleStart = (): void => {
+    countFrame = 0;
     renderPrediction();
     if (video.current) {
       video.current.style.visibility = "hidden";
@@ -44,11 +60,14 @@ function MyDance(props: { poses: Pose[] }) {
   }
 
   async function renderPrediction() {
-    await renderResult();
-    requestAnimationFrame(renderPrediction);
+    await renderResult(countFrame);
+    countFrame++;
+
+    if (countFrame < props.poseList.length)
+      requestAnimationFrame(renderPrediction);
   }
 
-  async function renderResult(): Promise<void> {
+  async function renderResult(countFrame: number): Promise<void> {
     if (camera.video.readyState < 2) {
       await new Promise<void>((resolve) => {
         camera.video.onloadeddata = () => {
@@ -57,11 +76,11 @@ function MyDance(props: { poses: Pose[] }) {
       });
     }
 
-    let poses: any;
+    let poseList: any;
 
     if (detector != null) {
       try {
-        poses = await detector.estimatePoses(camera.video, {
+        poseList = await detector.estimateposes(camera.video, {
           enableSmoothing: true,
         });
       } catch (error) {
@@ -73,11 +92,16 @@ function MyDance(props: { poses: Pose[] }) {
 
     camera.drawCtx();
 
-    if (poses && poses.length > 0) {
-      camera.drawResults(poses, "rgba(255,0,0,0.5)");
-      camera.drawResults(props.poses, "rgba(0,255,0,0.5)");
-      const score = getSmularity(props.poses, poses);
-      camera.drawScore(score);
+    if (poseList && poseList.length > 0) {
+      camera.drawResults(poseList, pallete.red);
+
+      const videoPose = [props.poseList[countFrame]];
+
+      if (videoPose[0].keypoints !== undefined) {
+        camera.drawResults(videoPose, pallete.green);
+        const score = getSmularity(videoPose, poseList);
+        camera.drawScore(score);
+      }
     }
   }
 
@@ -136,7 +160,6 @@ function MyDance(props: { poses: Pose[] }) {
 
     let avg = sum / pose1ConfidenceSum;
     if (avg < 0) avg = 0;
-    console.log(Math.round(avg * 100));
     return Math.round(avg * 100);
   };
 
@@ -146,12 +169,12 @@ function MyDance(props: { poses: Pose[] }) {
   };
 
   return (
-    <div>
-      <MyCanvas id="output"></MyCanvas>
-      <MyVideo id="video" playsInline ref={video}></MyVideo>
+    <DanceVideoContainer>
+      <CanvasContainer id="camOutput"></CanvasContainer>
+      <CamContainer id="cam" playsInline ref={video}></CamContainer>
       <StartBtn onClick={handleStart}>시작</StartBtn>
-    </div>
+    </DanceVideoContainer>
   );
 }
 
-export default MyDance;
+export default DanceCam;

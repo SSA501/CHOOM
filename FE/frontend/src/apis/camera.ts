@@ -5,19 +5,10 @@ export class Camera {
   video: HTMLVideoElement;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  source: HTMLSourceElement;
-
   constructor() {
-    this.video = document.getElementById("video") as HTMLVideoElement;
-    this.canvas = document.getElementById("output") as HTMLCanvasElement;
+    this.video = document.getElementById("cam") as HTMLVideoElement;
+    this.canvas = document.getElementById("camOutput") as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d")!;
-
-    // video
-    this.source = document.getElementById("currentVID") as HTMLSourceElement;
-    const stream = this.canvas.captureStream();
-    const options = { mimeType: "video/webm; codecs=vp9" };
-    // this.mediaRecorder = new MediaRecorder(stream, options);
-    // this.mediaRecorder.ondataavailable = this.handleDataAvailable;
   }
 
   static async setupCamera(cameraParam: {
@@ -26,10 +17,27 @@ export class Camera {
   }): Promise<Camera> {
     const { targetFPS, sizeOption } = cameraParam;
     const $size = sizeOption;
+    // const videoConfig = {
+    //   audio: false,
+    //   video: {
+    //     facingMode: "user",
+    //     // Only setting the video to a specified size for large screen, on
+    //     // mobile devices accept the default size.
+    //     width: $size.width,
+    //     height: $size.height,
+    //     frameRate: {
+    //       ideal: targetFPS,
+    //     },
+    //   },
+    // };
     const videoConfig = {
       audio: false,
       video: {
         facingMode: "user",
+        // deviceId: {
+        //   exact:
+        //     "f00492628375c7b7f3ec9ccfb2d8a0851623225961f8572b58b2372e543bf045",
+        // },
         // Only setting the video to a specified size for large screen, on
         // mobile devices accept the default size.
         width: $size.width,
@@ -85,8 +93,8 @@ export class Camera {
     this.ctx.clearRect(0, 0, this.video.videoWidth, this.video.videoHeight);
   }
 
-  drawResults(poses: any[], color: string) {
-    for (const pose of poses) {
+  drawResults(poseList: any[], color: string) {
+    for (const pose of poseList) {
       this.drawResult(pose, color);
     }
   }
