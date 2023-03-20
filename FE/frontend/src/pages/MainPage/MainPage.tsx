@@ -1,7 +1,7 @@
 import React from "react";
 import MainBanner from "../../components/MainBanner/MainBanner";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
-import { pickRandomColor } from "../../utils/colors";
+import { pickRandomColor } from "../../utils/utils";
 
 export interface VideoData {
   id: number;

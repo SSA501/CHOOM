@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
+import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
     --yellow-color: #FFE550;
     --pink-color: #F7B5CE;
     --orange-color: #EB6D15;
-    --red-color: #EB6D15;
+    --red-color: #CE2222;
   }
   
   *, *::before, *::after {
@@ -59,6 +59,6 @@ const GlobalStyle = createGlobalStyle`
   textarea {
     font-family: inherit;
   }
-`
+`;
 
-export {GlobalStyle}
+export { GlobalStyle };

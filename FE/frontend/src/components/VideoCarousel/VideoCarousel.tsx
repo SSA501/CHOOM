@@ -34,10 +34,7 @@ function VideoCarousel({ videoData, title, titleAlign }: VideoCarouselProps) {
           spaceBetween={50}
           slidesPerView={3}
           // navigation
-          onBeforeInit={(swipper: SwiperCore): void => {
-            setSwiper(swipper);
-            console.log(swipper);
-          }}
+          onBeforeInit={(swipper: SwiperCore): void => setSwiper(swipper)}
           onSlideChange={(e) => {
             e.isEnd ? setReachingEnd(true) : setReachingEnd(false);
             e.isBeginning ? setReachingFirst(true) : setReachingFirst(false);
