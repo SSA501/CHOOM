@@ -4,7 +4,7 @@ import RecentChallenge from "../../components/RecentChallenge/RecentChallenge";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { pickRandomColor } from "../../utils/utils";
 
-export interface VideoData {
+export interface VideoDataProps {
   id: number;
   videoSrc: string;
   thumbnailSrc: string;
@@ -12,7 +12,7 @@ export interface VideoData {
 }
 
 function MainPage() {
-  const videoData: VideoData[] = [
+  const popularVideoData: VideoDataProps[] = [
     {
       id: 1,
       videoSrc: "https://www.youtube.com/shorts/fYQxthUKung",
@@ -45,9 +45,11 @@ function MainPage() {
     },
   ];
 
-  for (let video of videoData) {
+  for (let video of popularVideoData) {
     video.frameColor = pickRandomColor();
   }
+
+  const recentVideoData = popularVideoData; // 임시 데이터, api 완성되면 따로 받아올 부분
 
   return (
     <>
@@ -55,9 +57,9 @@ function MainPage() {
       <VideoCarousel
         title={"요즘 인기있는 챌린지 🔥"}
         titleAlign={"center"}
-        videoData={videoData}
+        videoData={popularVideoData}
       />
-      <RecentChallenge />
+      <RecentChallenge videoData={recentVideoData} />
     </>
   );
 }

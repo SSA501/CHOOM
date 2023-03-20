@@ -1,9 +1,20 @@
 import React from "react";
-import { FlowText, FlowTextContainer } from "./style";
+import { VideoDataProps } from "../../pages/MainPage/MainPage";
+import Video from "../Video/Video";
+import {
+  FlowText,
+  FlowTextContainer,
+  RecentChallengeContainer,
+  RecentVideosContainer,
+} from "./style";
 
-function RecentChallenge() {
+interface RecentChallengeProps {
+  videoData: VideoDataProps[];
+}
+
+function RecentChallenge({ videoData }: RecentChallengeProps) {
   return (
-    <div>
+    <RecentChallengeContainer>
       <FlowTextContainer>
         <FlowText>
           Recent Challenges ✨ Recent Challenges ✨ Recent Challenges ✨ Recent
@@ -14,7 +25,19 @@ function RecentChallenge() {
           Challenges ✨
         </FlowText>
       </FlowTextContainer>
-    </div>
+      <RecentVideosContainer>
+        {videoData?.map(({ id, videoSrc, thumbnailSrc }) => (
+          <div style={{ width: "300px" }}>
+            <Video
+              id={id}
+              videoSrc={videoSrc}
+              thumbnailSrc={thumbnailSrc}
+              frameColor={"black"}
+            />
+          </div>
+        ))}
+      </RecentVideosContainer>
+    </RecentChallengeContainer>
   );
 }
 

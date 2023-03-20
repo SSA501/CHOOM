@@ -1,5 +1,9 @@
 import styled, { keyframes } from "styled-components";
 
+const RecentChallengeContainer = styled.div`
+  padding: 2em 0;
+`;
+
 const flowAnimation = keyframes`
   from {
     -webkit-transform: translateX(0);
@@ -13,7 +17,7 @@ const flowAnimation = keyframes`
 
 const FlowTextContainer = styled.div`
   background-color: var(--blue-color);
-  padding: 0.5em 0;
+  padding: 1em 0;
   color: white;
   text-transform: uppercase;
   overflow-x: hidden;
@@ -24,4 +28,17 @@ const FlowText = styled.div`
   animation: ${flowAnimation} 20s linear infinite;
 `;
 
-export { FlowTextContainer, FlowText };
+const RecentVideosContainer = styled.div`
+  padding: 3em 5em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  row-gap: 3em;
+  justify-items: center;
+`;
+
+export {
+  RecentChallengeContainer,
+  FlowTextContainer,
+  FlowText,
+  RecentVideosContainer,
+};
