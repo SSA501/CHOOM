@@ -1,5 +1,6 @@
 import React from "react";
 import MainBanner from "../../components/MainBanner/MainBanner";
+import RecentChallenge from "../../components/RecentChallenge/RecentChallenge";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { pickRandomColor } from "../../utils/utils";
 
@@ -56,6 +57,7 @@ function MainPage() {
         titleAlign={"center"}
         videoData={videoData}
       />
+      <RecentChallenge />
     </>
   );
 }
