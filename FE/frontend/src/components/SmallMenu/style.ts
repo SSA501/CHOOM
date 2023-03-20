@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
-const Menu = styled.div`
+const Menu = styled.div<{ top: string; right: string }>`
+  position: absolute;
+  top: ${(props) => props.top};
+  right: ${(props) => props.right};
   width: 168px;
   border: 1px solid black;
+  background-color: white;
+  z-index: 99;
 `;
 
 const MenuBtn = styled.button`

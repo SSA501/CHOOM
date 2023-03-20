@@ -3,6 +3,8 @@ import { Menu, MenuBtn } from "./style";
 
 type SmallMenuProps = {
   itemList: { name: string; handleClick: () => void }[];
+  top: string;
+  right: string;
 };
 
 function SmallMenu(props: SmallMenuProps) {
@@ -12,7 +14,11 @@ function SmallMenu(props: SmallMenuProps) {
     </MenuBtn>
   ));
 
-  return <Menu>{menuItemList}</Menu>;
+  return (
+    <Menu top={props.top} right={props.right}>
+      {menuItemList}
+    </Menu>
+  );
 }
 
 export default SmallMenu;

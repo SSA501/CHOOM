@@ -9,6 +9,7 @@ const Background = styled.div`
   background: black;
   opacity: 0.5;
   overflow: hidden;
+  z-index: 999;
 `;
 
 const Modal = styled.div<{ width: number; height: number }>`
