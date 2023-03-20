@@ -20,7 +20,7 @@ public class Coordinate extends BaseTimeEntity {
     private Long id;
 
     @NotNull
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     String result;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinate", cascade = CascadeType.ALL)
