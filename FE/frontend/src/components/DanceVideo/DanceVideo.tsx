@@ -6,9 +6,9 @@ import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/pose";
 
 import { STATE } from "../../apis/params";
-import { Camera } from "../../apis/camera";
+import { Camera } from "../../apis/context";
 
-import { VideoContainer, MyCanvas } from "./style";
+import { DanceVideoContainer, VideoContainer, CircleBtn } from "./style";
 
 interface Kpt {
   x: number;
@@ -20,8 +20,9 @@ interface Pose {
   keypoints: Kpt[];
 }
 
-function MyVideo() {
+function DanceVideo(props: { setPoseList: (poseList: Pose[]) => void }) {
   let camera: Camera, detector: any;
+  let poseList: Pose[];
 
   useEffect(() => {
     init();
@@ -38,7 +39,7 @@ function MyVideo() {
   async function updateVideo(
     event: React.ChangeEvent<HTMLInputElement>
   ): Promise<void> {
-    alert("동영상을 update 했습니다");
+    alert("잠시만 기다려주세요");
     // Clear reference to any previous uploaded video.
     URL.revokeObjectURL(camera.video.currentSrc);
     const file = (event.target as HTMLInputElement)?.files?.[0];
@@ -59,18 +60,17 @@ function MyVideo() {
     // Must set below two lines, otherwise video element doesn't show.
     camera.video.width = videoWidth;
     camera.video.height = videoHeight;
-    camera.canvas.width = videoWidth;
-    camera.canvas.height = videoHeight;
+
+    await detector.estimatePoses(camera.video);
+    alert("동영상 준비완료");
   }
 
   async function run(): Promise<void> {
+    poseList = [];
     // Warming up pipeline.
-    camera.video.style.visibility = "hidden";
     camera.video.pause();
     camera.video.currentTime = 0;
     camera.video.play();
-    //
-    camera.ctx.scale(0.5, 0.5);
 
     await new Promise<void>((resolve) => {
       camera.video.onseeked = () => {
@@ -84,47 +84,63 @@ function MyVideo() {
   async function runFrame() {
     if (camera.video.paused) {
       // video has finished.
-      camera.clearCtx();
-      camera.video.style.visibility = "visible";
+      console.log(poseList);
+      props.setPoseList(poseList);
+      localStorage.setItem("poseList", JSON.stringify(poseList));
       return;
     }
+
     await renderResult();
+
     requestAnimationFrame(runFrame);
   }
 
   async function renderResult() {
-    let poses: any;
+    let poseList: any;
 
-    // FPS only counts the time it takes to finish estimatePoses.
-    poses = await detector.estimatePoses(camera.video, {
+    // FPS only counts the time it takes to finish estimateposeList.
+    poseList = await detector.estimatePoses(camera.video, {
       enableSmoothing: true,
     });
-    camera.drawCtx();
-    if (poses.length > 0) {
-      camera.drawResults(poses, "rgba(255,0,0,0.5)");
+    if (poseList.length > 0) {
+      const newKpts: Kpt[] = [];
+
+      poseList[0].keypoints.map((kpt: Kpt) => {
+        newKpts.push({
+          x: kpt.x / 2,
+          y: kpt.y / 2,
+          z: kpt.z,
+          score: kpt.score,
+        });
+        return newKpts;
+      });
+      poseList.push({ keypoints: newKpts });
     }
   }
 
   return (
-    <div>
-      <div>
-        <div id="top-bar">
-          <input
-            type="file"
-            id="videofile"
-            name="video"
-            accept="video/*"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              updateVideo(e);
-            }}
-          />
-          <button id="submit" onClick={run}>
-            Run
-          </button>
-        </div>
+    <DanceVideoContainer>
+      <div id="top-bar">
+        <input
+          type="file"
+          id="videofile"
+          name="video"
+          accept="video/*"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            updateVideo(e);
+          }}
+        />
       </div>
 
-      <MyCanvas id="output"></MyCanvas>
+      <CircleBtn id="submit" onClick={run} top="20%">
+        Run
+      </CircleBtn>
+      <CircleBtn id="submit" onClick={run} top="40%">
+        Run
+      </CircleBtn>
+      <CircleBtn id="submit" onClick={run} top="60%">
+        Run
+      </CircleBtn>
       <VideoContainer id="video">
         <source id="currentVID" src="" type="video/mp4" />
       </VideoContainer>
@@ -132,8 +148,8 @@ function MyVideo() {
       <div>
         <span id="status"></span>
       </div>
-    </div>
+    </DanceVideoContainer>
   );
 }
 
-export default MyVideo;
+export default DanceVideo;
