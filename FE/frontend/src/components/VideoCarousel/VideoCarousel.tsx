@@ -30,6 +30,7 @@ function VideoCarousel({ videoData, title, titleAlign }: VideoCarouselProps) {
         </ArrowBtn>
         <Swiper
           modules={[Navigation, A11y]}
+          width={1200}
           // loop={true}
           spaceBetween={50}
           slidesPerView={3}
