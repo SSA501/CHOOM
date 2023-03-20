@@ -20,7 +20,7 @@ function MainBanner() {
       autoplay={true}
     >
       <SwiperSlide>
-        <BannerContainer>
+        <BannerContainer bgColor={"blue"}>
           <BannerTextContainer>
             <p>지금 무슨 노래 듣고 계세요?</p>
             <p>C#OOM과 함께라면 유행하는 챌린지 뚝딱!</p>
@@ -35,7 +35,7 @@ function MainBanner() {
         </BannerContainer>
       </SwiperSlide>
       <SwiperSlide>
-        <BannerContainer>
+        <BannerContainer bgColor={"pink"}>
           <BannerTextContainer>
             <p>2번문구</p>
             <p>C#OOM과 함께라면 유행하는 챌린지 뚝딱!</p>
@@ -50,7 +50,7 @@ function MainBanner() {
         </BannerContainer>
       </SwiperSlide>
       <SwiperSlide>
-        <BannerContainer>
+        <BannerContainer bgColor={"green"}>
           <BannerTextContainer>
             <p>3번문구</p>
             <p>C#OOM과 함께라면 유행하는 챌린지 뚝딱!</p>

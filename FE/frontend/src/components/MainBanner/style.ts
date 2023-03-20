@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-const BannerContainer = styled.div`
-  background-color: var(--blue-color);
+const BannerContainer = styled.div<{ bgColor: string }>`
+  background-color: ${(props) => `var(--${props.bgColor}-color)`};
   height: 450px;
   padding: 0 5em;
   display: flex;
