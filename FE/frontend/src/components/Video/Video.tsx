@@ -7,7 +7,7 @@ interface VideoProps {
   thumbnailSrc: string;
   playbackRate?: number; // 유튜브만 적용됨, 틱톡은 따로 코드 추가해야함
   volume?: number;
-  bgFrame?: string; // 테두리 색상, 적용안하면 비디오만 표시
+  frameColor?: string; // 테두리 색상, 적용안하면 비디오만 표시
 }
 
 /**
@@ -20,13 +20,13 @@ function Video({
   videoSrc,
   playbackRate,
   volume,
-  bgFrame,
+  frameColor,
 }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
   const initial = 333;
-  const borderSize = 12;
-  const width = bgFrame ? initial + borderSize * 2 : initial; // Replace with the actual width of your element
-  const height = bgFrame ? initial * 1.7 + borderSize * 2 : initial * 1.7; // Replace with the actual height of your element
+  const borderSize = 14;
+  const width = frameColor ? initial + borderSize * 2 : initial;
+  const height = frameColor ? initial * 1.7 + borderSize * 2 : initial * 1.7;
   const ratio = (height / width) * 100;
 
   return (
@@ -34,7 +34,7 @@ function Video({
       key={id}
       onMouseEnter={(): void => setPlayingVideoId(id)}
       onMouseLeave={(): void => setPlayingVideoId(null)}
-      bgFrame={bgFrame}
+      frameColor={frameColor}
       ratio={ratio}
     >
       {playingVideoId === id ? (

@@ -1,14 +1,16 @@
 import React from "react";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
+import { pickRandomColor } from "../../utils/colors";
 
-export interface videoData {
+export interface VideoData {
   id: number;
   videoSrc: string;
   thumbnailSrc: string;
+  frameColor?: string;
 }
 
 function MainPage() {
-  const videoData: videoData[] = [
+  const videoData: VideoData[] = [
     {
       id: 1,
       videoSrc: "https://www.youtube.com/shorts/fYQxthUKung",
@@ -40,6 +42,10 @@ function MainPage() {
         "https://i.ytimg.com/vi/8P7BoKIcEMM/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAkOrwDKfR9IJ-Eg3-wu_Gc0IOSbw",
     },
   ];
+
+  for (let video of videoData) {
+    video.frameColor = pickRandomColor();
+  }
 
   return (
     <>

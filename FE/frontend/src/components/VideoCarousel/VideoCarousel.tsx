@@ -3,7 +3,7 @@ import { ArrowBtn, CarouselContainer, SwiperContainer } from "./style";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import Video from "../../components/Video/Video";
-import { videoData } from "../../pages/MainPage/MainPage";
+import { VideoData } from "../../pages/MainPage/MainPage";
 import SwiperCore from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -11,7 +11,7 @@ import "swiper/css/navigation";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 interface VideoCarouselProps {
-  videoData: videoData[];
+  videoData: VideoData[];
   title: string;
   titleAlign?: string;
 }
@@ -44,13 +44,13 @@ function VideoCarousel({ videoData, title, titleAlign }: VideoCarouselProps) {
           }}
         >
           <div>
-            {videoData.map(({ id, videoSrc, thumbnailSrc }) => (
+            {videoData.map(({ id, videoSrc, thumbnailSrc, frameColor }) => (
               <SwiperSlide key={id}>
                 <Video
                   id={id}
                   videoSrc={videoSrc}
                   thumbnailSrc={thumbnailSrc}
-                  bgFrame="blue"
+                  frameColor={frameColor}
                 />
               </SwiperSlide>
             ))}
