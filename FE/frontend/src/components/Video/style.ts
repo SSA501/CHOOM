@@ -2,17 +2,16 @@ import ReactPlayer from "react-player";
 import styled, { css } from "styled-components";
 
 interface VideoContainerProps {
-  bgFrame?: string;
+  frameColor?: string;
   ratio: number;
 }
 
 const VideoContainer = styled.div<VideoContainerProps>`
-  ${({ bgFrame, ratio }) => css`
+  ${({ frameColor, ratio }) => css`
     position: relative;
     width: 100%;
-    /* width: ${bgFrame ? "" : ""};
-    height: ${bgFrame ? "626px" : "594px"}; */
-    border: ${bgFrame ? `12px solid var(--${bgFrame}-color)` : null};
+    /* height: ${frameColor ? "626px" : "594px"}; */
+    border: ${frameColor ? `14px solid var(--${frameColor}-color)` : null};
     padding-top: ${ratio
       ? `${ratio}%`
       : "56.25%"}; /* default aspect ratio is 16:9 */
