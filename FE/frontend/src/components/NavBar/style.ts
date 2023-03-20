@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const NavContainer = styled.nav`
-  width: 100vw;
+  /* width: 100vw; */
   min-height: 80px;
   padding: 1em 2em 0.5em;
   border-top: 0.8em solid black;

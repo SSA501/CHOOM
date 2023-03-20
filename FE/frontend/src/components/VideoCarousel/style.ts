@@ -1,9 +1,24 @@
 import styled from "styled-components";
 
-const SwiperContainer = styled.div`
+const CarouselContainer = styled.div<{ titleAlign?: string }>`
   padding: 5em;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
+  h2 {
+    text-align: ${(props) => props.titleAlign || ""};
+    font-weight: 600;
+    font-size: 1.7em;
+    padding: 1.2em 0 1em;
+  }
 `;
 
-export { SwiperContainer };
+const SwiperContainer = styled.div`
+  display: flex;
+  gap: 1em;
+`;
+
+const ArrowBtn = styled.button`
+  font-size: 2em;
+`;
+
+export { SwiperContainer, CarouselContainer, ArrowBtn };

@@ -1,14 +1,16 @@
 import React from "react";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
+import { pickRandomColor } from "../../utils/colors";
 
-export interface videoData {
+export interface VideoData {
   id: number;
   videoSrc: string;
   thumbnailSrc: string;
+  frameColor?: string;
 }
 
 function MainPage() {
-  const videoData: videoData[] = [
+  const videoData: VideoData[] = [
     {
       id: 1,
       videoSrc: "https://www.youtube.com/shorts/fYQxthUKung",
@@ -41,10 +43,17 @@ function MainPage() {
     },
   ];
 
+  for (let video of videoData) {
+    video.frameColor = pickRandomColor();
+  }
+
   return (
     <>
-      메인페이지
-      <VideoCarousel videoData={videoData} />
+      <VideoCarousel
+        title={"요즘 인기있는 챌린지 🔥"}
+        titleAlign={"center"}
+        videoData={videoData}
+      />
     </>
   );
 }
