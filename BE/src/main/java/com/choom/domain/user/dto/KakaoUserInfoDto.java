@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class KakaoUserInfo {
+public class KakaoUserInfoDto {
     String identifier;
     String nickname;
     String profileImage;

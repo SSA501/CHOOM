@@ -1,7 +1,7 @@
 package com.choom.domain.user.service;
 
-import com.choom.domain.user.dto.KakaoOAuth2;
-import com.choom.domain.user.dto.KakaoUserInfo;
+import com.choom.domain.user.dto.KakaoOAuth2Dto;
+import com.choom.domain.user.dto.KakaoUserInfoDto;
 import com.choom.domain.user.entity.SocialType;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final KakaoOAuth2 kakaoOAuth2;
+    private final KakaoOAuth2Dto kakaoOAuth2Dto;
     private final UserRepository userRepository;
 
     public Optional<User> findUserById(Long id) {
@@ -30,7 +30,7 @@ public class UserService {
 
     public void kakaoLogin(String code) {
         log.info(code);
-        KakaoUserInfo userInfo = kakaoOAuth2.getUserInfo(code);
+        KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
         String nickname = userInfo.getNickname();
         String profileImage = userInfo.getProfileImage();

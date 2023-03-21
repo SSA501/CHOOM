@@ -15,7 +15,7 @@ import java.net.URL;
 
 @Slf4j
 @Component
-public class KakaoOAuth2 {
+public class KakaoOAuth2Dto {
     private static String KAKAO_APIKEY;
 
     @Value("${apikey.kakao}")
@@ -23,7 +23,7 @@ public class KakaoOAuth2 {
         KAKAO_APIKEY = value;
     }
 
-    public KakaoUserInfo getUserInfo(String code) {
+    public KakaoUserInfoDto getUserInfo(String code) {
         String accessToken = getAccessToken(code);
         return getUserInfoByToken(accessToken);
     }
@@ -81,7 +81,7 @@ public class KakaoOAuth2 {
         return access_Token;
     }
 
-    public KakaoUserInfo getUserInfoByToken(String accessToken){
+    public KakaoUserInfoDto getUserInfoByToken(String accessToken){
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -121,7 +121,7 @@ public class KakaoOAuth2 {
 
             br.close();
 
-            return new KakaoUserInfo(identifier, nickname, profileImage);
+            return new KakaoUserInfoDto(identifier, nickname, profileImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
