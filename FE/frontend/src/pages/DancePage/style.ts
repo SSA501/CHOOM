@@ -2,9 +2,7 @@ import styled from "styled-components";
 
 const DancePageContainer = styled.div`
   height: calc(100vh - 150px);
-  margin-inline: 200px;
-  margin-top: 35px;
-  border: 3px solid black;
+  margin: 35px 200px;
 `;
 
 const TitleContainer = styled.div`

@@ -7,27 +7,35 @@ const DanceVideoContainer = styled.div`
   position: relative;
 `;
 
-const VideoContainer = styled.video`
+const VideoContainer = styled.video<{ isFlipped: Boolean }>`
   position: absolute;
   top: 50%;
   left: 60%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%)
+    ${(props) => (props.isFlipped ? "scaleX(-1)" : "")};
 `;
 
 const CircleBtn = styled.button<{ top: string }>`
   position: absolute;
   top: ${(props) => props.top};
-  left: calc(60% + 230px);
+  left: calc(60% + 200px);
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
+  background-color: #fff;
+  color: var(--blue-color);
+  border: 2px solid var(--blue-color);
+  font-size: 20px;
   text-align: center;
-  line-height: 60px;
+  line-height: 20px;
   text-decoration: none;
-  border: none;
   cursor: pointer;
+
+  & > svg {
+    font-size: 28px;
+  }
+  &:hover {
+    background-color: var(--lightblue-color);
+  }
 `;
 export { DanceVideoContainer, VideoContainer, CircleBtn };

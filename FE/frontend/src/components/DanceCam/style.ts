@@ -37,4 +37,16 @@ const CircleBtn = styled.button<{ left: string }>`
   cursor: pointer;
 `;
 
-export { DanceVideoContainer, CamContainer, CanvasContainer, CircleBtn };
+const AnalyzingDiv = styled.div`
+  position: absolute;
+  top: 85%;
+  left: 10%;
+`;
+
+export {
+  DanceVideoContainer,
+  CamContainer,
+  CanvasContainer,
+  CircleBtn,
+  AnalyzingDiv,
+};

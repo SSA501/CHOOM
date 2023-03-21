@@ -13,6 +13,7 @@ import {
   CamContainer,
   CanvasContainer,
   CircleBtn,
+  AnalyzingDiv,
 } from "./style";
 
 interface Kpt {
@@ -177,12 +178,19 @@ function DanceCam(props: {
     <DanceVideoContainer>
       <CanvasContainer id="camOutput"></CanvasContainer>
       <CamContainer id="cam" playsInline ref={video}></CamContainer>
-      <CircleBtn onClick={handleStart} left="60px">
-        시작
-      </CircleBtn>
-      <CircleBtn onClick={handleStart} left="-60px">
-        시작
-      </CircleBtn>
+      {props.poseList.length > 0 ? (
+        <div>
+          {" "}
+          <CircleBtn onClick={handleStart} left="60px">
+            시작
+          </CircleBtn>
+          <CircleBtn onClick={handleStart} left="-60px">
+            시작
+          </CircleBtn>
+        </div>
+      ) : (
+        <AnalyzingDiv>영상 준비중입니다</AnalyzingDiv>
+      )}
     </DanceVideoContainer>
   );
 }
