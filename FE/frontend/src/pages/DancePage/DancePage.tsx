@@ -19,7 +19,7 @@ function DancePage() {
 
   return (
     <DancePageContainer>
-      <TitleContainer>Hype Boy - New Jeans</TitleContainer>
+      {/* <TitleContainer>Hype Boy - New Jeans</TitleContainer> */}
       <DanceVideo setPoseList={setPoseList} ref={danceVideoRef} />
       <DanceCam poseList={poseList} danceVideoRef={danceVideoRef} />
     </DancePageContainer>

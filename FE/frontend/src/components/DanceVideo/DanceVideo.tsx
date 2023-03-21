@@ -1,5 +1,11 @@
-import React, { useEffect, useImperativeHandle, forwardRef } from "react";
-
+import React, {
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  useState,
+} from "react";
+import { CgEditFlipH, CgPlayButton } from "react-icons/cg";
+import { MdVolumeUp, MdVolumeOff, MdPlayArrow } from "react-icons/md";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
@@ -27,6 +33,10 @@ const DanceVideo = forwardRef(
   ) => {
     let camera: Camera, detector: any;
     let poseList: Pose[];
+
+    const [volumeState, setVolumeState] = useState<Boolean>(true);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const [playRate, setplayRate] = useState("1.0");
 
     useEffect(() => {
       init();
@@ -95,6 +105,7 @@ const DanceVideo = forwardRef(
       // Warming up pipeline.
       camera.video.pause();
       camera.video.currentTime = 0;
+      camera.video.playbackRate = parseFloat(playRate);
       camera.video.play();
     };
 
@@ -134,6 +145,22 @@ const DanceVideo = forwardRef(
       }
     }
 
+    const handleVolumeClick = () => {
+      setVolumeState(!volumeState);
+    };
+    const handleFlipClick = () => {
+      setIsFlipped(!isFlipped);
+    };
+
+    const handlePlayRateClick = () => {
+      if (playRate === "1.0") setplayRate("0.5");
+      else if (playRate === "0.5") setplayRate("2.0");
+      else if (playRate === "2.0") setplayRate("1.0");
+    };
+    useEffect(() => {
+      camera.video.playbackRate = parseFloat(playRate);
+    }, [playRate]);
+
     return (
       <DanceVideoContainer>
         <div id="top-bar">
@@ -148,16 +175,19 @@ const DanceVideo = forwardRef(
           />
         </div>
 
-        <CircleBtn id="submit" onClick={playVideo} top="20%">
-          Run
+        <CircleBtn id="submit" top="20%" onClick={handleFlipClick}>
+          <CgEditFlipH />
         </CircleBtn>
-        <CircleBtn id="submit" onClick={playVideo} top="40%">
-          Run
+        <CircleBtn id="submit" onClick={handleVolumeClick} top="35%">
+          {volumeState ? <MdVolumeUp /> : <MdVolumeOff />}
         </CircleBtn>
-        <CircleBtn id="submit" onClick={playVideo} top="60%">
-          Run
+        <CircleBtn id="submit" onClick={handlePlayRateClick} top="50%">
+          {playRate}
         </CircleBtn>
-        <VideoContainer id="video">
+        <CircleBtn id="submit" onClick={playVideo} top="65%">
+          <MdPlayArrow />
+        </CircleBtn>
+        <VideoContainer id="video" isFlipped={isFlipped}>
           <source id="currentVID" src="" type="video/mp4" />
         </VideoContainer>
 
