@@ -2,7 +2,7 @@ package com.choom.global.util;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.choom.global.common.BaseResponse;
+import com.choom.global.model.BaseResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;

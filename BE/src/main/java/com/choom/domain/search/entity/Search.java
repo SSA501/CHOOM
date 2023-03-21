@@ -1,6 +1,6 @@
 package com.choom.domain.search.entity;
 
-import com.choom.global.common.BaseTimeEntity;
+import com.choom.global.model.BaseTimeEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.choom.global.common;
+package com.choom.global.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
