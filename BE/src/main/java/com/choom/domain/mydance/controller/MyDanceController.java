@@ -1,7 +1,7 @@
 package com.choom.domain.mydance.controller;
 
 import com.choom.domain.mydance.service.MyDanceService;
-import com.choom.global.common.BaseResponse;
+import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
