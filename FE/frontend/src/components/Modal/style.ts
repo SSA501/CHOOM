@@ -32,8 +32,6 @@ const CloseBtn = styled.button`
 `;
 
 const ModalTitle = styled.p`
-  @import url("https://fonts.cdnfonts.com/css/libre-baskerville");
-  font-family: "Libre Baskerville", sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: 2rem;
@@ -64,8 +62,6 @@ const BtnDiv = styled.div`
 
 const AcceptBtn = styled.button`
   width: 112.4px;
-  font-family: "Libre Baskerville";
-  font-style: normal;
   font-weight: 400;
   font-size: 24px;
   line-height: 30px;
@@ -74,7 +70,6 @@ const AcceptBtn = styled.button`
 
 const CancelBtn = styled.button`
   width: 112.4px;
-  font-family: "Libre Baskerville";
   font-style: normal;
   font-weight: 400;
   font-size: 24px;

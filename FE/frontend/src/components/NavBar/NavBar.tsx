@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginModal from "../Modal/LoginModal";
-import { ActiveBar, NavBtnLink, NavContainer, NavLi } from "./style";
+import { NavBtnLink, NavContainer, NavLi, NavUl } from "./style";
 
 function NavBar() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -24,25 +24,21 @@ function NavBar() {
             />
           </Link>
         </div>
-        <ul>
+        <NavUl>
           <NavLi>
-            <NavBtnLink to="/challenge">
-              <ActiveBar challenge />
+            <NavBtnLink challenge={true} to="/challenge">
               챌린지
             </NavBtnLink>
           </NavLi>
           <NavLi>
-            <NavBtnLink to="/profile">
-              <ActiveBar />
-              프로필
-            </NavBtnLink>
+            <NavBtnLink to="/profile">프로필</NavBtnLink>
           </NavLi>
           <NavLi>
             <NavBtnLink to="" onClick={showLoginModal}>
               로그인
             </NavBtnLink>
           </NavLi>
-        </ul>
+        </NavUl>
       </NavContainer>
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
     </div>
