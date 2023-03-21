@@ -1,5 +1,10 @@
-import React, { useRef, useEffect } from "react";
-
+import React, { useRef, useEffect, useState } from "react";
+import {
+  MdPlayCircleOutline,
+  MdOutlineStopCircle,
+  MdOutlineTimer3,
+} from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
@@ -13,7 +18,8 @@ import {
   CamContainer,
   CanvasContainer,
   CircleBtn,
-  AnalyzingDiv,
+  CircleBtnLabel,
+  ClickedCircleBtn,
 } from "./style";
 
 interface Kpt {
@@ -38,9 +44,13 @@ function DanceCam(props: {
   const video = useRef<HTMLVideoElement>(null);
 
   let camera: Camera, detector: any;
+
+  const [isRecoding, setIsRecoding] = useState<Boolean>(false);
+  const [isGuide, setIsGuide] = useState<Boolean>(true);
+
   useEffect(() => {
     init();
-  });
+  }, [props.poseList, isGuide]);
 
   const init = async () => {
     camera = await Camera.setupCamera(STATE.camera);
@@ -52,7 +62,8 @@ function DanceCam(props: {
 
   let countFrame: number;
 
-  const handleStart = (): void => {
+  const handleStartClick = async () => {
+    setIsRecoding(true);
     countFrame = 0;
     camera.mediaRecorder?.start();
     props.danceVideoRef.current.playVideo();
@@ -61,6 +72,15 @@ function DanceCam(props: {
       video.current.style.visibility = "hidden";
     }
   };
+
+  const handleStopClick = () => {
+    window.location.reload();
+  };
+
+  const handleGuideClick = () => {
+    setIsGuide(!isGuide);
+  };
+
   async function createDetector() {
     return poseDetection.createDetector(STATE.model, STATE.detectorConfig);
   }
@@ -99,12 +119,13 @@ function DanceCam(props: {
 
     camera.drawCtx();
 
-    if (estimatePoseList && estimatePoseList.length > 0) {
-      camera.drawResults(estimatePoseList, pallete.red);
+    const videoPose = [props.poseList[countFrame]];
+    if (isGuide) camera.drawResults(videoPose, pallete.green);
 
-      const videoPose = [props.poseList[countFrame]];
+    if (estimatePoseList && estimatePoseList.length > 0) {
+      if (isGuide) camera.drawResults(estimatePoseList, pallete.red);
+
       if (videoPose[0].keypoints !== undefined) {
-        camera.drawResults(videoPose, pallete.green);
         const score = getSmularity(videoPose, estimatePoseList);
         camera.drawScore(score);
       }
@@ -178,18 +199,42 @@ function DanceCam(props: {
     <DanceVideoContainer>
       <CanvasContainer id="camOutput"></CanvasContainer>
       <CamContainer id="cam" playsInline ref={video}></CamContainer>
-      {props.poseList.length > 0 ? (
+
+      <CircleBtn top="30%">
+        <MdOutlineTimer3 />
+      </CircleBtn>
+      <CircleBtnLabel top="39%">타이머</CircleBtnLabel>
+      {isGuide ? (
         <div>
-          {" "}
-          <CircleBtn onClick={handleStart} left="60px">
-            시작
+          <CircleBtn top="45%" onClick={handleGuideClick}>
+            <AiOutlineEye />
           </CircleBtn>
-          <CircleBtn onClick={handleStart} left="-60px">
-            시작
-          </CircleBtn>
+          <CircleBtnLabel top="54%">안보기</CircleBtnLabel>
         </div>
       ) : (
-        <AnalyzingDiv>영상 준비중입니다</AnalyzingDiv>
+        <div>
+          {" "}
+          <ClickedCircleBtn top="45%" onClick={handleGuideClick}>
+            <AiOutlineEyeInvisible />
+          </ClickedCircleBtn>
+          <CircleBtnLabel top="54%">보기</CircleBtnLabel>
+        </div>
+      )}
+
+      {isRecoding ? (
+        <div>
+          <ClickedCircleBtn top="60%" onClick={handleStopClick}>
+            <MdOutlineStopCircle />
+          </ClickedCircleBtn>
+          <CircleBtnLabel top="69%">녹화중</CircleBtnLabel>
+        </div>
+      ) : (
+        <div>
+          <CircleBtn onClick={handleStartClick} top="60%">
+            <MdPlayCircleOutline />
+          </CircleBtn>
+          <CircleBtnLabel top="69%">녹화 시작</CircleBtnLabel>
+        </div>
       )}
     </DanceVideoContainer>
   );

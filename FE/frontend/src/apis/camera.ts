@@ -61,8 +61,8 @@ export class Camera {
 
     camera.video.play();
 
-    const videoWidth = 360;
-    const videoHeight = 640;
+    const videoWidth = 450;
+    const videoHeight = 800;
     // Must set below two lines, otherwise video element doesn't show.
     camera.video.width = videoWidth;
     camera.video.height = videoHeight;

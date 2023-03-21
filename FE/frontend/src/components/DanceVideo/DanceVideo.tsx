@@ -4,7 +4,7 @@ import React, {
   forwardRef,
   useState,
 } from "react";
-import { CgEditFlipH, CgPlayButton } from "react-icons/cg";
+import { CgEditFlipH } from "react-icons/cg";
 import { MdVolumeUp, MdVolumeOff, MdPlayArrow } from "react-icons/md";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import "@tensorflow/tfjs-core";
@@ -14,7 +14,12 @@ import "@mediapipe/pose";
 import { STATE } from "../../apis/params";
 import { Camera } from "../../apis/context";
 
-import { DanceVideoContainer, VideoContainer, CircleBtn } from "./style";
+import {
+  DanceVideoContainer,
+  VideoContainer,
+  CircleBtn,
+  BtnLabel,
+} from "./style";
 
 interface Kpt {
   x: number;
@@ -28,7 +33,7 @@ interface Pose {
 
 const DanceVideo = forwardRef(
   (
-    props: { setPoseList: (poseList: Pose[]) => void },
+    props: { setPoseList: (poseList: Pose[]) => void; poseList: Pose[] },
     ref: React.ForwardedRef<any>
   ) => {
     let camera: Camera, detector: any;
@@ -73,8 +78,8 @@ const DanceVideo = forwardRef(
         };
       });
 
-      const videoWidth = 360;
-      const videoHeight = 640;
+      const videoWidth = 450;
+      const videoHeight = 800;
 
       // Must set below two lines, otherwise video element doesn't show.
       camera.video.width = videoWidth;
@@ -174,23 +179,25 @@ const DanceVideo = forwardRef(
             }}
           />
         </div>
-
         <CircleBtn id="submit" top="20%" onClick={handleFlipClick}>
           <CgEditFlipH />
         </CircleBtn>
+        <BtnLabel top="29%">좌우 반전</BtnLabel>
         <CircleBtn id="submit" onClick={handleVolumeClick} top="35%">
           {volumeState ? <MdVolumeUp /> : <MdVolumeOff />}
         </CircleBtn>
+        <BtnLabel top="44%">볼륨 조절</BtnLabel>
         <CircleBtn id="submit" onClick={handlePlayRateClick} top="50%">
           {playRate}
         </CircleBtn>
+        <BtnLabel top="59%">배속 조절</BtnLabel>
         <CircleBtn id="submit" onClick={playVideo} top="65%">
           <MdPlayArrow />
         </CircleBtn>
+        <BtnLabel top="74%">영상 재생</BtnLabel>
         <VideoContainer id="video" isFlipped={isFlipped}>
           <source id="currentVID" src="" type="video/mp4" />
         </VideoContainer>
-
         <div>
           <span id="status"></span>
         </div>
