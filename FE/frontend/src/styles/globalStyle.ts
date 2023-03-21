@@ -1,6 +1,13 @@
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 
+// react icons 스타일
+export const iconStyle = {
+  verticalAlign: "middle",
+  fontSize: "1.3rem",
+  cursor: "pointer",
+};
+
 const GlobalStyle = createGlobalStyle`
   ${reset}
 
