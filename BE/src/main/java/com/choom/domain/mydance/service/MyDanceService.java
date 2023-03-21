@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +23,7 @@ public class MyDanceService {
 
     private final FileService fileService;
 
-    public void addMyDance(MyDanceAddRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException, ParseException {
+    public void addMyDance(MyDanceAddRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
@@ -36,7 +35,7 @@ public class MyDanceService {
         log.info(matchRate);
     }
 
-    private String calculateMatchRate(Long originalDanceId, String myDanceCoordinatePath) throws ParseException, IOException {
+    private String calculateMatchRate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
         ArrayList<Double> matchRates = new ArrayList<Double>();
 
         /*
@@ -46,7 +45,7 @@ public class MyDanceService {
 
         // 현재는 그냥 더미 데이터로 테스트
         Reader originalDanceCoordinate = new FileReader("C:\\Users\\SSAFY\\Downloads\\jsonexample.json");
-        Reader myDanceCoordinate =  new FileReader(myDanceCoordinatePath);
+        Reader myDanceCoordinate = new FileReader(myDanceCoordinatePath);
 
         JsonParser parser = new JsonParser();
         JsonArray originalResult = parser.parse(originalDanceCoordinate).getAsJsonArray();
