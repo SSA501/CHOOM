@@ -2,7 +2,7 @@ package com.choom.domain.originaldance.controller;
 
 import com.choom.domain.originaldance.dto.YoutubeResponseDto;
 import com.choom.domain.originaldance.service.OriginalDanceService;
-import com.choom.global.common.BaseResponse;
+import com.choom.global.model.BaseResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

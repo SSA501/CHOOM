@@ -1,7 +1,7 @@
 package com.choom.domain.originaldance.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
-import com.choom.global.common.BaseTimeEntity;
+import com.choom.global.model.BaseTimeEntity;
 import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
 import lombok.Getter;

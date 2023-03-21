@@ -2,9 +2,9 @@ package com.choom.domain.mydance.controller;
 
 import com.choom.domain.mydance.service.MyDanceService;
 import com.choom.global.common.BaseResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/mychallenge")
 @Slf4j
+@RequiredArgsConstructor
 public class MyDanceController {
 
-    @Autowired
-    MyDanceService myDanceService;
+    private final MyDanceService myDanceService;
 
     @PostMapping()
     public BaseResponse myChallengeAdd() throws ParseException {
