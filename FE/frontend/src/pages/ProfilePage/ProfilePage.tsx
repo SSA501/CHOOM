@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SmallMenu from "../../components/SmallMenu/SmallMenu";
 import NormalModal from "../../components/Modal/NormalModal";
 import {
@@ -23,6 +24,7 @@ function ProfilePage() {
     useState<string>("높은 등급순");
   const [dropMenuOpen, setDropMenuOpen] = useState<boolean>(false);
   const [normalModalOpen, setNormalModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const showDropMenu = () => {
     setDropMenuOpen(!dropMenuOpen);
@@ -30,6 +32,12 @@ function ProfilePage() {
 
   const showNormalModal = () => {
     setNormalModalOpen(true);
+  };
+
+  const withdrawMember = () => {
+    alert("탈퇴 완료!");
+    console.log("TODO: 탈퇴하기 기능 들어갈 부분");
+    navigate("/");
   };
 
   const changVideoList = (mode: string) => {
@@ -202,7 +210,7 @@ function ProfilePage() {
       {normalModalOpen && (
         <NormalModal
           setNormalModalOpen={setNormalModalOpen}
-          acceptModal={() => alert("탈퇴하기!!")}
+          acceptModal={() => withdrawMember()}
         />
       )}
     </ProfileDiv>
