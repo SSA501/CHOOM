@@ -5,6 +5,7 @@ import com.choom.domain.user.dto.KakaoUserInfoDto;
 import com.choom.domain.user.entity.SocialType;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
+import com.choom.global.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,12 @@ public class UserService {
                     .build();
             userRepository.save(user);
         }
+
+        String accessToken = JwtTokenUtil.getAccessToken(identifier);
+        String refreshToken = JwtTokenUtil.getRefreshToken(identifier);
+
+        log.info(accessToken);
+        log.info(refreshToken);
+
     }
 }

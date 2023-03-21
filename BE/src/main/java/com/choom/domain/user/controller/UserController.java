@@ -14,7 +14,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/login/oauth2/code/kakao")
+    @GetMapping("/login/kakao")
     public void kakaoLogin(@RequestParam String code) {
         log.info(code);
         userService.kakaoLogin(code);
