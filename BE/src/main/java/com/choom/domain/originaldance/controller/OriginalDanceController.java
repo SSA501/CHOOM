@@ -26,8 +26,8 @@ public class OriginalDanceController {
     @GetMapping()
     public BaseResponse searchChallenge(@RequestParam(name = "q")String keyword, @RequestParam int page){
         log.info("keyword : "+keyword+" page : "+page);
-        List<YoutubeResponseDto> youtubeResponseDtos = originalDanceService.searchChallenge(keyword,page);
-        return BaseResponse.success(youtubeResponseDtos);
+        List<YoutubeResponseDto> youtubeResponseDtoList = originalDanceService.searchChallenge(keyword,page);
+        return BaseResponse.success(youtubeResponseDtoList);
     }
 
     @PostMapping()
