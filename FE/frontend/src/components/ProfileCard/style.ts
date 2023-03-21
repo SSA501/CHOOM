@@ -35,6 +35,7 @@ const EditProfileBtn = styled.button<{ editAccept?: boolean }>`
 `;
 
 const ProfileImg = styled.div<{ BgImg: string }>`
+  position: relative;
   width: 150px;
   height: 150px;
   border-radius: 75px;
@@ -42,6 +43,25 @@ const ProfileImg = styled.div<{ BgImg: string }>`
   margin-inline: auto;
   background-image: url(${(props) => props.BgImg});
   background-size: cover;
+`;
+
+const AddProfileImgBtn = styled.label`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  cursor: pointer;
+`;
+
+const ProfileImgBG = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  background-color: rgba(0, 0, 0, 0.55);
 `;
 
 const Nickname = styled.input.attrs((props) => ({
@@ -59,6 +79,13 @@ const Nickname = styled.input.attrs((props) => ({
   border-bottom: ${(props) => (props.disabled ? "none" : "3px solid #3A3A3A")};
 `;
 
+const ErrorMsg = styled.p`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 32px;
+  color: var(--red-color);
+`;
+
 const InfoDetail = styled.table`
   position: absolute;
   bottom: 50px;
@@ -73,15 +100,15 @@ const InfoDetail = styled.table`
     vertical-align: middle;
   }
 
-  & > tr:nth-child(2) {
+  & tr:nth-child(2) {
     font-size: 12px;
     line-height: 28px;
   }
-  & > tr:nth-child(3) {
+  & tr:nth-child(3) {
     font-size: 32px;
     line-height: 68px;
 
-    & > td > span {
+    & td > span {
       font-size: 16px;
       line-height: 20px;
     }
@@ -93,6 +120,9 @@ export {
   SettingBtn,
   EditProfileBtn,
   ProfileImg,
+  ProfileImgBG,
+  AddProfileImgBtn,
   Nickname,
+  ErrorMsg,
   InfoDetail,
 };
