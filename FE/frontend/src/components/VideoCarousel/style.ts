@@ -3,6 +3,7 @@ import styled from "styled-components";
 const CarouselContainer = styled.div<{ titleAlign?: string }>`
   padding: 3em 1em;
   width: 90%;
+  max-width: 1330px;
   margin: 0 auto;
   h2 {
     text-align: ${(props) => props.titleAlign || ""};
