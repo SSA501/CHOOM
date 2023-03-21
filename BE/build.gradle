@@ -54,6 +54,9 @@ dependencies {
 	implementation 'com.google.guava:guava:29.0-jre'
 	annotationProcessor 'com.google.guava:guava:29.0-jre'
 
+	// gson
+	implementation'com.google.code.gson:gson:2.8.7'
+
 	// Jackson 2 Extensions to The Google APIs Client Library For Java » 1.20.0
 	implementation group: 'com.google.api-client', name: 'google-api-client-jackson2', version: '1.20.0'
 
