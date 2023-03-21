@@ -1,6 +1,13 @@
 package com.choom.domain.mydance.service;
 
 import com.choom.domain.mydance.dto.MyDanceAddRequestDto;
+import com.choom.domain.mydance.dto.MyDanceAddResponseDto;
+import com.choom.domain.mydance.entity.MyDance;
+import com.choom.domain.mydance.entity.MyDanceRepository;
+import com.choom.domain.originaldance.entity.OriginalDance;
+import com.choom.domain.originaldance.entity.OriginalDanceRepository;
+import com.choom.domain.user.entity.User;
+import com.choom.domain.user.service.UserService;
 import com.choom.global.service.FileService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -8,22 +15,28 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class MyDanceService {
 
+    private final UserService userService;
+
+    //    private final OriginalDanceService originalDanceService;
+    private final OriginalDanceRepository originalDanceRepository;
+
     private final FileService fileService;
 
-    public void addMyDance(MyDanceAddRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
+    private final MyDanceRepository myDanceRepository;
+
+    public MyDanceAddResponseDto addMyDance(MyDanceAddRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
@@ -31,12 +44,34 @@ public class MyDanceService {
         String jsonPath = fileService.fileUpload("mycoordinate", jsonFile);
 
         // 일치율 계산
-        String matchRate = calculateMatchRate(1L, jsonPath);
-        log.info(matchRate);
+        HashMap<String, Object> result = calculate(1L, jsonPath);
+        log.info(String.valueOf(result));
+
+        // MY_DANCE insert
+        // user, originalDance 더미데이터
+        User user = userService.findUserById(1L).get();
+        OriginalDance originalDance = originalDanceRepository.findById(1L).get();
+        MyDance myDance = MyDance.builder()
+                .score((int) result.get("score"))
+                .matchRate((String) result.get("matchRate"))
+                .videoPath(videoPath)
+                .videoLength(myDanceAddRequestDto.getVideoLength())
+                .title(myDanceAddRequestDto.getTitle())
+                .user(user)
+                .originalDance(originalDance)
+                .build();
+        MyDance insertResult = myDanceRepository.save(myDance);
+
+        return MyDanceAddResponseDto.builder()
+                .myDance(insertResult)
+                .build();
+
     }
 
-    private String calculateMatchRate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
+    private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
+        HashMap<String, Object> result = new HashMap<>();
         ArrayList<Double> matchRates = new ArrayList<Double>();
+        double similaritySum = 0.0;
 
         /*
         coordinate에서 result를 가져오는 code
@@ -62,6 +97,7 @@ public class MyDanceService {
 
                 double similarity = calculate(originalKeypoints, myKeypoints);
 
+                similaritySum += similarity;
                 matchRates.add(similarity);
 
             }
@@ -72,7 +108,9 @@ public class MyDanceService {
         File file = new File(myDanceCoordinatePath);
         file.delete();
 
-        return matchRates.toString();
+        result.put("matchRate", matchRates.toString());
+        result.put("score", (int) similaritySum / myResult.size());
+        return result;
     }
 
     private double calculate(JsonArray originalKeypoints, JsonArray myKeypoints) {

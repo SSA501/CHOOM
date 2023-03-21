@@ -3,9 +3,7 @@ package com.choom.domain.mydance.entity;
 import com.choom.global.model.BaseTimeEntity;
 import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -52,4 +50,16 @@ public class MyDance extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORIGINALDANCE_ID")
     private OriginalDance originalDance;
+
+    @Builder
+    public MyDance(Long id, int score, String matchRate, String videoPath, double videoLength, String title, User user, OriginalDance originalDance) {
+        this.id = id;
+        this.score = score;
+        this.matchRate = matchRate;
+        this.videoPath = videoPath;
+        this.videoLength = videoLength;
+        this.title = title;
+        this.user = user;
+        this.originalDance = originalDance;
+    }
 }
