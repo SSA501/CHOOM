@@ -1,12 +1,17 @@
 package com.choom.domain.mydance.service;
 
+import com.choom.domain.mydance.dto.MyDanceAddRequestDto;
+import com.choom.global.service.FileService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,9 +19,24 @@ import java.util.Set;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MyDanceService {
 
-    public String calculateSimilarity(Long originalDanceId, String myDanceCoordinate) throws ParseException {
+    private final FileService fileService;
+
+    public void addMyDance(MyDanceAddRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException, ParseException {
+        // 내 챌린지 영상 업로드
+        String videoPath = fileService.fileUpload("mydance", videoFile);
+
+        // 내 챌린지 좌표 업로드
+        String jsonPath = fileService.fileUpload("mycoordinate", jsonFile);
+
+        // 일치율 계산
+        String matchRate = calculateMatchRate(1L, jsonPath);
+        log.info(matchRate);
+    }
+
+    private String calculateMatchRate(Long originalDanceId, String myDanceCoordinatePath) throws ParseException, IOException {
         ArrayList<Double> matchRates = new ArrayList<Double>();
 
         /*
@@ -25,28 +45,21 @@ public class MyDanceService {
          */
 
         // 현재는 그냥 더미 데이터로 테스트
-        String originalDanceCoordinate = "";
+        Reader originalDanceCoordinate = new FileReader("C:\\Users\\SSAFY\\Downloads\\jsonexample.json");
+        Reader myDanceCoordinate =  new FileReader(myDanceCoordinatePath);
 
-        // String -> Object
-        JSONParser parser = new JSONParser();
-        Object originalObj = parser.parse(originalDanceCoordinate);
-        Object myObj = parser.parse(myDanceCoordinate);
+        JsonParser parser = new JsonParser();
+        JsonArray originalResult = parser.parse(originalDanceCoordinate).getAsJsonArray();
+        JsonArray myResult = parser.parse(myDanceCoordinate).getAsJsonArray();
 
-        // Object -> JSONArray
-        JSONArray originalResult = (JSONArray) originalObj;
-        JSONArray myResult = (JSONArray) myObj;
-
-        // JSONArray에서 하나씩 처리
+        // JsonArray에서 하나씩 처리
         if (myResult.size() > 0) {
             // 내 챌린지 영상 frame 개수만큼 반복
             // 원본 영상보다 내 챌린지 영상이 긴 경우는 없다고 가정
             for (int i = 0; i < myResult.size(); i++) {
-                JSONObject originalFrameObj = (JSONObject) originalResult.get(i);
-                JSONObject myFrameObj = (JSONObject) myResult.get(i);
-
                 // keypoints 배열
-                JSONArray originalKeypoints = (JSONArray) originalFrameObj.get("keypoints");
-                JSONArray myKeypoints = (JSONArray) myFrameObj.get("keypoints");
+                JsonArray originalKeypoints = originalResult.get(i).getAsJsonObject().get("keypoints").getAsJsonArray();
+                JsonArray myKeypoints = myResult.get(i).getAsJsonObject().get("keypoints").getAsJsonArray();
 
                 double similarity = calculate(originalKeypoints, myKeypoints);
 
@@ -54,10 +67,16 @@ public class MyDanceService {
 
             }
         }
+
+        // mycoordinate 파일 삭제
+        myDanceCoordinate.close();
+        File file = new File(myDanceCoordinatePath);
+        file.delete();
+
         return matchRates.toString();
     }
 
-    private double calculate(JSONArray originalKeypoints, JSONArray myKeypoints) {
+    private double calculate(JsonArray originalKeypoints, JsonArray myKeypoints) {
         // 관절 벡터 배열
         int[][] joints = {
                 {8, 12},
@@ -89,25 +108,25 @@ public class MyDanceService {
         double accuracySum = 0;
 
         for (int[] joint : joints) {
-            JSONObject originalKeypoint1 = (JSONObject) originalKeypoints.get(joint[0]);
-            JSONObject originalKeypoint2 = (JSONObject) originalKeypoints.get(joint[1]);
+            JsonObject originalKeypoint1 = originalKeypoints.get(joint[0]).getAsJsonObject();
+            JsonObject originalKeypoint2 = originalKeypoints.get(joint[1]).getAsJsonObject();
 
-            JSONObject myKeypoint1 = (JSONObject) myKeypoints.get(joint[0]);
-            JSONObject myKeypoint2 = (JSONObject) myKeypoints.get(joint[1]);
+            JsonObject myKeypoint1 = myKeypoints.get(joint[0]).getAsJsonObject();
+            JsonObject myKeypoint2 = myKeypoints.get(joint[1]).getAsJsonObject();
 
             Map<String, Double> originalVector = Map.of(
-                    "x", (double) originalKeypoint1.get("x") - (double) originalKeypoint2.get("x"),
-                    "y", (double) originalKeypoint1.get("y") - (double) originalKeypoint2.get("y"),
-                    "z", (double) originalKeypoint1.get("z") - (double) originalKeypoint2.get("z")
+                    "x", originalKeypoint1.get("x").getAsDouble() - originalKeypoint2.get("x").getAsDouble(),
+                    "y", originalKeypoint1.get("y").getAsDouble() - originalKeypoint2.get("y").getAsDouble(),
+                    "z", originalKeypoint1.get("z").getAsDouble() - originalKeypoint2.get("z").getAsDouble()
             );
 
             Map<String, Double> myVector = Map.of(
-                    "x", (double) myKeypoint1.get("x") - (double) myKeypoint2.get("x"),
-                    "y", (double) myKeypoint1.get("y") - (double) myKeypoint2.get("y"),
-                    "z", (double) myKeypoint1.get("z") - (double) myKeypoint2.get("z")
+                    "x", myKeypoint1.get("x").getAsDouble() - myKeypoint2.get("x").getAsDouble(),
+                    "y", myKeypoint1.get("y").getAsDouble() - myKeypoint2.get("y").getAsDouble(),
+                    "z", myKeypoint1.get("z").getAsDouble() - myKeypoint2.get("z").getAsDouble()
             );
 
-            double accuracy = ((double) originalKeypoint1.get("score") + (double) originalKeypoint2.get("score")) / 2;
+            double accuracy = (originalKeypoint1.get("score").getAsDouble() + originalKeypoint2.get("score").getAsDouble()) / 2;
 
             accuracySum += accuracy;
 

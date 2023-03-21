@@ -11,5 +11,4 @@ public class MyDanceAddRequestDto {
     private Long originalDanceId;
     private double videoLength;
     private String title;
-    private String result;
 }
