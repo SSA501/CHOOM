@@ -9,5 +9,6 @@ const FooterContainer = styled.footer`
   text-align: center;
   color: #d9d9d9;
   font-size: 14px;
+  z-index: 99;
 `;
 export { FooterContainer };

@@ -6,8 +6,6 @@ import {
   LeftDiv,
   RightDiv,
   Header,
-  ProfileCard,
-  SettingBtn,
   ListHeader,
   ListHeaderBtn,
   DropBtn,
@@ -15,20 +13,16 @@ import {
   VideoItem,
 } from "./style";
 import { CgShapeTriangle } from "react-icons/cg";
-import { TbSettings } from "react-icons/tb";
 import Video from "../../components/Video/Video";
+import ProfileCard from "../../components/ProfileCard/ProfileCard";
 
 function ProfilePage() {
-  const [smallMenuOpen, setSmallMenuOpen] = useState(false);
-  const [videoList, setVideoList] = useState("History");
-  const [selectHistory, setSelectHistory] = useState(true);
-  const [selectedDropMenu, setSelectedDropMenu] = useState("높은 등급순");
-  const [dropMenuOpen, setDropMenuOpen] = useState(false);
-  const [normalModalOpen, setNormalModalOpen] = useState(false);
-
-  const showSmallMenu = () => {
-    setSmallMenuOpen(!smallMenuOpen);
-  };
+  const [videoList, setVideoList] = useState<string>("History");
+  const [selectHistory, setSelectHistory] = useState<boolean>(true);
+  const [selectedDropMenu, setSelectedDropMenu] =
+    useState<string>("높은 등급순");
+  const [dropMenuOpen, setDropMenuOpen] = useState<boolean>(false);
+  const [normalModalOpen, setNormalModalOpen] = useState<boolean>(false);
 
   const showDropMenu = () => {
     setDropMenuOpen(!dropMenuOpen);
@@ -43,12 +37,6 @@ function ProfilePage() {
     if (mode === "History") setSelectHistory(true);
     else setSelectHistory(false);
   };
-
-  const menuItemList = [
-    { name: "프로필 편집", handleClick: () => alert("프로필 편집!!") },
-    { name: "로그아웃", handleClick: () => alert("로그아웃!!") },
-    { name: "탈퇴하기", handleClick: () => showNormalModal() },
-  ];
 
   const dropMenuItemList = [
     {
@@ -169,18 +157,7 @@ function ProfilePage() {
     <ProfileDiv>
       <LeftDiv>
         <Header>My Profile</Header>
-        <ProfileCard>
-          <SettingBtn onClick={showSmallMenu}>
-            <TbSettings fontSize={"29px"} />
-          </SettingBtn>
-          {smallMenuOpen && (
-            <SmallMenu
-              itemList={menuItemList}
-              top="65px"
-              right="14px"
-            ></SmallMenu>
-          )}
-        </ProfileCard>
+        <ProfileCard showNormalModal={showNormalModal} />
       </LeftDiv>
 
       <RightDiv>
@@ -211,7 +188,7 @@ function ProfilePage() {
           {dropMenuOpen && (
             <SmallMenu
               itemList={dropMenuItemList}
-              top="72px"
+              top="62px"
               right="0px"
             ></SmallMenu>
           )}
