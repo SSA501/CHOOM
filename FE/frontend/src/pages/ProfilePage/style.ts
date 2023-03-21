@@ -21,7 +21,6 @@ const RightDiv = styled.div`
 `;
 
 const Header = styled.h1`
-  font-family: "Libre Baskerville";
   font-style: normal;
   font-weight: 700;
   font-size: 48px;
@@ -61,7 +60,6 @@ const ListHeader = styled.div`
 const ListHeaderBtn = styled.button<{ selected: boolean }>`
   width: 150px;
   height: 70px;
-  font-family: "Libre Baskerville";
   font-style: normal;
   font-weight: 400;
   font-size: 32px;
