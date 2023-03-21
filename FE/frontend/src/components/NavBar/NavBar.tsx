@@ -12,7 +12,7 @@ function NavBar() {
 
   const navigate = useNavigate();
   return (
-    <div>
+    <header>
       <NavContainer>
         <div>
           <Link to="/">
@@ -41,7 +41,7 @@ function NavBar() {
         </NavUl>
       </NavContainer>
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
-    </div>
+    </header>
   );
 }
 
