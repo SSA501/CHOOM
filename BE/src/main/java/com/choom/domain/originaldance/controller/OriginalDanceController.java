@@ -3,6 +3,7 @@ package com.choom.domain.originaldance.controller;
 import com.choom.domain.originaldance.dto.YoutubeResponseDto;
 import com.choom.domain.originaldance.service.OriginalDanceService;
 import com.choom.global.model.BaseResponse;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,8 @@ public class OriginalDanceController {
         return BaseResponse.success(youtubeResponseDtoList);
     }
 
-    @PostMapping()
-    public BaseResponse addCoordinate(@PathVariable Long originalDanceId, @RequestPart MultipartFile jsonFile){
+    @PostMapping("/{originalDanceId}")
+    public BaseResponse addCoordinate(@PathVariable Long originalDanceId, @RequestPart MultipartFile jsonFile) throws IOException {
         log.info("originalDanceId : "+originalDanceId);
         log.info("jsonFile : "+jsonFile);
         originalDanceService.addCoordinate(originalDanceId,jsonFile);

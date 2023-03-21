@@ -3,6 +3,7 @@ package com.choom.domain.originaldance.service;
 import com.choom.domain.originaldance.dto.YoutubeResponseDto;
 import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.originaldance.entity.OriginalDanceRepository;
+import com.choom.global.service.FileService;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -30,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class OriginalDanceService{
 
     private final OriginalDanceRepository originalDanceRepository;
-//    private final FileService fileService;
+    private final FileService fileService;
 
     /** Global instance of the HTTP transport. */
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -117,16 +118,14 @@ public class OriginalDanceService{
         return rvalue;
     }
 
-    public void addCoordinate(Long originalDanceId, MultipartFile jsonFile) {
+    public void addCoordinate(Long originalDanceId, MultipartFile jsonFile) throws IOException {
         // JSON파일 서버에 저장
-//        String jsonPath = fileService.fileUpload("video", jsonFile);
-        String jsonPath = null;
-
+        String jsonPath = fileService.fileUpload("coordinate", jsonFile);
+        log.info("변경 된 jsonPath : "+jsonPath);
         // DB에 파일 위치 UPDATE
         OriginalDance originalDance = originalDanceRepository.findById(originalDanceId).orElse(null);
         if(originalDance != null){
             originalDance.updateJsonPath(jsonPath);
         }
-
     }
 }
