@@ -3,7 +3,7 @@ package com.choom.domain.user.dto;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +13,14 @@ import java.net.URL;
 
 
 
+@Slf4j
 @Component
 public class KakaoOAuth2 {
-    private static String apiKey;
+    private static String KAKAO_APIKEY;
 
-    @Autowired
-    public KakaoOAuth2(@Value("${apikey.kakao}") String apiKey) {
-        this.apiKey = apiKey;
+    @Value("${apikey.kakao}")
+    public void setKey(String value){
+        KAKAO_APIKEY = value;
     }
 
     public KakaoUserInfo getUserInfo(String code) {
@@ -36,7 +37,7 @@ public class KakaoOAuth2 {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            System.out.println(apiKey);
+            log.info("KAKAO_APIKEY : "+KAKAO_APIKEY);
 
             //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod("POST");
@@ -46,7 +47,7 @@ public class KakaoOAuth2 {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=" + apiKey);
+            sb.append("&client_id=" + KAKAO_APIKEY);
             sb.append("&redirect_uri=http://localhost:8081/user/login/oauth2/code/kakao");
             sb.append("&code=" + code);
             bw.write(sb.toString());
@@ -104,7 +105,7 @@ public class KakaoOAuth2 {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body : " + result);
+            log.info("response body : " + result);
 
             //Gson 라이브러리로 JSON 파싱
             JsonParser jsonParser = new JsonParser();
@@ -116,7 +117,7 @@ public class KakaoOAuth2 {
             String nickname = properties.get("nickname").getAsString();
             String profileImage = properties.get("profile_image").getAsString();
 
-            System.out.println("identifier : " + identifier);
+            log.info("identifier : " + identifier);
 
             br.close();
 

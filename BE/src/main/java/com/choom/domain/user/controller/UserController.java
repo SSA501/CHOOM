@@ -1,6 +1,6 @@
 package com.choom.domain.user.controller;
 
-import com.choom.domain.user.service.UserServiceImpl;
+import com.choom.domain.user.service.UserService;
 import com.choom.global.common.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
-    @ResponseBody
     @GetMapping("/login/oauth2/code/kakao")
     public void kakaoLogin(@RequestParam String code) {
-        System.out.println(code);
-        userServiceImpl.kakaoLogin(code);
+        log.info(code);
+        userService.kakaoLogin(code);
     }
 
 //  test
