@@ -2,9 +2,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const NavContainer = styled.nav`
-  /* width: 100vw; */
-  min-height: 80px;
-  padding: 1em 2em 0.5em;
+  padding: 1.5em 2em 1em;
   border-top: 0.8em solid black;
   display: flex;
   flex-direction: row;
@@ -12,31 +10,33 @@ const NavContainer = styled.nav`
   align-items: center;
 `;
 
+const NavUl = styled.ul`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1.8em;
+`;
+
 const NavLi = styled.li`
   display: inline-block;
   cursor: pointer;
   font-weight: 600;
-  position: relative;
-  margin-right: 2em;
 `;
 
-const NavBtnLink = styled(NavLink)`
-  & div {
+const NavBtnLink = styled(NavLink)<{ challenge?: boolean }>`
+  padding: 1em 0.5em;
+  /* & div {
     display: none;
+  } */
+  &.active {
+    box-shadow: ${(props) =>
+      props.challenge
+        ? "inset 0 -5px 0 0 var(--blue-color)"
+        : "inset 0 -5px 0 0 var(--orange-color)"};
   }
-  &.active div {
+  /* &.active div {
     display: block;
-  }
+  } */
 `;
 
-const ActiveBar = styled.div<{ challenge?: boolean }>`
-  position: absolute;
-  width: 120%;
-  height: 0.3em;
-  background-color: ${(props) =>
-    props.challenge ? "var(--blue-color)" : "var(--orange-color)"};
-  bottom: -100%;
-  right: calc(50% - 1.6em);
-`;
-
-export { NavContainer, NavLi, NavBtnLink, ActiveBar };
+export { NavContainer, NavUl, NavLi, NavBtnLink };

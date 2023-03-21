@@ -26,7 +26,6 @@ const GlobalStyle = createGlobalStyle`
   }
   
   html, body {
-    color: var(--default-font-color);
     width: 100%;
     height: 100%;
     font-family: 'Pretendard-Regular', -apple-system, Helvetica Neue, sans-serif;
