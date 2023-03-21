@@ -12,7 +12,7 @@ import {
   DanceVideoContainer,
   CamContainer,
   CanvasContainer,
-  StartBtn,
+  CircleBtn,
 } from "./style";
 
 interface Kpt {
@@ -30,26 +30,31 @@ const pallete = {
   green: "rgba(0,255,0,0.5)",
 };
 
-function DanceCam(props: { poseList: Pose[] }) {
+function DanceCam(props: {
+  poseList: Pose[];
+  danceVideoRef: React.MutableRefObject<any>;
+}) {
   const video = useRef<HTMLVideoElement>(null);
 
   let camera: Camera, detector: any;
   useEffect(() => {
     init();
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      console.log(devices);
-    });
   });
 
   const init = async () => {
     camera = await Camera.setupCamera(STATE.camera);
     detector = await createDetector();
+    await detector.estimatePoses(camera.video, {
+      enableSmoothing: true,
+    });
   };
 
   let countFrame: number;
 
   const handleStart = (): void => {
     countFrame = 0;
+    camera.mediaRecorder?.start();
+    props.danceVideoRef.current.playVideo();
     renderPrediction();
     if (video.current) {
       video.current.style.visibility = "hidden";
@@ -65,6 +70,7 @@ function DanceCam(props: { poseList: Pose[] }) {
 
     if (countFrame < props.poseList.length)
       requestAnimationFrame(renderPrediction);
+    else camera.mediaRecorder?.stop();
   }
 
   async function renderResult(countFrame: number): Promise<void> {
@@ -76,11 +82,11 @@ function DanceCam(props: { poseList: Pose[] }) {
       });
     }
 
-    let poseList: any;
+    let estimatePoseList: any;
 
     if (detector != null) {
       try {
-        poseList = await detector.estimateposes(camera.video, {
+        estimatePoseList = await detector.estimatePoses(camera.video, {
           enableSmoothing: true,
         });
       } catch (error) {
@@ -92,14 +98,13 @@ function DanceCam(props: { poseList: Pose[] }) {
 
     camera.drawCtx();
 
-    if (poseList && poseList.length > 0) {
-      camera.drawResults(poseList, pallete.red);
+    if (estimatePoseList && estimatePoseList.length > 0) {
+      camera.drawResults(estimatePoseList, pallete.red);
 
       const videoPose = [props.poseList[countFrame]];
-
       if (videoPose[0].keypoints !== undefined) {
         camera.drawResults(videoPose, pallete.green);
-        const score = getSmularity(videoPose, poseList);
+        const score = getSmularity(videoPose, estimatePoseList);
         camera.drawScore(score);
       }
     }
@@ -172,7 +177,12 @@ function DanceCam(props: { poseList: Pose[] }) {
     <DanceVideoContainer>
       <CanvasContainer id="camOutput"></CanvasContainer>
       <CamContainer id="cam" playsInline ref={video}></CamContainer>
-      <StartBtn onClick={handleStart}>시작</StartBtn>
+      <CircleBtn onClick={handleStart} left="60px">
+        시작
+      </CircleBtn>
+      <CircleBtn onClick={handleStart} left="-60px">
+        시작
+      </CircleBtn>
     </DanceVideoContainer>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
 import { DancePageContainer, TitleContainer } from "./style";
@@ -15,12 +15,13 @@ function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>(
     JSON.parse(localStorage.getItem("poseList") || "[]")
   );
+  const danceVideoRef = useRef<any>();
 
   return (
     <DancePageContainer>
       <TitleContainer>Hype Boy - New Jeans</TitleContainer>
-      <DanceVideo setPoseList={setPoseList} />
-      <DanceCam poseList={poseList} />
+      <DanceVideo setPoseList={setPoseList} ref={danceVideoRef} />
+      <DanceCam poseList={poseList} danceVideoRef={danceVideoRef} />
     </DancePageContainer>
   );
 }
