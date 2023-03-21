@@ -2,7 +2,6 @@ package com.choom.domain.originaldance.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
 import com.choom.global.common.BaseTimeEntity;
-import com.choom.domain.coordinate.entity.Coordinate;
 import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,6 +36,9 @@ public class OriginalDance extends BaseTimeEntity {
     private String videoPath;
 
     @Column(length = 2083, unique = true)
+    private String jsonPath;
+
+    @Column(length = 2083, unique = true)
     private String thumbnailPath;
 
     @NotNull
@@ -48,10 +50,6 @@ public class OriginalDance extends BaseTimeEntity {
     @Column
     @ColumnDefault("0")
     private int status;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COORDINATE_ID", unique = true)
-    private Coordinate coordinate;
 
     @OneToMany(mappedBy = "originalDance", cascade = CascadeType.ALL)
     private List<Bookmark> bookmarkList = new ArrayList<>();

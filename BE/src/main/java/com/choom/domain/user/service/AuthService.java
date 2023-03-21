@@ -1,4 +1,4 @@
 package com.choom.domain.user.service;
 
-public interface AuthService {
+public class AuthService {
 }
