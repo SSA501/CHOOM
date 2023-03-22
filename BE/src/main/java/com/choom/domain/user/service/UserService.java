@@ -21,6 +21,10 @@ public class UserService {
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
     private final UserRepository userRepository;
 
+    public Optional<User> findUserByIdentifier(String identifier) {
+        return userRepository.findByIdentifier(identifier);
+    }
+
     public Token kakaoLogin(String code) {
         KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
