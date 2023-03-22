@@ -67,9 +67,7 @@ public class OriginalDanceService{
             // 1. 유튜브 검색 결과
             if (youtube != null) {
                 YouTube.Search.List search = youtube.search().list("snippet");
-
-                String apiKey = YOUTUBE_APIKEY;
-                search.setKey(apiKey);
+                search.setKey(YOUTUBE_APIKEY);
                 search.setQ(keyword);
                 search.setType("video");
                 search.setVideoDuration("short");
@@ -82,7 +80,7 @@ public class OriginalDanceService{
                 if (searchResultList != null) {
                     for (SearchResult video : searchResultList) {
                         // 비동기로 검색 -> 검색 속도 향상
-                        SearchResponseDto searchResponseDto = getVideoDetail(apiKey, video);
+                        SearchResponseDto searchResponseDto = getVideoDetail(video);
 
                         if (searchResponseDto != null)
                             searchResponseDtoList.add(searchResponseDto);
@@ -112,9 +110,9 @@ public class OriginalDanceService{
     }
 
     @Async
-    SearchResponseDto getVideoDetail(String apiKey, SearchResult video)throws IOException {
+    SearchResponseDto getVideoDetail(SearchResult video)throws IOException {
         YouTube.Videos.List videoDetails =  youtube.videos().list("contentDetails");
-        videoDetails.setKey(apiKey);
+        videoDetails.setKey(YOUTUBE_APIKEY);
         videoDetails.setId(video.getId().getVideoId());
         videoDetails.setPart("statistics,snippet,contentDetails");
         videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
