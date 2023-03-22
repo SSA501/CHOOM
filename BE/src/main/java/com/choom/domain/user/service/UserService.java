@@ -3,6 +3,7 @@ package com.choom.domain.user.service;
 import com.choom.domain.user.dto.KakaoOAuth2Dto;
 import com.choom.domain.user.dto.KakaoUserInfoDto;
 import com.choom.domain.user.entity.SocialType;
+import com.choom.domain.user.entity.Token;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.util.JwtTokenUtil;
@@ -20,17 +21,7 @@ public class UserService {
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
     private final UserRepository userRepository;
 
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public Optional<User> findUserByIdentifier(String identifier) {
-
-        return userRepository.findByIdentifier(identifier);
-    }
-
-    public void kakaoLogin(String code) {
-        log.info(code);
+    public Token kakaoLogin(String code) {
         KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
         String nickname = userInfo.getNickname();
@@ -51,8 +42,13 @@ public class UserService {
         String accessToken = JwtTokenUtil.getAccessToken(identifier);
         String refreshToken = JwtTokenUtil.getRefreshToken(identifier);
 
-        log.info(accessToken);
-        log.info(refreshToken);
+        // TODO: refreshToken Redis에 저장
 
+        Token token = Token.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+        return token;
     }
 }
