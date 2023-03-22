@@ -7,6 +7,7 @@ import com.choom.domain.mydance.entity.MyDanceRepository;
 import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.originaldance.entity.OriginalDanceRepository;
 import com.choom.domain.user.entity.User;
+import com.choom.domain.user.entity.UserRepository;
 import com.choom.domain.user.service.UserService;
 import com.choom.global.service.FileService;
 import com.google.gson.JsonArray;
@@ -31,6 +32,7 @@ public class MyDanceService {
 
     private final UserService userService;
     private final FileService fileService;
+    private final UserRepository userRepository;
     private final MyDanceRepository myDanceRepository;
     private final OriginalDanceRepository originalDanceRepository;
 
@@ -47,7 +49,7 @@ public class MyDanceService {
 
         // MY_DANCE insert
         // user, originalDance 더미데이터
-        User user = userService.findUserById(1L).get();
+        User user = userRepository.findById(1L).get();
         OriginalDance originalDance = originalDanceRepository.findById(1L).get();
         MyDance myDance = MyDance.builder()
                 .score((int) result.get("score"))
