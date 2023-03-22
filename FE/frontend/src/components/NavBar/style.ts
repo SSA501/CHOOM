@@ -31,8 +31,8 @@ const NavBtnLink = styled(NavLink)<{ challenge?: boolean }>`
   &.active {
     box-shadow: ${(props) =>
       props.challenge
-        ? "inset 0 -5px 0 0 var(--blue-color)"
-        : "inset 0 -5px 0 0 var(--orange-color)"};
+        ? "inset 0 -5px 0 0 var(--purple-color)"
+        : "inset 0 -5px 0 0 var(--green-color)"};
   }
   /* &.active div {
     display: block;

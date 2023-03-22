@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ReactPlayerStyled, ThumbnailImg, VideoContainer } from "./style";
+import { VideoContainer } from "./style";
 
 interface VideoProps {
   id: number;
@@ -14,19 +14,14 @@ interface VideoProps {
  * 우리 서버에서 주는 url로는 ReactPlayer 안될수도 있음
  */
 
-function Video({
-  id,
-  thumbnailSrc,
-  videoSrc,
-  playbackRate,
-  volume,
-  frameColor,
-}: VideoProps) {
+function Video({ id, thumbnailSrc, videoSrc, frameColor }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
-  const initial = 300;
-  const borderSize = 14;
-  const width = frameColor ? initial + borderSize * 2 : initial;
-  const height = frameColor ? initial * 1.7 + borderSize * 2 : initial * 1.7;
+  // const initial = 300;
+  // const borderSize = 14;
+  // const width = frameColor ? initial + borderSize * 2 : initial;
+  // const height = frameColor ? initial * 1.7 + borderSize * 2 : initial * 1.7;
+  const width = 450;
+  const height = 800;
   const ratio = (height / width) * 100;
 
   return (
@@ -38,27 +33,20 @@ function Video({
       ratio={ratio}
     >
       {playingVideoId === id ? (
-        <ReactPlayerStyled
-          url={videoSrc}
-          playing={playingVideoId === id}
-          controls={true}
-          muted={true}
-          playbackRate={playbackRate}
-          volume={volume}
-          loop={true}
-          width="100%"
-          height="100%"
-          key={id}
-          tabIndex={-1}
-        />
+        // <ReactPlayerStyled
+        //   url={videoSrc}
+        //   playing={playingVideoId === id}
+        //   controls={true}
+        //   muted={true}
+        //   loop={true}
+        //   width="100%"
+        //   height="100%"
+        //   key={id}
+        //   tabIndex={-1}
+        // />
+        <iframe src={videoSrc} title={videoSrc} width="450px" height="800px" />
       ) : (
-        // <iframe src={videoSrc} title={videoSrc} />
-        <ThumbnailImg
-          src={thumbnailSrc}
-          alt="썸네일이미지"
-          width="100%"
-          height="100%"
-        />
+        <img src={thumbnailSrc} alt="썸네일이미지" width="100%" height="100%" />
       )}
     </VideoContainer>
   );
