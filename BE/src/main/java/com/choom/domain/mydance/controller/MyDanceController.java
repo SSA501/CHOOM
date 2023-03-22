@@ -24,12 +24,12 @@ public class MyDanceController {
     private final MyDanceService myDanceService;
 
     @PostMapping()
-    public BaseResponse addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
+    public ResponseEntity<BaseResponse> addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
                                    @RequestPart MultipartFile videoFile,
                                    @RequestPart MultipartFile jsonFile) throws IOException {
         log.info("MyDanceAddRequestDto : " + myDanceAddRequestDto);
         AddMyDanceResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile, jsonFile);
-        return BaseResponse.success(myDanceAddResponseDto);
+        return new ResponseEntity<>(BaseResponse.success(myDanceAddResponseDto), HttpStatus.OK);
     }
 
     @GetMapping("/{myDanceId}/download")
@@ -40,9 +40,9 @@ public class MyDanceController {
     }
 
     @DeleteMapping("/{myDanceId}")
-    public BaseResponse removeMyDance(@PathVariable Long myDanceId) {
+    public ResponseEntity<BaseResponse> removeMyDance(@PathVariable Long myDanceId) {
         log.info("myDanceId : " + myDanceId);
         myDanceService.removeMyDance(myDanceId);
-        return BaseResponse.success(null);
+        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 }
