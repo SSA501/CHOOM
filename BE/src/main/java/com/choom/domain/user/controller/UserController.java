@@ -1,7 +1,7 @@
 package com.choom.domain.user.controller;
 
 import com.choom.domain.user.dto.UserLoginResponseDto;
-import com.choom.domain.user.entity.Token;
+import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.service.UserService;
 import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,9 @@ public class UserController {
     @GetMapping("/login/kakao")
     public ResponseEntity<BaseResponse> kakaoLogin(@RequestParam String code) {
         log.info(code);
-        Token token = userService.kakaoLogin(code);
+        TokenDto token = userService.kakaoLogin(code);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "refreshToken="+token.getRefreshToken());
+        headers.add("Set-Cookie", "refreshToken="+ token.getRefreshToken());
         UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto(token.getAccessToken());
         return new ResponseEntity<>(BaseResponse.success(userLoginResponseDto), headers, HttpStatus.OK);
     }
