@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,7 +31,7 @@ public class OriginalDanceController {
         return BaseResponse.success(searchResponseDtoList);
     }
 
-    @PostMapping("/{originalDanceId}")
+    @PutMapping("/{originalDanceId}")
     public BaseResponse addCoordinate(@PathVariable Long originalDanceId, @RequestPart MultipartFile jsonFile) throws IOException {
         log.info("originalDanceId : "+originalDanceId);
         log.info("jsonFile : "+jsonFile);
