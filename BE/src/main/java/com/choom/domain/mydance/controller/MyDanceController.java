@@ -25,10 +25,9 @@ public class MyDanceController {
 
     @PostMapping()
     public ResponseEntity<BaseResponse> addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
-                                   @RequestPart MultipartFile videoFile,
-                                   @RequestPart MultipartFile jsonFile) throws IOException {
+                                   @RequestPart MultipartFile videoFile) throws IOException {
         log.info("MyDanceAddRequestDto : " + myDanceAddRequestDto);
-        AddMyDanceResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile, jsonFile);
+        AddMyDanceResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile);
         return new ResponseEntity<>(BaseResponse.success(myDanceAddResponseDto), HttpStatus.OK);
     }
 

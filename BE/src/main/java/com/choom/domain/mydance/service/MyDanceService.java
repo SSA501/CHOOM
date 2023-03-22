@@ -34,28 +34,20 @@ public class MyDanceService {
     private final MyDanceRepository myDanceRepository;
     private final OriginalDanceRepository originalDanceRepository;
 
-    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
+    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
-        // 내 챌린지 좌표 업로드
-        String jsonPath = fileService.fileUpload("mycoordinate", jsonFile);
-
-        // 일치율 계산
-        HashMap<String, Object> result = calculate(1L, jsonPath);
-        log.info(String.valueOf(result));
-
         // MY_DANCE insert
-        // user, originalDance 더미데이터
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
-        OriginalDance originalDance = originalDanceRepository.findById(1L).get();
+        // user 더미데이터
+        User user = userRepository.findById(1L).get();
+        OriginalDance originalDance = originalDanceRepository.findById(myDanceAddRequestDto.getOriginalDanceId()).get();
         MyDance myDance = MyDance.builder()
-                .score((int) result.get("score"))
-                .matchRate((String) result.get("matchRate"))
-                .videoPath(videoPath)
+                .score(myDanceAddRequestDto.getScore())
+                .matchRate(myDanceAddRequestDto.getMatchRate())
                 .videoLength(myDanceAddRequestDto.getVideoLength())
                 .title(myDanceAddRequestDto.getTitle())
+                .videoPath(videoPath)
                 .user(user)
                 .originalDance(originalDance)
                 .build();
@@ -93,6 +85,8 @@ public class MyDanceService {
         myDanceRepository.deleteById(myDanceId);
     }
 
+
+    // 일치율 계산 부분 (front에서 하기로 해서 안 씀!)
     private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
         HashMap<String, Object> result = new HashMap<>();
         ArrayList<Double> matchRates = new ArrayList<Double>();
