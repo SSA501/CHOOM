@@ -1,6 +1,5 @@
 import React from "react";
 import { BannerContainer, BannerTextContainer } from "./style";
-import { ReactComponent as Dance } from "./dance.svg";
 
 interface BannerProps {
   bgColor: string;
