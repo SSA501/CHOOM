@@ -1,38 +1,53 @@
 import React, { useState } from "react";
 import { CgSearch } from "react-icons/cg";
-import { useNavigate } from "react-router-dom";
-import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
+import { createSearchParams, useNavigate } from "react-router-dom";
+import {
+  SearchBarContainer,
+  SearchCircle,
+  SearchContainer,
+  SearchIcon,
+  SearchInput,
+} from "./style";
 
 function SearchBar() {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (inputValue.length < 1) {
+      const trimmedValue = inputValue.trim();
+      if (trimmedValue.length < 1) {
         alert("검색어를 입력하세요");
         return;
       }
 
       // search 실행
-      navigate(`/challenge/${inputValue}`);
+      navigate({
+        pathname: "challenge",
+        search: createSearchParams({
+          query: trimmedValue,
+        }).toString(),
+      });
     }
   };
 
   return (
-    <SearchBarContainer>
-      <SearchIcon>
-        <CgSearch size={"24px"} />
-      </SearchIcon>
-      <SearchInput
-        type="text"
-        value={inputValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-          setInputValue(e.target.value.trim())
-        }
-        onKeyDown={handleKeyDown}
-        placeholder="곡명 혹은 영상 링크를 검색하세요"
-      />
-    </SearchBarContainer>
+    <SearchContainer>
+      <SearchCircle>SEARCH</SearchCircle>
+      <SearchBarContainer>
+        <SearchIcon>
+          <CgSearch size={"24px"} />
+        </SearchIcon>
+        <SearchInput
+          type="text"
+          value={inputValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+            setInputValue(e.target.value)
+          }
+          onKeyDown={handleKeyDown}
+          placeholder="곡명 혹은 영상 링크를 검색하세요"
+        />
+      </SearchBarContainer>
+    </SearchContainer>
   );
 }
 

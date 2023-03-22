@@ -1,12 +1,22 @@
 import styled from "styled-components";
 
-const SearchBarContainer = styled.div`
-  position: absolute;
-  bottom: -1.5em;
-  z-index: 1;
+const SearchContainer = styled.div`
+  width: 40%;
+  margin: 0 auto;
+`;
+
+const SearchCircle = styled.div`
+  width: fit-content;
   background-color: black;
   color: white;
-  width: 90%;
+  border-radius: 50px;
+  padding: 1em 2em;
+  margin: 0 auto;
+`;
+
+const SearchBarContainer = styled.div`
+  border-bottom: 5px solid black;
+  color: black;
   margin: 0 auto;
   padding: 1em;
   display: flex;
@@ -20,10 +30,15 @@ const SearchIcon = styled.div`
 `;
 
 const SearchInput = styled.input<{ value: string }>`
-  color: white;
   font-size: 1.2rem;
   width: ${(props) => (props.value.length > 0 ? "calc(100% - 3em)" : null)};
   transition: 1s linear 0.1;
 `;
 
-export { SearchBarContainer, SearchIcon, SearchInput };
+export {
+  SearchContainer,
+  SearchBarContainer,
+  SearchCircle,
+  SearchIcon,
+  SearchInput,
+};
