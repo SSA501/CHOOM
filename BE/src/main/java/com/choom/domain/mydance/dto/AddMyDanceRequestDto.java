@@ -7,9 +7,8 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MyDanceAddRequestDto {
+public class AddMyDanceRequestDto {
     private Long originalDanceId;
     private double videoLength;
     private String title;
-    private String result;
 }

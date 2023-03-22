@@ -67,8 +67,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube
 	implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev222-1.25.0'
 
-	// JSON
-	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 tasks.named('test') {
