@@ -1,17 +1,10 @@
 package com.choom.domain.user.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class UserLoginResponseDto {
     private String accessToken;
-
-    @Builder
-    public UserLoginResponseDto(String accessToken) {
-        this.accessToken = accessToken;
-    }
 }
