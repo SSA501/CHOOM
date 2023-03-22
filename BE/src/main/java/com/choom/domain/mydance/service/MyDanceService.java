@@ -77,6 +77,21 @@ public class MyDanceService {
         return resource;
     }
 
+    public void removeMyDance(Long myDanceId) {
+        MyDance myDance = myDanceRepository.findById(myDanceId).get();
+
+        // 내 챌린지 영상 삭제
+        if (fileService.fileDelete(myDance.getVideoPath())) {
+            log.info("영상 삭제 완료");
+        } else {
+            log.info("영상 삭제 실패");
+            return;
+        }
+
+        // MY_DANCE delete
+        myDanceRepository.deleteById(myDanceId);
+    }
+
     private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
         HashMap<String, Object> result = new HashMap<>();
         ArrayList<Double> matchRates = new ArrayList<Double>();
@@ -114,8 +129,7 @@ public class MyDanceService {
 
         // mycoordinate 파일 삭제
         myDanceCoordinate.close();
-        File file = new File(myDanceCoordinatePath);
-        file.delete();
+        fileService.fileDelete(myDanceCoordinatePath);
 
         result.put("matchRate", matchRates.toString());
         result.put("score", (int) similaritySum / myResult.size());

@@ -53,4 +53,9 @@ public class FileService {
 
         return resource;
     }
+
+    public boolean fileDelete(String path) {
+        File file = new File(path);
+        return file.delete();
+    }
 }

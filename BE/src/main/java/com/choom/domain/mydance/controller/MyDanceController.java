@@ -38,4 +38,11 @@ public class MyDanceController {
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<Resource>(myDanceService.downloadMyDance(myDanceId, headers), headers, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{myDanceId}")
+    public BaseResponse removeMyDance(@PathVariable Long myDanceId) {
+        log.info("myDanceId : " + myDanceId);
+        myDanceService.removeMyDance(myDanceId);
+        return BaseResponse.success(null);
+    }
 }
