@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   MdPlayCircleOutline,
   MdOutlineStopCircle,
@@ -21,6 +22,7 @@ import {
   CircleBtnLabel,
   ClickedCircleBtn,
 } from "./style";
+import { count } from "console";
 
 interface Kpt {
   x: number;
@@ -40,9 +42,11 @@ const pallete = {
 function DanceCam(props: {
   poseList: Pose[];
   danceVideoRef: React.MutableRefObject<any>;
+  setScoreList: (scoreList: number[]) => void;
+  setVideoUrl: (videoUrl: string) => void;
 }) {
   const video = useRef<HTMLVideoElement>(null);
-
+  const navigate = useNavigate();
   let camera: Camera, detector: any;
 
   const [isRecoding, setIsRecoding] = useState<Boolean>(false);
@@ -65,7 +69,7 @@ function DanceCam(props: {
   const handleStartClick = async () => {
     setIsRecoding(true);
     countFrame = 0;
-    camera.mediaRecorder?.start();
+    camera.start();
     props.danceVideoRef.current.playVideo();
     renderPrediction();
     if (video.current) {
@@ -91,9 +95,19 @@ function DanceCam(props: {
 
     if (countFrame < props.poseList.length)
       requestAnimationFrame(renderPrediction);
-    else camera.mediaRecorder?.stop();
+    else {
+      camera.stop();
+
+      setTimeout(() => {
+        props.setScoreList(scoreList);
+        props.setVideoUrl(camera.url);
+        navigate("/dance/result");
+      }, 1000);
+    }
   }
 
+  let scoreTemp = 0;
+  let scoreList: number[] = [];
   async function renderResult(countFrame: number): Promise<void> {
     if (camera.video.readyState < 2) {
       await new Promise<void>((resolve) => {
@@ -120,6 +134,7 @@ function DanceCam(props: {
     camera.drawCtx();
 
     const videoPose = [props.poseList[countFrame]];
+
     if (isGuide) camera.drawResults(videoPose, pallete.green);
 
     if (estimatePoseList && estimatePoseList.length > 0) {
@@ -127,7 +142,12 @@ function DanceCam(props: {
 
       if (videoPose[0].keypoints !== undefined) {
         const score = getSmularity(videoPose, estimatePoseList);
-        camera.drawScore(score);
+        scoreTemp += score;
+        if (countFrame % 10 === 9) {
+          scoreList.push(Math.round(scoreTemp / 10));
+          scoreTemp = 0;
+        }
+        if (countFrame > 9) camera.drawScore(scoreList[scoreList.length - 1]);
       }
     }
   }
@@ -187,7 +207,7 @@ function DanceCam(props: {
 
     let avg = sum / pose1ConfidenceSum;
     if (avg < 0) avg = 0;
-    return Math.round(avg * 100);
+    return avg * 100;
   };
 
   const l2_norm = (kpt: { x: number; y: number; z: number }) => {
@@ -209,7 +229,7 @@ function DanceCam(props: {
           <CircleBtn top="45%" onClick={handleGuideClick}>
             <AiOutlineEye />
           </CircleBtn>
-          <CircleBtnLabel top="54%">안보기</CircleBtnLabel>
+          <CircleBtnLabel top="54%">가이드</CircleBtnLabel>
         </div>
       ) : (
         <div>
@@ -217,7 +237,7 @@ function DanceCam(props: {
           <ClickedCircleBtn top="45%" onClick={handleGuideClick}>
             <AiOutlineEyeInvisible />
           </ClickedCircleBtn>
-          <CircleBtnLabel top="54%">보기</CircleBtnLabel>
+          <CircleBtnLabel top="54%">가이드</CircleBtnLabel>
         </div>
       )}
 
