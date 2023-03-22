@@ -2,13 +2,14 @@ package com.choom.domain.user.service;
 
 import com.choom.domain.user.dto.KakaoOAuth2Dto;
 import com.choom.domain.user.dto.KakaoUserInfoDto;
-import com.choom.domain.user.entity.SocialType;
 import com.choom.domain.user.dto.TokenDto;
+import com.choom.domain.user.entity.SocialType;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class UserService {
 
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
     private final UserRepository userRepository;
+    private final RedisService redisService;
 
     public Optional<User> findUserByIdentifier(String identifier) {
         return userRepository.findByIdentifier(identifier);
@@ -45,8 +47,7 @@ public class UserService {
 
         TokenDto token = JwtTokenUtil.getToken(identifier);
 
-        // TODO: refreshToken Redis에 저장
-//        String refreshToken = token.getRefreshToken();
+        redisService.saveToken(user.getId(), token.getRefreshToken());
 
         return token;
     }
