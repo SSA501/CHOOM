@@ -1,29 +1,41 @@
 package com.choom.domain.mydance.controller;
 
+import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
+import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
 import com.choom.domain.mydance.service.MyDanceService;
-import com.choom.global.common.BaseResponse;
+import com.choom.global.model.BaseResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/mychallenge")
+@RequestMapping("/mydance")
 @Slf4j
+@RequiredArgsConstructor
 public class MyDanceController {
 
-    @Autowired
-    MyDanceService myDanceService;
+    private final MyDanceService myDanceService;
 
     @PostMapping()
-    public BaseResponse myChallengeAdd() throws ParseException {
-        log.info("myChallengeAdd");
+    public BaseResponse addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
+                                   @RequestPart MultipartFile videoFile,
+                                   @RequestPart MultipartFile jsonFile) throws IOException {
+        log.info("MyDanceAddRequestDto : " + myDanceAddRequestDto);
+        AddMyDanceResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile, jsonFile);
+        return BaseResponse.success(myDanceAddResponseDto);
+    }
 
-        // 현재 original dance 좌표값이 없기 때문에 더미 데이터로 테스트
-        String similarity = myDanceService.calculateSimilarity(1L,"테스트");
-
-        return BaseResponse.success(similarity);
+    @GetMapping("/{myDanceId}/download")
+    public ResponseEntity<Resource> downloadMyDance(@PathVariable Long myDanceId) throws IOException {
+        log.info("myDanceId : " + myDanceId);
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<Resource>(myDanceService.downloadMyDance(myDanceId, headers), headers, HttpStatus.OK);
     }
 }
