@@ -1,6 +1,6 @@
 package com.choom.domain.originaldance.controller;
 
-import com.choom.domain.originaldance.dto.YoutubeResponseDto;
+import com.choom.domain.originaldance.dto.SearchResponseDto;
 import com.choom.domain.originaldance.service.OriginalDanceService;
 import com.choom.global.model.BaseResponse;
 import java.io.IOException;
@@ -25,10 +25,10 @@ public class OriginalDanceController {
     private final OriginalDanceService originalDanceService;
 
     @GetMapping()
-    public BaseResponse searchChallenge(@RequestParam(name = "q") String keyword, @RequestParam int page){
-        log.info("keyword : "+keyword+" page : "+page);
-        List<YoutubeResponseDto> youtubeResponseDtoList = originalDanceService.searchChallenge(keyword,page);
-        return BaseResponse.success(youtubeResponseDtoList);
+    public BaseResponse searchChallenge(@RequestParam(name = "q") String keyword){
+        log.info("keyword : "+keyword);
+        List<SearchResponseDto> searchResponseDtoList = originalDanceService.searchChallenge(keyword);
+        return BaseResponse.success(searchResponseDtoList);
     }
 
     @PostMapping("/{originalDanceId}")
