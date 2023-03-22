@@ -8,6 +8,7 @@ import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.originaldance.entity.OriginalDanceRepository;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
+import com.choom.global.exception.file.FileDeleteException;
 import com.choom.global.service.FileService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -74,11 +75,8 @@ public class MyDanceService {
         MyDance myDance = myDanceRepository.findById(myDanceId).get();
 
         // 내 챌린지 영상 삭제
-        if (fileService.fileDelete(myDance.getVideoPath())) {
-            log.info("영상 삭제 완료");
-        } else {
-            log.info("영상 삭제 실패");
-            return;
+        if (!fileService.fileDelete(myDance.getVideoPath())) {
+            throw new FileDeleteException("파일 삭제에 실패했습니다");
         }
 
         // MY_DANCE delete
