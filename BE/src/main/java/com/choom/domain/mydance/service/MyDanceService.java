@@ -14,6 +14,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +68,17 @@ public class MyDanceService {
                 .myDance(insertResult)
                 .build();
 
+    }
+
+    public Resource downloadMyDance(Long myDanceId, HttpHeaders headers) throws IOException {
+        // 내 챌린지 영상 경로 찾기
+        String videoPath = myDanceRepository.findById(myDanceId).get().getVideoPath();
+        log.info(videoPath);
+
+        // file -> Resource
+        Resource resource = fileService.fileDownload(videoPath, headers);
+
+        return resource;
     }
 
     private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {

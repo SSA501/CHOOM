@@ -1,14 +1,20 @@
 package com.choom.global.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Files;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class FileService {
     public String fileUpload(String type, MultipartFile image) throws IOException {
         //서버에 파일 저장
@@ -31,5 +37,20 @@ public class FileService {
 
         image.transferTo(file);
         return path + name;
+    }
+
+    public Resource fileDownload(String path, HttpHeaders headers) throws IOException {
+        Resource resource = new FileSystemResource(path);
+
+        // 원본 파일에서 uuid 자르기
+        String filename = resource.getFilename().substring(36);
+
+        String downloadName = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        String contentType = Files.probeContentType(resource.getFile().toPath());
+
+        headers.add("Content-type", contentType);
+        headers.add("Content-Disposition", "attachment; filename=" + downloadName);
+
+        return resource;
     }
 }
