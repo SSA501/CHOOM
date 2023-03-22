@@ -31,7 +31,7 @@ public class UserService {
         String nickname = userInfo.getNickname();
         String profileImage = userInfo.getProfileImage();
 
-        User user = userRepository.findByIdentifier(identifier).orElse(null);
+        User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
 
         if (user == null) {
             user = User.builder()
