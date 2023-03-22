@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyDanceAddResponseDto {
+public class AddMyDanceResponseDto {
     private Long id;
     private Long originalDanceId;
     private int score;
@@ -16,7 +16,7 @@ public class MyDanceAddResponseDto {
     private String title;
 
     @Builder
-    public MyDanceAddResponseDto(MyDance myDance) {
+    public AddMyDanceResponseDto(MyDance myDance) {
         this.id = myDance.getId();
         this.originalDanceId = myDance.getOriginalDance().getId();
         this.score = myDance.getScore();

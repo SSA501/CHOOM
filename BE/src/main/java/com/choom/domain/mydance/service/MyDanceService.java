@@ -1,7 +1,7 @@
 package com.choom.domain.mydance.service;
 
-import com.choom.domain.mydance.dto.MyDanceAddRequestDto;
-import com.choom.domain.mydance.dto.MyDanceAddResponseDto;
+import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
+import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
 import com.choom.domain.originaldance.entity.OriginalDance;
@@ -30,15 +30,11 @@ import java.util.*;
 public class MyDanceService {
 
     private final UserService userService;
-
-    //    private final OriginalDanceService originalDanceService;
+    private final FileService fileService;
+    private final MyDanceRepository myDanceRepository;
     private final OriginalDanceRepository originalDanceRepository;
 
-    private final FileService fileService;
-
-    private final MyDanceRepository myDanceRepository;
-
-    public MyDanceAddResponseDto addMyDance(MyDanceAddRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
+    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
@@ -64,7 +60,7 @@ public class MyDanceService {
                 .build();
         MyDance insertResult = myDanceRepository.save(myDance);
 
-        return MyDanceAddResponseDto.builder()
+        return AddMyDanceResponseDto.builder()
                 .myDance(insertResult)
                 .build();
 

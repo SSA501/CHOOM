@@ -1,7 +1,7 @@
 package com.choom.domain.mydance.controller;
 
-import com.choom.domain.mydance.dto.MyDanceAddRequestDto;
-import com.choom.domain.mydance.dto.MyDanceAddResponseDto;
+import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
+import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
 import com.choom.domain.mydance.service.MyDanceService;
 import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,11 @@ public class MyDanceController {
     private final MyDanceService myDanceService;
 
     @PostMapping()
-    public BaseResponse addMyDance(@RequestPart MyDanceAddRequestDto myDanceAddRequestDto,
+    public BaseResponse addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
                                    @RequestPart MultipartFile videoFile,
                                    @RequestPart MultipartFile jsonFile) throws IOException {
         log.info("MyDanceAddRequestDto : " + myDanceAddRequestDto);
-        MyDanceAddResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile, jsonFile);
+        AddMyDanceResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile, jsonFile);
         return BaseResponse.success(myDanceAddResponseDto);
     }
 
