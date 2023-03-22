@@ -1,6 +1,6 @@
 import React from "react";
 import MainBanner from "../../components/MainBanner/MainBanner";
-import RecentChallenge from "../../components/RecentChallenge/RecentChallenge";
+import ScrollingText from "../../components/ScrollingText/ScrollingText";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { pickRandomColor } from "../../utils/utils";
@@ -57,20 +57,18 @@ function MainPage() {
     video.frameColor = pickRandomColor();
   }
 
-  const recentVideoData = popularVideoData; // 임시 데이터, api 완성되면 따로 받아올 부분
-
   return (
     <>
       <TopContainer>
         <MainBanner />
         <SearchBar />
       </TopContainer>
+      <ScrollingText />
       <VideoCarousel
         title={"요즘 인기있는 챌린지 🔥"}
         titleAlign={"center"}
         videoData={popularVideoData}
       />
-      <RecentChallenge videoData={recentVideoData} />
     </>
   );
 }
