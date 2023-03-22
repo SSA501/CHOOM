@@ -2,6 +2,7 @@ package com.choom.domain.mydance.service;
 
 import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
 import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
+import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
 import com.choom.domain.originaldance.entity.OriginalDance;
@@ -83,6 +84,12 @@ public class MyDanceService {
         myDanceRepository.deleteById(myDanceId);
     }
 
+    public FindMyDanceResponseDto findMyDance(Long myDanceId) {
+        MyDance myDance = myDanceRepository.findById(myDanceId).get();
+        return FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build();
+    }
 
     // 일치율 계산 부분 (front에서 하기로 해서 안 씀!)
     private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
