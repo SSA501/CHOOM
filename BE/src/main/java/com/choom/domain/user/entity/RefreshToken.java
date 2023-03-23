@@ -13,11 +13,11 @@ import org.springframework.data.redis.core.TimeToLive;
 @RedisHash(value = "refreshToken")
 public class RefreshToken {
     @TimeToLive
-    private static Integer expiratoin;
+    private static Integer expiration;
 
     @Value("${spring.jwt.expiration.rtk}")
     public void setExpiration(Integer value){
-        expiratoin = value;
+        expiration = value;
     }
 
     @Id
