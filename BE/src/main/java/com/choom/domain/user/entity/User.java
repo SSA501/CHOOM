@@ -1,7 +1,7 @@
 package com.choom.domain.user.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
-import com.choom.global.common.BaseTimeEntity;
+import com.choom.global.model.BaseTimeEntity;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.search.entity.Search;
 
@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,4 +50,13 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Search> searchList = new ArrayList<>();
+
+
+    @Builder
+    public User(String identifier, String nickname, String profileImage, SocialType socialType) {
+        this.identifier = identifier;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.socialType = socialType;
+    }
 }
