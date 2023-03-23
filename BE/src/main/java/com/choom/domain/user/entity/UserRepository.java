@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByIdentifier(String identifier);
+
+    Optional<User> findByIdentifierAndSocialType(String identifier, SocialType socialType);
 }

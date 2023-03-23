@@ -24,7 +24,6 @@ public class KakaoOAuth2Dto {
     }
 
     public KakaoUserInfoDto getUserInfo(String code) {
-        log.info("여기서 터짐?" + code);
         String accessToken = getAccessToken(code);
         return getUserInfoByToken(accessToken);
     }
