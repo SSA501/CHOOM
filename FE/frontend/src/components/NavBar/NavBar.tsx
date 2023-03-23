@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginModal from "../Modal/LoginModal";
-import { NavBtnLink, NavContainer, NavLi, NavUl } from "./style";
+import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
 
 function NavBar() {
+  const [isLogin, setIsLogin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const showLoginModal = () => {
     setLoginModalOpen(true);
+    document.body.style.overflow = "hidden";
   };
 
   const navigate = useNavigate();
@@ -30,17 +32,24 @@ function NavBar() {
               챌린지
             </NavBtnLink>
           </NavLi>
-          <NavLi>
-            <NavBtnLink to="/profile">프로필</NavBtnLink>
-          </NavLi>
-          <NavLi>
-            <NavBtnLink to="" onClick={showLoginModal}>
-              로그인
-            </NavBtnLink>
-          </NavLi>
+          {isLogin && (
+            <NavLi>
+              <NavBtnLink to="/profile">프로필</NavBtnLink>
+            </NavLi>
+          )}
+          {!isLogin && (
+            <NavLi>
+              <LoginBtn onClick={showLoginModal}>로그인</LoginBtn>
+            </NavLi>
+          )}
         </NavUl>
       </NavContainer>
-      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+      {loginModalOpen && (
+        <LoginModal
+          setIsLogin={setIsLogin}
+          setLoginModalOpen={setLoginModalOpen}
+        />
+      )}
     </header>
   );
 }

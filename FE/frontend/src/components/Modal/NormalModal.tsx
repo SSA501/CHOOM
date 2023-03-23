@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import { ShadowContainer } from "../ShadowContainer/style";
 import {
   Background,
   Modal,
@@ -41,14 +42,21 @@ function NormalModal(props: {
   return (
     <div>
       <Background />
-      <Modal ref={modalRef} width={400} height={300}>
-        <ModalContent>정말 탈퇴할까요?</ModalContent>
-        <BtnDiv>
-          <CancelBtn onClick={closeModal}>No</CancelBtn>
-          <span>/</span>
-          <AcceptBtn onClick={acceptModal}>Yes</AcceptBtn>
-        </BtnDiv>
-        <LogoImg src="/assets/logo.png" alt="로고이미지" />
+      <Modal ref={modalRef} width={"400px"} height={"300px"}>
+        <ShadowContainer
+          width={"400px"}
+          height={"300px"}
+          bgColor={"white"}
+          padding={"3em 0px"}
+        >
+          <ModalContent>정말 탈퇴할까요?</ModalContent>
+          <BtnDiv>
+            <CancelBtn onClick={closeModal}>No</CancelBtn>
+            <span>/</span>
+            <AcceptBtn onClick={acceptModal}>Yes</AcceptBtn>
+          </BtnDiv>
+          <LogoImg src="/assets/logo.png" alt="로고이미지" />
+        </ShadowContainer>
       </Modal>
     </div>
   );

@@ -35,8 +35,8 @@ function ProfilePage() {
   };
 
   const withdrawMember = () => {
+    // TODO: 탈퇴하기 기능 구현
     alert("탈퇴 완료!");
-    console.log("TODO: 탈퇴하기 기능 들어갈 부분");
     navigate("/");
   };
 

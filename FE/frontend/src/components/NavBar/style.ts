@@ -40,4 +40,8 @@ const NavBtnLink = styled(NavLink)<{ challenge?: boolean }>`
   } */
 `;
 
-export { NavContainer, NavUl, NavLi, NavBtnLink };
+const LoginBtn = styled.a`
+  padding: 1em 0.5em 25px;
+`;
+
+export { NavContainer, NavUl, NavLi, NavBtnLink, LoginBtn };
