@@ -24,7 +24,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     width: ${width || "100%"};
     max-width: 1728px;
     height: ${height || "100%"};
-    background-color: var(--${bgColor}-color);
+    background-color: ${bgColor ? `var(--${bgColor}-color)` : "white"};
     border-radius: 50px;
     margin: ${margin || "0 auto 3em"};
     padding: ${padding || "3em"};
