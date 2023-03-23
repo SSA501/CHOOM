@@ -1,11 +1,38 @@
+import ReactPlayer from "react-player";
 import styled, { css } from "styled-components";
 
-const VideoContainer = styled.div<{ bgFrame?: string }>`
-  ${({ bgFrame }) => css`
-    width: ${bgFrame ? "366px" : "334px"};
-    height: ${bgFrame ? "626px" : "594px"};
-    border: ${bgFrame ? `1em solid var(--${bgFrame}-color)` : null};
+interface VideoContainerProps {
+  bgFrame?: string;
+  ratio: number;
+}
+
+const VideoContainer = styled.div<VideoContainerProps>`
+  ${({ bgFrame, ratio }) => css`
+    position: relative;
+    width: 100%;
+    /* width: ${bgFrame ? "" : ""};
+    height: ${bgFrame ? "626px" : "594px"}; */
+    border: ${bgFrame ? `12px solid var(--${bgFrame}-color)` : null};
+    padding-top: ${ratio
+      ? `${ratio}%`
+      : "56.25%"}; /* default aspect ratio is 16:9 */
   `}
 `;
 
-export { VideoContainer };
+const ReactPlayerStyled = styled(ReactPlayer)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+`;
+
+const ThumbnailImg = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+`;
+
+export { VideoContainer, ReactPlayerStyled, ThumbnailImg };

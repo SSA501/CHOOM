@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import ReactPlayer from "react-player";
-import { VideoContainer } from "./style";
+import { ReactPlayerStyled, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
   id: number;
@@ -11,6 +10,10 @@ interface VideoProps {
   bgFrame?: string; // 테두리 색상, 적용안하면 비디오만 표시
 }
 
+/**
+ * 우리 서버에서 주는 url로는 ReactPlayer 안될수도 있음
+ */
+
 function Video({
   id,
   thumbnailSrc,
@@ -20,16 +23,22 @@ function Video({
   bgFrame,
 }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
+  const initial = 333;
+  const borderSize = 12;
+  const width = bgFrame ? initial + borderSize * 2 : initial; // Replace with the actual width of your element
+  const height = bgFrame ? initial * 1.7 + borderSize * 2 : initial * 1.7; // Replace with the actual height of your element
+  const ratio = (height / width) * 100;
 
   return (
     <VideoContainer
-      key={videoSrc}
+      key={id}
       onMouseEnter={(): void => setPlayingVideoId(id)}
       onMouseLeave={(): void => setPlayingVideoId(null)}
       bgFrame={bgFrame}
+      ratio={ratio}
     >
       {playingVideoId === id ? (
-        <ReactPlayer
+        <ReactPlayerStyled
           url={videoSrc}
           playing={playingVideoId === id}
           controls={true}
@@ -43,7 +52,13 @@ function Video({
           tabIndex={-1}
         />
       ) : (
-        <img src={thumbnailSrc} alt="썸네일이미지" width="100%" height="100%" />
+        // <iframe src={videoSrc} title={videoSrc} />
+        <ThumbnailImg
+          src={thumbnailSrc}
+          alt="썸네일이미지"
+          width="100%"
+          height="100%"
+        />
       )}
     </VideoContainer>
   );

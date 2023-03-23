@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -51,6 +53,20 @@ dependencies {
 	// guava
 	implementation 'com.google.guava:guava:29.0-jre'
 	annotationProcessor 'com.google.guava:guava:29.0-jre'
+
+	// gson
+	implementation'com.google.code.gson:gson:2.8.7'
+
+	// Jackson 2 Extensions to The Google APIs Client Library For Java » 1.20.0
+	implementation group: 'com.google.api-client', name: 'google-api-client-jackson2', version: '1.20.0'
+
+	// Youtube API
+	compile 'com.google.api-client:google-api-client:1.30.9'
+	compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+
+	// https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube
+	implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev222-1.25.0'
+
 }
 
 tasks.named('test') {
