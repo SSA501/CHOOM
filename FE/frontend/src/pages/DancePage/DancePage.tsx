@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import ResultPage from "../ResultPage/ResultPage";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
-import { DancePageContainer, TitleContainer } from "./style";
+import { DancePageContainer } from "./style";
 interface Kpt {
   x: number;
   y: number;
@@ -13,11 +13,15 @@ interface Kpt {
 interface Pose {
   keypoints: Kpt[];
 }
+interface Score {
+  score: number;
+  time: number;
+}
 function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>(
     JSON.parse(localStorage.getItem("poseList") || "[]")
   );
-  const [scoreList, setScoreList] = useState<number[]>([]);
+  const [scoreList, setScoreList] = useState<Score[]>([]);
   const [videoUrl, setVideoUrl] = useState<string>("");
   const danceVideoRef = useRef<any>();
 

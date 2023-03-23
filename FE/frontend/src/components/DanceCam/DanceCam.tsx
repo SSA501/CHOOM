@@ -22,7 +22,6 @@ import {
   CircleBtnLabel,
   ClickedCircleBtn,
 } from "./style";
-import { count } from "console";
 
 interface Kpt {
   x: number;
@@ -33,7 +32,10 @@ interface Kpt {
 interface Pose {
   keypoints: Kpt[];
 }
-
+interface Score {
+  score: number;
+  time: number;
+}
 const pallete = {
   red: "rgba(255, 0, 0, 0.5)",
   green: "rgba(0,255,0,0.5)",
@@ -42,7 +44,7 @@ const pallete = {
 function DanceCam(props: {
   poseList: Pose[];
   danceVideoRef: React.MutableRefObject<any>;
-  setScoreList: (scoreList: number[]) => void;
+  setScoreList: (scoreList: Score[]) => void;
   setVideoUrl: (videoUrl: string) => void;
 }) {
   const video = useRef<HTMLVideoElement>(null);
@@ -54,6 +56,7 @@ function DanceCam(props: {
 
   useEffect(() => {
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.poseList, isGuide]);
 
   const init = async () => {
@@ -66,8 +69,14 @@ function DanceCam(props: {
 
   let countFrame: number;
 
+  let recordTime = -0.5;
+  let recordTimer: any;
+
   const handleStartClick = async () => {
     setIsRecoding(true);
+    recordTimer = setInterval(function () {
+      recordTime += 0.5;
+    }, 500);
     countFrame = 0;
     camera.start();
     props.danceVideoRef.current.playVideo();
@@ -97,7 +106,7 @@ function DanceCam(props: {
       requestAnimationFrame(renderPrediction);
     else {
       camera.stop();
-
+      clearInterval(recordTimer);
       setTimeout(() => {
         props.setScoreList(scoreList);
         props.setVideoUrl(camera.url);
@@ -107,7 +116,7 @@ function DanceCam(props: {
   }
 
   let scoreTemp = 0;
-  let scoreList: number[] = [];
+  let scoreList: Score[] = [];
   async function renderResult(countFrame: number): Promise<void> {
     if (camera.video.readyState < 2) {
       await new Promise<void>((resolve) => {
@@ -143,11 +152,15 @@ function DanceCam(props: {
       if (videoPose[0].keypoints !== undefined) {
         const score = getSmularity(videoPose, estimatePoseList);
         scoreTemp += score;
-        if (countFrame % 10 === 9) {
-          scoreList.push(Math.round(scoreTemp / 10));
+        if (countFrame % 40 === 39) {
+          scoreList.push({
+            score: Math.round(scoreTemp / 39),
+            time: recordTime,
+          });
           scoreTemp = 0;
         }
-        if (countFrame > 9) camera.drawScore(scoreList[scoreList.length - 1]);
+        if (countFrame > 39)
+          camera.drawScore(scoreList[scoreList.length - 1].score);
       }
     }
   }
@@ -233,7 +246,6 @@ function DanceCam(props: {
         </div>
       ) : (
         <div>
-          {" "}
           <ClickedCircleBtn top="45%" onClick={handleGuideClick}>
             <AiOutlineEyeInvisible />
           </ClickedCircleBtn>

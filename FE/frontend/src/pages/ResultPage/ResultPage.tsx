@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import DanceChart from "../../components/DanceChart/DanceChart";
 
-function ResultPage(props: { scoreList: number[]; videoUrl: string }) {
+interface Score {
+  score: number;
+  time: number;
+}
+
+function ResultPage(props: { scoreList: Score[]; videoUrl: string }) {
+  const [playTime, setPlayTime] = useState(0);
   return (
     <div>
       <p>ResultPage</p>
       <video src={props.videoUrl} controls></video>
-      <DanceChart />
+      <DanceChart scoreList={props.scoreList} />
     </div>
   );
 }
