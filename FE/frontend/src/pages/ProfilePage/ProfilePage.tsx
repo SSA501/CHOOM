@@ -4,9 +4,7 @@ import SmallMenu from "../../components/SmallMenu/SmallMenu";
 import NormalModal from "../../components/Modal/NormalModal";
 import {
   ProfileDiv,
-  LeftDiv,
   RightDiv,
-  Header,
   ListHeader,
   ListHeaderBtn,
   DropBtn,
@@ -163,10 +161,7 @@ function ProfilePage() {
 
   return (
     <ProfileDiv>
-      <LeftDiv>
-        <Header>My Profile</Header>
-        <ProfileCard showNormalModal={showNormalModal} />
-      </LeftDiv>
+      <ProfileCard showNormalModal={showNormalModal} />
 
       <RightDiv>
         <ListHeader>
@@ -196,8 +191,8 @@ function ProfilePage() {
           {dropMenuOpen && (
             <SmallMenu
               itemList={dropMenuItemList}
-              top="62px"
-              right="0px"
+              top="75px"
+              right="18px"
             ></SmallMenu>
           )}
         </ListHeader>

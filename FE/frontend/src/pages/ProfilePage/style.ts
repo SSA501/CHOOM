@@ -1,33 +1,17 @@
 import styled, { css } from "styled-components";
 
 const ProfileDiv = styled.div`
-  width: 100%;
+  width: 65%;
+  min-width: 1000px;
   height: -webkit-calc(100vh - 160px);
-`;
-
-const LeftDiv = styled.div`
-  width: 28%;
-  min-width: 360px;
-  height: 100%;
-  text-align: center;
-  float: left;
+  margin-inline: auto;
 `;
 
 const RightDiv = styled.div`
-  width: 72%;
+  width: 100%;
   height: 100%;
   padding-left: 40px;
   padding-right: 100px;
-  float: left;
-`;
-
-const Header = styled.h1`
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 86px;
-  padding-top: 16px;
-  color: #000000;
 `;
 
 const ListHeader = styled.div`
@@ -93,9 +77,7 @@ const VideoItem = styled.div`
 
 export {
   ProfileDiv,
-  LeftDiv,
   RightDiv,
-  Header,
   ListHeader,
   ListHeaderBtn,
   DropBtn,

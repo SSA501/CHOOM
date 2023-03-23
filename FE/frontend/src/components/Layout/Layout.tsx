@@ -9,7 +9,7 @@ function Layout() {
       style={{ display: "flex", minHeight: "100vh", flexDirection: "column" }}
     >
       <NavBar />
-      <main style={{ flex: "1" }}>
+      <main style={{ flex: "1", overflow: "auto" }}>
         <Outlet />
       </main>
       <Footer />

@@ -2,22 +2,20 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SmallMenu from "../SmallMenu/SmallMenu";
 import {
-  ProfileDiv,
-  SettingBtn,
-  EditProfileBtn,
   ProfileImg,
   ProfileImgBG,
   AddProfileImgBtn,
+  NicknameContainer,
   Nickname,
   ErrorMsg,
   InfoDetail,
+  SettingBtn,
+  BtnContainer,
+  EditProfileBtn,
 } from "./style";
-import { ReactComponent as YellowBoom } from "../../assets/icon_yellow_boom.svg";
-import { ReactComponent as GreenEllipse } from "../../assets/icon_green_ellipse.svg";
-import { ReactComponent as OrangeFlower } from "../../assets/icon_orange_flower.svg";
-import { ReactComponent as LayoutBottom } from "../../assets/layout_bottom.svg";
 import { CgCheckO, CgCloseO, CgMathPlus } from "react-icons/cg";
 import { TbSettings } from "react-icons/tb";
+import { ShadowContainer } from "../ShadowContainer/style";
 
 type ProfileInfo = {
   nickname: string;
@@ -112,26 +110,13 @@ function ProfileCard(props: ProfileProps) {
   };
 
   return (
-    <ProfileDiv>
-      {!editProfileMode && (
-        <SettingBtn onClick={showSmallMenu}>
-          <TbSettings fontSize={"29px"} />
-        </SettingBtn>
-      )}
-      {editProfileMode && (
-        <>
-          <EditProfileBtn onClick={cancelEditProfile}>
-            <CgCloseO fontSize={"29px"} />
-          </EditProfileBtn>
-          <EditProfileBtn editAccept onClick={editProfile}>
-            <CgCheckO fontSize={"29px"} />
-          </EditProfileBtn>
-        </>
-      )}
-      {smallMenuOpen && (
-        <SmallMenu itemList={menuItemList} top="65px" right="14px"></SmallMenu>
-      )}
-
+    <ShadowContainer
+      width={"100%"}
+      height={"204px"}
+      padding={"27px"}
+      bgColor={editProfileMode ? "lightgray" : "white"}
+      style={{ position: "relative", display: "flex" }}
+    >
       <ProfileImg BgImg={tmpProfileImg}>
         {editProfileMode && (
           <>
@@ -149,29 +134,20 @@ function ProfileCard(props: ProfileProps) {
           </>
         )}
       </ProfileImg>
-      <Nickname
-        type="text"
-        onChange={handleChange}
-        value={tmpNickname}
-        disabled={!editProfileMode}
-      />
-      {editProfileMode && nicknameOverlap && (
-        <ErrorMsg>해당 닉네임은 이미 존재합니다.</ErrorMsg>
-      )}
+      <NicknameContainer>
+        <Nickname
+          type="text"
+          onChange={handleChange}
+          value={tmpNickname}
+          disabled={!editProfileMode}
+        />
+        {editProfileMode && nicknameOverlap && (
+          <ErrorMsg>해당 닉네임은 이미 존재합니다.</ErrorMsg>
+        )}
+      </NicknameContainer>
 
       <InfoDetail>
         <tbody>
-          <tr>
-            <td>
-              <YellowBoom />
-            </td>
-            <td>
-              <GreenEllipse />
-            </td>
-            <td>
-              <OrangeFlower />
-            </td>
-          </tr>
           <tr>
             <td>챌린지</td>
             <td>점수</td>
@@ -193,8 +169,28 @@ function ProfileCard(props: ProfileProps) {
           </tr>
         </tbody>
       </InfoDetail>
-      <LayoutBottom />
-    </ProfileDiv>
+
+      <BtnContainer>
+        {!editProfileMode && (
+          <SettingBtn onClick={showSmallMenu}>
+            <TbSettings fontSize={"35px"} />
+          </SettingBtn>
+        )}
+        {editProfileMode && (
+          <>
+            <EditProfileBtn onClick={cancelEditProfile}>
+              <CgCloseO fontSize={"35px"} />
+            </EditProfileBtn>
+            <EditProfileBtn editAccept onClick={editProfile}>
+              <CgCheckO fontSize={"35px"} />
+            </EditProfileBtn>
+          </>
+        )}
+      </BtnContainer>
+      {smallMenuOpen && (
+        <SmallMenu itemList={menuItemList} top="65px" right="14px"></SmallMenu>
+      )}
+    </ShadowContainer>
   );
 }
 
