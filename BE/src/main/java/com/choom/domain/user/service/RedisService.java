@@ -17,20 +17,23 @@ public class RedisService {
 
     @Transactional
     public void saveToken(Long userId, String refreshToken) {
-        try {
-            refreshTokenRedisRepository.save(RefreshToken.builder()
-                    .userId(userId)
-                    .refreshToken(refreshToken)
-                    .build());
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        RefreshToken token = findRefreshTokenByUserId(userId);
+        if (token != null) {
+            deleteToken(token);
         }
+        refreshTokenRedisRepository.save(RefreshToken.builder()
+                .userId(userId)
+                .token(refreshToken)
+                .build());
     }
 
-    public String getRefreshToken(Long userId) {
-        return refreshTokenRedisRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new)
-                .getRefreshToken();
+    public RefreshToken findRefreshTokenByToken(String token) {
+        return refreshTokenRedisRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("만료된 토큰값입니다"));
+    }
+
+    public RefreshToken findRefreshTokenByUserId(Long userId) {
+        return refreshTokenRedisRepository.findById(userId).orElse(null);
     }
 
     @Transactional
