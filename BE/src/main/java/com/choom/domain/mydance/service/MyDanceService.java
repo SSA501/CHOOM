@@ -9,7 +9,6 @@ import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.originaldance.entity.OriginalDanceRepository;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
-import com.choom.global.exception.file.FileDeleteException;
 import com.choom.global.service.FileService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,6 +16,8 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ import java.io.*;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
 public class MyDanceService {
@@ -36,14 +37,17 @@ public class MyDanceService {
     private final MyDanceRepository myDanceRepository;
     private final OriginalDanceRepository originalDanceRepository;
 
+    @Transactional
     public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
         // MY_DANCE insert
         // user 더미데이터
-        User user = userRepository.findById(1L).get();
-        OriginalDance originalDance = originalDanceRepository.findById(myDanceAddRequestDto.getOriginalDanceId()).get();
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        OriginalDance originalDance = originalDanceRepository.findById(myDanceAddRequestDto.getOriginalDanceId())
+                .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
         MyDance myDance = MyDance.builder()
                 .score(myDanceAddRequestDto.getScore())
                 .matchRate(myDanceAddRequestDto.getMatchRate())
@@ -72,23 +76,37 @@ public class MyDanceService {
         return resource;
     }
 
+    @Transactional
     public void removeMyDance(Long myDanceId) {
-        MyDance myDance = myDanceRepository.findById(myDanceId).get();
+        MyDance myDance = myDanceRepository.findById(myDanceId)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
         // 내 챌린지 영상 삭제
-        if (!fileService.fileDelete(myDance.getVideoPath())) {
-            throw new FileDeleteException("파일 삭제에 실패했습니다");
-        }
+        fileService.fileDelete(myDance.getVideoPath());
 
         // MY_DANCE delete
         myDanceRepository.deleteById(myDanceId);
     }
 
     public FindMyDanceResponseDto findMyDance(Long myDanceId) {
-        MyDance myDance = myDanceRepository.findById(myDanceId).get();
+        MyDance myDance = myDanceRepository.findById(myDanceId)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
         return FindMyDanceResponseDto.builder()
                 .myDance(myDance)
                 .build();
+    }
+
+    public Page<FindMyDanceResponseDto> findAllMyDance(Pageable pageable) {
+        // user 더미데이터
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        Page<MyDance> myDancePage = myDanceRepository.findPageByUser(user, pageable);
+
+        // MyDance -> FindMyDanceResponseDto
+        return myDancePage.map(myDance -> FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build());
     }
 
     // 일치율 계산 부분 (front에서 하기로 해서 안 씀!)

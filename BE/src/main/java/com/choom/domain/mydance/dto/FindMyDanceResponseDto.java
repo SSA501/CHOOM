@@ -18,7 +18,7 @@ public class FindMyDanceResponseDto {
     private String title;
     private String youtubeUrl;
     private String tiktokUrl;
-    private String created;
+    private String createdAt;
 
     @Builder
     public FindMyDanceResponseDto(MyDance myDance) {
@@ -31,6 +31,6 @@ public class FindMyDanceResponseDto {
         this.title = myDance.getTitle();
         this.youtubeUrl = myDance.getYoutubeUrl();
         this.tiktokUrl = myDance.getTiktokUrl();
-        this.created = myDance.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));;
+        this.createdAt = myDance.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));;
     }
 }

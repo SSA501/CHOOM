@@ -8,6 +8,8 @@ import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +53,12 @@ public class MyDanceController {
         log.info("myDanceId : " + myDanceId);
         FindMyDanceResponseDto findMyDanceResponseDto = myDanceService.findMyDance(myDanceId);
         return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDto), HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<BaseResponse> myDanceList(Pageable pageable) {
+        log.info("pageable : " + pageable);
+        Page<FindMyDanceResponseDto> findMyDanceResponseDtoList = myDanceService.findAllMyDance(pageable);
+        return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDtoList), HttpStatus.OK);
     }
 }
