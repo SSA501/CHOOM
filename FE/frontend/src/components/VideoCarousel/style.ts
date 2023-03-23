@@ -1,21 +1,42 @@
 import styled from "styled-components";
+import Btn from "../Btn/Btn";
+import { ShadowContainer } from "../ShadowContainer/style";
 
-const CarouselContainer = styled.div<{ titleAlign?: string }>`
-  padding: 3em 1em;
-  width: 90%;
-  max-width: 1330px;
-  margin: 0 auto;
-  h2 {
-    text-align: ${(props) => props.titleAlign || ""};
-    font-weight: 600;
-    font-size: 1.7em;
-    padding: 1.2em 0 1em;
-  }
+type ChildrenProp = {
+  children: React.ReactNode;
+};
+
+const CarouselContainer = styled(ShadowContainer)<ChildrenProp>`
+  display: flex;
+  gap: 2em;
 `;
 
-const SwiperContainer = styled.div`
+const LeftTextContainer = styled.div`
+  flex: 3;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+`;
+
+const CarouselTitle = styled.div`
+  font-weight: bolder;
+  font-size: 3rem;
+  line-height: 1.2em;
+  max-width: 20rem;
+  word-break: keep-all;
+`;
+
+const MiddleText = styled.div`
+  line-height: 1.5em;
+  word-break: keep-all;
+`;
+
+const RightSwiperContainer = styled.div`
   display: flex;
   gap: 1em;
+  flex: 6;
+  max-width: 967px;
+  overflow: hidden;
 `;
 
 const ArrowBtnContainer = styled.div`
@@ -28,4 +49,12 @@ const ArrowBtn = styled.button`
   font-size: 2em;
 `;
 
-export { SwiperContainer, CarouselContainer, ArrowBtnContainer, ArrowBtn };
+export {
+  RightSwiperContainer,
+  LeftTextContainer,
+  CarouselTitle,
+  MiddleText,
+  CarouselContainer,
+  ArrowBtnContainer,
+  ArrowBtn,
+};
