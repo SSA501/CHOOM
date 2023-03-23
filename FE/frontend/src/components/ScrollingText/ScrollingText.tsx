@@ -19,11 +19,11 @@ function ScrollingText() {
       </FlowTextContainer>
       <GreenBox />
       {/* <RecentVideosContainer>
-        {videoData?.map(({ id, videoSrc, thumbnailSrc }) => (
+        {videoData?.map(({ id, videoPath, thumbnailSrc }) => (
           <div style={{ width: "450px" }} key={id}>
             <Video
               id={id}
-              videoSrc={videoSrc}
+              videoPath={videoPath}
               thumbnailSrc={thumbnailSrc}
               frameColor={"black"}
             />

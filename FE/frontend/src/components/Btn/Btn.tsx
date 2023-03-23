@@ -9,6 +9,7 @@ export type BtnProps = {
   width?: string;
   padding?: string;
   margin?: string;
+  className?: string;
 };
 
 function Btn({
@@ -19,6 +20,7 @@ function Btn({
   width,
   padding,
   margin,
+  className,
 }: BtnProps) {
   return login ? (
     <LoginBtn loginType={loginType} onClick={handleClick}>
@@ -26,6 +28,7 @@ function Btn({
     </LoginBtn>
   ) : (
     <NomalBtn
+      className={className}
       width={width}
       padding={padding}
       margin={margin}

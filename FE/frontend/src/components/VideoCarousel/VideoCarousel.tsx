@@ -18,10 +18,11 @@ import "swiper/css/navigation";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Btn from "../Btn/Btn";
+import { useNavigate } from "react-router-dom";
 
 interface VideoCarouselProps {
   videoData: VideoDataProps[];
-  title: string;
+  title: string | React.ReactNode;
   text?: string;
   handleBtnClick: () => void;
 }
@@ -35,6 +36,11 @@ function VideoCarousel({
   const [swiper, setSwiper] = useState<any>();
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
+
+  const navigate = useNavigate();
+  const handleClickVideo = (videoId: number): void => {
+    navigate(`/detail/${videoId}`);
+  };
 
   return (
     <CarouselContainer width="90%" padding="5em" bgColor="lightgray">
@@ -70,13 +76,14 @@ function VideoCarousel({
           }}
         >
           <div>
-            {videoData?.map(({ id, videoSrc, thumbnailSrc, frameColor }) => (
+            {videoData?.map(({ id, videoPath, thumbnailSrc, title }) => (
               <SwiperSlide key={id}>
                 <Video
                   id={id}
-                  videoSrc={videoSrc}
+                  title={title}
+                  videoPath={videoPath}
                   thumbnailSrc={thumbnailSrc}
-                  frameColor={frameColor}
+                  handleClickVideo={() => handleClickVideo(id)}
                 />
               </SwiperSlide>
             ))}

@@ -1,28 +1,14 @@
-import ReactPlayer from "react-player";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
+import Btn from "../Btn/Btn";
 
-interface VideoContainerProps {
-  frameColor?: string;
-  ratio: number;
-}
+const VideoContainer = styled.div`
+  width: 270px;
+  /* height: 480px; */
+  position: relative;
 
-const VideoContainer = styled.div<VideoContainerProps>`
-  ${({ frameColor, ratio }) => css`
-    width: 270px;
-    height: 480px;
-    /* height: ${frameColor ? "626px" : "594px"}; */
-    /* border: ${frameColor
-      ? frameColor === "black"
-        ? "14px solid black"
-        : `14px solid var(--${frameColor}-color)`
-      : null}; */
-    /* padding-top: ${ratio
-      ? `${ratio}%`
-      : "56.25%"}; default aspect ratio is 16:9 */
-  `}
-  iframe {
-    width: 270px;
-    height: 480px;
+  iframe,
+  video {
+    width: 100%;
     border-radius: 1rem;
   }
 
@@ -32,4 +18,14 @@ const VideoContainer = styled.div<VideoContainerProps>`
   }
 `;
 
-export { VideoContainer };
+const BtnDetail = styled(Btn)`
+  width: fit-content;
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+`;
+
+export { VideoContainer, BtnDetail };

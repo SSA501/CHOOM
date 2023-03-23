@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Btn from "../Btn/Btn";
 import { ShadowContainer } from "../ShadowContainer/style";
 
 type ChildrenProp = {

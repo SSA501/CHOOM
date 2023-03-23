@@ -8,48 +8,72 @@ import { TopContainer } from "./style";
 
 export interface VideoDataProps {
   id: number;
-  videoSrc: string;
+  videoPath: string;
   thumbnailSrc: string;
   frameColor?: string;
+  title: string;
+  url: string;
+  userCount: number;
+  status: number;
 }
 
 function MainPage() {
   const popularVideoData: VideoDataProps[] = [
     {
       id: 1,
-      videoSrc:
+      videoPath:
         "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
       thumbnailSrc:
         "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
+      title: "하입보이",
+      url: "https://youtu.be/videoId",
+      userCount: 2,
+      status: 2,
     },
     {
       id: 2,
-      videoSrc:
+      videoPath:
         "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
       thumbnailSrc:
         "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
+      title: "하입보이",
+      url: "https://youtu.be/videoId",
+      userCount: 2,
+      status: 2,
     },
     {
       id: 3,
-      // videoSrc: "https://www.youtube.com/shorts/fYQxthUKung",
-      videoSrc:
+      // videoPath: "https://www.youtube.com/shorts/fYQxthUKung",
+      videoPath:
         "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
       thumbnailSrc:
         "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
+      title: "하입보이",
+      url: "https://youtu.be/videoId",
+      userCount: 2,
+      status: 2,
     },
     {
       id: 4,
-      videoSrc:
+      videoPath:
         "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
       thumbnailSrc:
         "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
+      title: "하입보이",
+      url: "https://youtu.be/videoId",
+      userCount: 2,
+      status: 2,
     },
     {
       id: 5,
-      videoSrc:
+      videoPath:
         "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
       thumbnailSrc:
         "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
+      title: "하입보이",
+      url: "https://youtu.be/videoId",
+      userCount: 2,
+      status: 2,
     },
   ];
 
