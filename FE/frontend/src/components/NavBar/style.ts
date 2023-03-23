@@ -8,6 +8,7 @@ const NavContainer = styled.nav`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid var(--lightgray-color);
 `;
 
 const NavUl = styled.ul`
@@ -24,7 +25,7 @@ const NavLi = styled.li`
 `;
 
 const NavBtnLink = styled(NavLink)<{ challenge?: boolean }>`
-  padding: 1em 0.5em;
+  padding: 1em 0.5em 25px;
   /* & div {
     display: none;
   } */

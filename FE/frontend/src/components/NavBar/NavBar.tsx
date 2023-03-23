@@ -19,7 +19,7 @@ function NavBar() {
             <img
               src="/assets/logo.png"
               alt="로고이미지"
-              width="60px"
+              width="135px"
               onClick={() => navigate("/")}
             />
           </Link>
