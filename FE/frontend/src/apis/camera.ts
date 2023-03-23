@@ -6,8 +6,11 @@ export class Camera {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   mediaRecorder: MediaRecorder | null = null;
+  chunks: BlobPart[] = [];
+  url = "";
 
   constructor() {
+    this.chunks = [];
     this.video = document.getElementById("cam") as HTMLVideoElement;
     this.canvas = document.getElementById("camOutput") as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d")!;
@@ -27,7 +30,7 @@ export class Camera {
     const $size = sizeOption;
 
     const videoConfig = {
-      audio: true,
+      audio: false,
       video: {
         facingMode: "user",
         // deviceId: {
@@ -51,7 +54,8 @@ export class Camera {
 
     const options = { mimeType: "video/webm" };
     camera.mediaRecorder = new MediaRecorder(stream, options);
-    camera.mediaRecorder.ondataavailable = camera.handleDataAvailable;
+    camera.mediaRecorder.ondataavailable =
+      camera.handleDataAvailable.bind(camera);
 
     await new Promise<void>((resolve) => {
       camera.video.onloadedmetadata = () => {
@@ -61,8 +65,8 @@ export class Camera {
 
     camera.video.play();
 
-    const videoWidth = 360;
-    const videoHeight = 640;
+    const videoWidth = 450;
+    const videoHeight = 800;
     // Must set below two lines, otherwise video element doesn't show.
     camera.video.width = videoWidth;
     camera.video.height = videoHeight;
@@ -130,9 +134,30 @@ export class Camera {
   }
 
   drawScore(score: number): void {
+    score > 80
+      ? (this.ctx.fillStyle = "Green")
+      : score < 20
+      ? (this.ctx.fillStyle = "Red")
+      : (this.ctx.fillStyle = "Black");
+
+    this.ctx.lineWidth = 1;
+    this.ctx.strokeStyle = this.ctx.fillStyle;
+
+    const circle = new Path2D();
+    circle.arc(225, 42, 24, 0, 2 * Math.PI);
+    this.ctx.fill(circle);
+    this.ctx.stroke(circle);
+
+    this.ctx.fillStyle = "White";
     this.ctx.font = "italic bold 24px Arial, sans-serif";
-    this.ctx.fillText(score.toString(), 10, 50);
-    this.ctx.restore();
+    this.ctx.fillText(score.toString(), 210, 50);
+  }
+
+  drawFinalScore(score: number): void {
+    const img = new Image();
+    img.src = "/assets/score.jpg";
+    this.ctx.drawImage(img, 0, 0, 270, 480);
+    console.log(score);
   }
 
   drawKeypoint(keypoint: any) {
@@ -211,7 +236,14 @@ export class Camera {
   }
 
   stop() {
-    this.mediaRecorder?.stop();
+    if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
+      this.mediaRecorder.stop();
+    }
+    this.video.srcObject = null;
+    this.video.removeAttribute("src");
+    this.video.load();
+    URL.revokeObjectURL(this.video.src);
+    this.mediaRecorder = null;
   }
 
   handleDataAvailable(event: BlobEvent) {
@@ -221,13 +253,15 @@ export class Camera {
       // Download.
       const blob = new Blob(recordedChunks, { type: "video/webm" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style.display = "none";
-      a.href = url;
-      a.download = "pose.webm";
-      a.click();
-      window.URL.revokeObjectURL(url);
+
+      this.url = url;
+      // const a = document.createElement("a");
+      // document.body.appendChild(a);
+      // a.style.display = "none";
+      // a.href = url;
+      // a.download = "pose.webm";
+      // a.click();
+      // window.URL.revokeObjectURL(url);
     }
   }
 }
