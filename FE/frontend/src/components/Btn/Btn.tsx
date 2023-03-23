@@ -1,24 +1,38 @@
 import React from "react";
 import { LoginBtn, Icon, NomalBtn } from "./style";
 
-type BtnProps = {
+export type BtnProps = {
   login?: boolean;
   loginType?: "kakao" | "google" | "tiktok";
   btnText?: string;
   handleClick: () => void;
+  width?: string;
+  padding?: string;
+  margin?: string;
 };
 
-function Btn(props: BtnProps) {
-  return props.login ? (
-    <LoginBtn loginType={props.loginType} onClick={props.handleClick}>
-      <Icon
-        src={`/assets/icon_${props.loginType}.png`}
-        alt="이미지"
-        height="45px"
-      />
+function Btn({
+  login,
+  loginType,
+  btnText,
+  handleClick,
+  width,
+  padding,
+  margin,
+}: BtnProps) {
+  return login ? (
+    <LoginBtn loginType={loginType} onClick={handleClick}>
+      <Icon src={`/assets/icon_${loginType}.png`} alt="이미지" height="45px" />
     </LoginBtn>
   ) : (
-    <NomalBtn onClick={props.handleClick}>{props.btnText}</NomalBtn>
+    <NomalBtn
+      width={width}
+      padding={padding}
+      margin={margin}
+      onClick={handleClick}
+    >
+      {btnText}
+    </NomalBtn>
   );
 }
 
