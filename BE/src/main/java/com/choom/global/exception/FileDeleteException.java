@@ -1,4 +1,4 @@
-package com.choom.global.exception.file;
+package com.choom.global.exception;
 
 public class FileDeleteException extends RuntimeException {
     public FileDeleteException(String message) {

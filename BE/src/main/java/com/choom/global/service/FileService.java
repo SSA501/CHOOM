@@ -1,5 +1,6 @@
 package com.choom.global.service;
 
+import com.choom.global.exception.FileDeleteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -54,8 +55,9 @@ public class FileService {
         return resource;
     }
 
-    public boolean fileDelete(String path) {
+    public void fileDelete(String path) {
         File file = new File(path);
-        return file.delete();
+        if (!file.delete())
+            throw new FileDeleteException("파일 삭제에 실패했습니다");
     }
 }

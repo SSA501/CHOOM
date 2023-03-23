@@ -1,6 +1,5 @@
 package com.choom.global.exception;
 
-import com.choom.global.exception.file.FileDeleteException;
 import com.choom.global.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
