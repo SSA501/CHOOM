@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import ResultPage from "../ResultPage/ResultPage";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
-import { DancePageContainer } from "./style";
+import { ShadowContainer } from "../../components/ShadowContainer/style";
+import { DancePageContainer, SideInfoContainer } from "./style";
+import SideTitle from "../../components/SideTitle/SideTitle";
 interface Kpt {
   x: number;
   y: number;
@@ -26,12 +28,22 @@ function DancePage() {
   const danceVideoRef = useRef<any>();
 
   return (
-    <div>
+    <DancePageContainer>
+      <SideInfoContainer>
+        <SideTitle title={["챌린지", "연습하기✨"]}></SideTitle>
+        <SideTitle title={["챌린지", "연습하기✨"]}></SideTitle>
+      </SideInfoContainer>
       <Routes>
         <Route
           path=""
           element={
-            <DancePageContainer>
+            <ShadowContainer
+              padding="8px"
+              margin="8px 16px 16px 8px"
+              display="flex"
+              justifyContent="space-evenly"
+              flexWrap="wrap"
+            >
               <DanceVideo
                 setPoseList={setPoseList}
                 poseList={poseList}
@@ -43,7 +55,7 @@ function DancePage() {
                 setScoreList={setScoreList}
                 setVideoUrl={setVideoUrl}
               />
-            </DancePageContainer>
+            </ShadowContainer>
           }
         />
       </Routes>
@@ -53,7 +65,7 @@ function DancePage() {
           element={<ResultPage scoreList={scoreList} videoUrl={videoUrl} />}
         />
       </Routes>
-    </div>
+    </DancePageContainer>
   );
 }
 
