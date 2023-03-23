@@ -13,7 +13,7 @@ function App() {
         <Route index element={<MainPage />} />
         <Route path="/challenge" element={<ChallengePage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/dance" element={<DancePage />} />
+        <Route path="/dance/*" element={<DancePage />} />
       </Route>
     </Routes>
   );
