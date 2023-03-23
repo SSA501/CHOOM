@@ -66,7 +66,7 @@ function ProfileCard(props: ProfileProps) {
   ];
 
   const logout = () => {
-    console.log("TODO: 로그아웃 기능 들어갈 부분");
+    // TODO: 로그아웃 기능 구현
     navigate("/");
   };
 
@@ -99,7 +99,7 @@ function ProfileCard(props: ProfileProps) {
   };
 
   const editProfile = () => {
-    console.log("TODO: 프로필 수정 요청 들어갈 부분");
+    // TODO: 프로필 수정 요청 구현
     const newProfileInfo = {
       nickname: tmpNickname,
       profileImg: tmpProfileImg,
