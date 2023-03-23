@@ -32,6 +32,8 @@ const GlobalStyle = createGlobalStyle`
     --green-color:#B6F56A;
     --lightgray-color:#F2F2F2;
     --darkgray-color:#3A3A3A;
+    --black-color:#000000;
+    --white-color:#FFFFFF;
   }
   
   *, *::before, *::after {
