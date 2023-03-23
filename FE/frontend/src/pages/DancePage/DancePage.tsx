@@ -6,6 +6,7 @@ import DanceVideo from "../../components/DanceVideo/DanceVideo";
 import { ShadowContainer } from "../../components/ShadowContainer/style";
 import { DancePageContainer, SideInfoContainer } from "./style";
 import SideTitle from "../../components/SideTitle/SideTitle";
+import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
 interface Kpt {
   x: number;
   y: number;
@@ -27,11 +28,17 @@ function DancePage() {
   const [videoUrl, setVideoUrl] = useState<string>("");
   const danceVideoRef = useRef<any>();
 
+  const contents = [
+    "1️⃣ 알아서 잘해보세요",
+    "2️⃣ 어쩌라고요",
+    "3️⃣ 그냥 녹화하면 됩니다^^",
+  ];
+
   return (
     <DancePageContainer>
       <SideInfoContainer>
-        <SideTitle title={["챌린지", "연습하기✨"]}></SideTitle>
-        <SideTitle title={["챌린지", "연습하기✨"]}></SideTitle>
+        <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
+        <SideSubTitle title="챌린지 연습 방법 ❓" contents={contents} />
       </SideInfoContainer>
       <Routes>
         <Route
