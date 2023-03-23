@@ -1,7 +1,25 @@
-import { ShadowContainerProps } from "./ShadowContainer";
 import styled, { css } from "styled-components";
 
-const Container = styled.div<ShadowContainerProps>`
+export interface ShadowContainerProps {
+  width?: string;
+  height?: string;
+  margin?: string;
+  padding?: string;
+  bgColor?: string;
+  children?: React.ReactNode;
+}
+
+/**
+ * css 추가해서 사용시
+ * type ChildrenProp = {
+    children: React.ReactNode;
+  };
+ * 
+ * const CustomContainer = styled(ShadowContainer)<ChildrenProp>`
+    커스텀할 css 내용
+  `;
+ */
+export const ShadowContainer = styled.div<ShadowContainerProps>`
   ${({ width, height, margin, padding, bgColor }) => css`
     width: ${width || "100%"};
     max-width: 1728px;
@@ -14,5 +32,3 @@ const Container = styled.div<ShadowContainerProps>`
     box-shadow: 12px 12px black;
   `}
 `;
-
-export { Container };
