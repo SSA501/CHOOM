@@ -12,14 +12,14 @@ function NavBar() {
 
   const navigate = useNavigate();
   return (
-    <div>
+    <header>
       <NavContainer>
         <div>
           <Link to="/">
             <img
               src="/assets/logo.png"
               alt="로고이미지"
-              width="60px"
+              width="135px"
               onClick={() => navigate("/")}
             />
           </Link>
@@ -41,7 +41,7 @@ function NavBar() {
         </NavUl>
       </NavContainer>
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
-    </div>
+    </header>
   );
 }
 

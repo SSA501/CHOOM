@@ -8,34 +8,28 @@ interface VideoContainerProps {
 
 const VideoContainer = styled.div<VideoContainerProps>`
   ${({ frameColor, ratio }) => css`
-    position: relative;
-    width: 100%;
+    width: 270px;
+    height: 480px;
     /* height: ${frameColor ? "626px" : "594px"}; */
-    border: ${frameColor
+    /* border: ${frameColor
       ? frameColor === "black"
         ? "14px solid black"
         : `14px solid var(--${frameColor}-color)`
-      : null};
-    padding-top: ${ratio
+      : null}; */
+    /* padding-top: ${ratio
       ? `${ratio}%`
-      : "56.25%"}; /* default aspect ratio is 16:9 */
+      : "56.25%"}; default aspect ratio is 16:9 */
   `}
+  iframe {
+    width: 270px;
+    height: 480px;
+    border-radius: 1rem;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 1rem;
+  }
 `;
 
-const ReactPlayerStyled = styled(ReactPlayer)`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-`;
-
-const ThumbnailImg = styled.img`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-`;
-
-export { VideoContainer, ReactPlayerStyled, ThumbnailImg };
+export { VideoContainer };

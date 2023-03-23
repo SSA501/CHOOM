@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 
-const RecentChallengeContainer = styled.div`
-  padding: 2em 0;
+const ScrollingTextContainer = styled.div`
+  margin: 3em 0;
 `;
 
 const flowAnimation = keyframes`
@@ -16,11 +16,12 @@ const flowAnimation = keyframes`
 `;
 
 const FlowTextContainer = styled.div`
-  background-color: var(--blue-color);
+  background-color: black;
   padding: 1em 0;
   color: white;
   text-transform: uppercase;
   overflow-x: hidden;
+  font-weight: 600;
 `;
 
 const FlowText = styled.div`
@@ -29,15 +30,15 @@ const FlowText = styled.div`
 `;
 
 const RecentVideosContainer = styled.div`
-  padding: 3em 5em;
+  padding: 3em 10em;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  row-gap: 3em;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  row-gap: 5em;
   justify-items: center;
 `;
 
 export {
-  RecentChallengeContainer,
+  ScrollingTextContainer,
   FlowTextContainer,
   FlowText,
   RecentVideosContainer,

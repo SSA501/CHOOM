@@ -2,27 +2,30 @@ import styled from "styled-components";
 
 const BannerContainer = styled.div<{ bgColor: string }>`
   background-color: ${(props) => `var(--${props.bgColor}-color)`};
-  height: 450px;
+  color: ${(props) => (props.bgColor !== "darkgray" ? "black" : "white")};
+  border-radius: 50px;
+  height: 60vh;
   padding: 0 5em;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
 `;
 
 const BannerTextContainer = styled.div`
-  color: white;
-  font-weight: 600;
-  font-size: 1.2em;
-  line-height: 2.3em;
+  text-align: center;
 
   p:nth-of-type(1) {
-    font-size: 1.7em;
+    font-size: 2em;
+    font-weight: 600;
+  }
+  p:nth-of-type(2) {
+    width: 50%;
+    font-size: 1em;
+    margin: 1.7em auto 0;
+    line-height: 1.5rem;
   }
 `;
 
-const BannerIconsContainer = styled.div`
-  text-align: center;
-  width: 300px;
-`;
-
-export { BannerContainer, BannerTextContainer, BannerIconsContainer };
+export { BannerContainer, BannerTextContainer };
