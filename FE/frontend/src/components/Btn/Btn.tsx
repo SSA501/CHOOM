@@ -4,7 +4,7 @@ import { LoginBtn, Icon, NomalBtn } from "./style";
 type BtnProps = {
   login?: boolean;
   loginType?: "kakao" | "google" | "tiktok";
-  children: string;
+  btnText?: string;
   handleClick: () => void;
 };
 
@@ -18,7 +18,7 @@ function Btn(props: BtnProps) {
       />
     </LoginBtn>
   ) : (
-    <NomalBtn onClick={props.handleClick}>{props.children}</NomalBtn>
+    <NomalBtn onClick={props.handleClick}>{props.btnText}</NomalBtn>
   );
 }
 

@@ -68,15 +68,9 @@ function LoginModal(props: {
           </CloseBtn>
           <ModalTitle>LOGIN</ModalTitle>
           <BtnDiv>
-            <Btn login loginType={"google"} handleClick={loginGoogle}>
-              구글로그인
-            </Btn>
-            <Btn login loginType={"kakao"} handleClick={loginKaKao}>
-              카카오로그인
-            </Btn>
-            <Btn login loginType={"tiktok"} handleClick={loginTiktok}>
-              틱톡로그인
-            </Btn>
+            <Btn login loginType={"google"} handleClick={loginGoogle}></Btn>
+            <Btn login loginType={"kakao"} handleClick={loginKaKao}></Btn>
+            <Btn login loginType={"tiktok"} handleClick={loginTiktok}></Btn>
           </BtnDiv>
           <LogoImg src="/assets/logo.png" alt="logo" />
         </ShadowContainer>
