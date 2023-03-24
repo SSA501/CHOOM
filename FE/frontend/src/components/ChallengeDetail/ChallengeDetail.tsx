@@ -1,12 +1,16 @@
 import React from "react";
-import { ShadowContainer } from "../ShadowContainer/style";
-import { ChallengeDetailContainer } from "./style";
+import { ChallengeDetailContainer, DetailTitle } from "./style";
 
-function ChallengeDetail() {
+interface ChallengeDetailProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function ChallengeDetail({ title, children }: ChallengeDetailProps) {
   return (
     <ChallengeDetailContainer>
-      DETAIL
-      <div>세부내용</div>
+      <DetailTitle>{title}</DetailTitle>
+      {children}
     </ChallengeDetailContainer>
   );
 }
