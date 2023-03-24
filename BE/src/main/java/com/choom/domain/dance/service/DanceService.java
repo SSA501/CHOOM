@@ -207,6 +207,7 @@ public class DanceService {
             danceRankUserDtoList = myDanceList.stream().map(myDance ->
                 DanceRankUserDto.builder()
                     .title(myDance.getTitle())
+                    .videoLength(myDance.getVideoLength())
                     .userId(myDance.getUser().getId())
                     .nickname(myDance.getUser().getNickname())
                     .score(myDance.getScore())
