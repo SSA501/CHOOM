@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DanceDetailDto {
+public class DanceDetailsDto {
 
     private String title;
     private String description;
@@ -27,7 +27,7 @@ public class DanceDetailDto {
     }
 
     @Builder
-    public DanceDetailDto(String title, int sec, String videoId, String description, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status) {
+    public DanceDetailsDto(String title, int sec, String videoId, String description, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status) {
         this.url = url;
         this.title = title;
         this.description = description;

@@ -1,7 +1,7 @@
 package com.choom.domain.dance.service;
 
-import com.choom.domain.dance.dto.DanceDetailWithRankDto;
-import com.choom.domain.dance.dto.DanceDetailDto;
+import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
+import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.domain.dance.dto.DanceRankUserDto;
 import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
@@ -64,9 +64,9 @@ public class DanceService {
         }).setApplicationName("youtube-cmdline-search-sample").build();
     }
 
-    public List<DanceDetailDto> searchDance(String keyword) {
+    public List<DanceDetailsDto> searchDance(String keyword) {
         log.info("Starting YouTube search... " +keyword);
-        List<DanceDetailDto> danceDetailDtoList = new ArrayList<>();
+        List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
 
         try {
 
@@ -87,7 +87,7 @@ public class DanceService {
                     for (SearchResult video : searchResultList) {
                         // 비동기로 검색 -> 검색 속도 향상
                         String videoId = video.getId().getVideoId();
-                        DanceDetailDto danceDetailDto = getVideoDetail(videoId);
+                        DanceDetailsDto danceDetailDto = getVideoDetail(videoId);
 
                         if (danceDetailDto != null)
                             danceDetailDtoList.add(danceDetailDto);
@@ -117,7 +117,7 @@ public class DanceService {
     }
 
     @Async
-    DanceDetailDto getVideoDetail(String videoId)throws IOException {
+    DanceDetailsDto getVideoDetail(String videoId)throws IOException {
         YouTube.Videos.List videoDetails =  youtube.videos().list("contentDetails");
         videoDetails.setKey(YOUTUBE_APIKEY);
         videoDetails.setId(videoId);
@@ -155,7 +155,7 @@ public class DanceService {
 
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
-        DanceDetailDto danceDetailDto = DanceDetailDto.builder()
+        DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
             .url(url)
             .title(videoDetail.getSnippet().getTitle())
             .description(videoDetail.getSnippet().getDescription())
@@ -182,11 +182,11 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceDetailWithRankDto findDance(String videoId) throws IOException {
+    public DanceDetailsWithRankDto findDance(String videoId) throws IOException {
         String url = GOOGLE_YOUTUBE_URL+videoId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
-        DanceDetailDto danceDetailDto = getVideoDetail(videoId);
+        DanceDetailsDto danceDetailDto = getVideoDetail(videoId);
         log.info("1차 검색 정보 : " + danceDetailDto);
 
         // 2. 저장하기 (처음 참여한 경우에만)
@@ -217,7 +217,7 @@ public class DanceService {
                 Collectors.toList());
         }
 
-        DanceDetailWithRankDto danceDetailWithRankDto = DanceDetailWithRankDto.builder()
+        DanceDetailsWithRankDto danceDetailWithRankDto = DanceDetailsWithRankDto.builder()
             .danceDetailDto(danceDetailDto)
             .danceRankUserDtoList(danceRankUserDtoList)
             .build();

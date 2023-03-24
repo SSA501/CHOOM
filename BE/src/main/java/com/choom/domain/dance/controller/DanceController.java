@@ -1,7 +1,7 @@
 package com.choom.domain.dance.controller;
 
-import com.choom.domain.dance.dto.DanceDetailWithRankDto;
-import com.choom.domain.dance.dto.DanceDetailDto;
+import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
+import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.domain.dance.service.DanceService;
 import com.choom.global.model.BaseResponse;
 import java.io.IOException;
@@ -30,14 +30,14 @@ public class DanceController {
     @GetMapping()
     public ResponseEntity<BaseResponse> searchDance(@RequestParam(name = "q") String keyword){
         log.info("keyword : "+keyword);
-        List<DanceDetailDto> danceDetailDtoList = danceService.searchDance(keyword);
+        List<DanceDetailsDto> danceDetailDtoList = danceService.searchDance(keyword);
         return new ResponseEntity<>(BaseResponse.success(danceDetailDtoList), HttpStatus.OK);
     }
 
     @GetMapping("/{videoId}")
     public ResponseEntity<BaseResponse> danceDetails(@PathVariable String videoId) throws IOException {
         log.info("videoId : "+videoId);
-        DanceDetailWithRankDto danceDetailWithRankDto = danceService.findDance(videoId);
+        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(videoId);
         return new ResponseEntity<>(BaseResponse.success(danceDetailWithRankDto), HttpStatus.OK);
     }
 

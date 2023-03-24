@@ -1,7 +1,7 @@
 package com.choom.domain.dance.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
-import com.choom.domain.dance.dto.DanceDetailDto;
+import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.global.model.BaseTimeEntity;
 import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
@@ -66,7 +66,7 @@ public class Dance extends BaseTimeEntity {
     @Builder
     public Dance(Long id, String videoPath, String jsonPath,
         List<Bookmark> bookmarkList,
-        List<MyDance> myDanceList, DanceDetailDto danceDetailDto) {
+        List<MyDance> myDanceList, DanceDetailsDto danceDetailDto) {
         this.id = id;
         this.title = danceDetailDto.getTitle();
         this.url = danceDetailDto.getUrl();
