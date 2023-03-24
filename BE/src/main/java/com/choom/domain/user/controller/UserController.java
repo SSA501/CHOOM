@@ -1,9 +1,15 @@
 package com.choom.domain.user.controller;
 
-import com.choom.domain.user.service.UserService;
+import com.choom.domain.user.dto.TokenDto;
+import com.choom.domain.user.dto.UserLoginResponseDto;
+import com.choom.domain.user.service.AuthService;
+import com.choom.domain.user.service.RedisService;
 import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,12 +18,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final AuthService authService;
+    private final RedisService redisService;
 
-    @GetMapping("/login/oauth2/code/kakao")
-    public void kakaoLogin(@RequestParam String code) {
+    @GetMapping("/login/kakao")
+    public ResponseEntity<BaseResponse> kakaoLogin(@RequestParam String code) {
         log.info(code);
-        userService.kakaoLogin(code);
+        TokenDto token = authService.kakaoLogin(code);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", "refreshToken="+ token.getRefreshToken());
+        UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto(token.getAccessToken());
+        return new ResponseEntity<>(BaseResponse.success(userLoginResponseDto), headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/login/token")
+    public ResponseEntity<BaseResponse> reissueToken(@RequestHeader("Cookie") String refreshToken) {
+        TokenDto token = authService.reissueToken(refreshToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", "refreshToken="+ token.getRefreshToken());
+        UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto(token.getAccessToken());
+        return new ResponseEntity<>(BaseResponse.success(userLoginResponseDto), headers, HttpStatus.OK);
     }
 
 //  test

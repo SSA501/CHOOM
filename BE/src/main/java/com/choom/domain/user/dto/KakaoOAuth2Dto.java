@@ -48,7 +48,7 @@ public class KakaoOAuth2Dto {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=" + KAKAO_APIKEY);
-            sb.append("&redirect_uri=http://localhost:8081/user/login/oauth2/code/kakao");
+            sb.append("&redirect_uri=http://localhost:8081/user/login/kakao");
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();

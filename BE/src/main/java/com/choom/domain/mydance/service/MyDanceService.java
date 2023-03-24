@@ -2,12 +2,13 @@ package com.choom.domain.mydance.service;
 
 import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
 import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
+import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
 import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.originaldance.entity.OriginalDanceRepository;
 import com.choom.domain.user.entity.User;
-import com.choom.domain.user.service.UserService;
+import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.service.FileService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -15,6 +16,8 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,37 +27,33 @@ import java.io.*;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
 public class MyDanceService {
 
-    private final UserService userService;
     private final FileService fileService;
+    private final UserRepository userRepository;
     private final MyDanceRepository myDanceRepository;
     private final OriginalDanceRepository originalDanceRepository;
 
-    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
+    @Transactional
+    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
-        // 내 챌린지 좌표 업로드
-        String jsonPath = fileService.fileUpload("mycoordinate", jsonFile);
-
-        // 일치율 계산
-        HashMap<String, Object> result = calculate(1L, jsonPath);
-        log.info(String.valueOf(result));
-
         // MY_DANCE insert
-        // user, originalDance 더미데이터
-        User user = userService.findUserById(1L).get();
-        OriginalDance originalDance = originalDanceRepository.findById(1L).get();
+        // user 더미데이터
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        OriginalDance originalDance = originalDanceRepository.findById(myDanceAddRequestDto.getOriginalDanceId())
+                .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
         MyDance myDance = MyDance.builder()
-                .score((int) result.get("score"))
-                .matchRate((String) result.get("matchRate"))
-                .videoPath(videoPath)
+                .score(myDanceAddRequestDto.getScore())
+                .matchRate(myDanceAddRequestDto.getMatchRate())
                 .videoLength(myDanceAddRequestDto.getVideoLength())
                 .title(myDanceAddRequestDto.getTitle())
+                .videoPath(videoPath)
                 .user(user)
                 .originalDance(originalDance)
                 .build();
@@ -77,6 +76,40 @@ public class MyDanceService {
         return resource;
     }
 
+    @Transactional
+    public void removeMyDance(Long myDanceId) {
+        MyDance myDance = myDanceRepository.findById(myDanceId)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+
+        // 내 챌린지 영상 삭제
+        fileService.fileDelete(myDance.getVideoPath());
+
+        // MY_DANCE delete
+        myDanceRepository.deleteById(myDanceId);
+    }
+
+    public FindMyDanceResponseDto findMyDance(Long myDanceId) {
+        MyDance myDance = myDanceRepository.findById(myDanceId)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+        return FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build();
+    }
+
+    public Page<FindMyDanceResponseDto> findAllMyDance(Pageable pageable) {
+        // user 더미데이터
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        Page<MyDance> myDancePage = myDanceRepository.findPageByUser(user, pageable);
+
+        // MyDance -> FindMyDanceResponseDto
+        return myDancePage.map(myDance -> FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build());
+    }
+
+    // 일치율 계산 부분 (front에서 하기로 해서 안 씀!)
     private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
         HashMap<String, Object> result = new HashMap<>();
         ArrayList<Double> matchRates = new ArrayList<Double>();
@@ -114,8 +147,7 @@ public class MyDanceService {
 
         // mycoordinate 파일 삭제
         myDanceCoordinate.close();
-        File file = new File(myDanceCoordinatePath);
-        file.delete();
+        fileService.fileDelete(myDanceCoordinatePath);
 
         result.put("matchRate", matchRates.toString());
         result.put("score", (int) similaritySum / myResult.size());

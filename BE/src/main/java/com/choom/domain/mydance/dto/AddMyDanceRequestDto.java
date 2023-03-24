@@ -11,4 +11,6 @@ public class AddMyDanceRequestDto {
     private Long originalDanceId;
     private double videoLength;
     private String title;
+    private String matchRate;
+    private int score;
 }
