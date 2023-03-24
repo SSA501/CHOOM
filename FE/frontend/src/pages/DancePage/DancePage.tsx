@@ -1,31 +1,21 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import ResultPage from "../ResultPage/ResultPage";
+
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
 import { ShadowContainer } from "../../components/ShadowContainer/style";
 import { DancePageContainer, SideInfoContainer } from "./style";
 import SideTitle from "../../components/SideTitle/SideTitle";
 import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
-interface Kpt {
-  x: number;
-  y: number;
-  z: number;
-  score: number;
-}
+import * as poseDetection from "@tensorflow-models/pose-detection";
+
 interface Pose {
-  keypoints: Kpt[];
+  keypoints: poseDetection.Keypoint[];
 }
-interface Score {
-  score: number;
-  time: number;
-}
+
 function DancePage() {
-  const [poseList, setPoseList] = useState<Pose[]>(
-    JSON.parse(localStorage.getItem("poseList") || "[]")
-  );
-  const [scoreList, setScoreList] = useState<Score[]>([]);
-  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [poseList, setPoseList] = useState<Pose[]>([]);
+  const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const danceVideoRef = useRef<any>();
 
   const contents = [
@@ -33,6 +23,25 @@ function DancePage() {
     "2️⃣ 어쩌라고요",
     "3️⃣ 그냥 녹화하면 됩니다^^",
   ];
+
+  // 모델 불러오기
+  useEffect(() => {
+    createDetector();
+  }, []);
+
+  const createDetector = async () => {
+    const model = poseDetection.SupportedModels.BlazePose;
+    const detectorConfig = {
+      runtime: "mediapipe" as "mediapipe",
+      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/pose",
+    };
+    const createdDetector = await poseDetection.createDetector(
+      model,
+      detectorConfig
+    );
+    createdDetector.estimatePoses(new ImageData(450, 800));
+    setDetector(createdDetector);
+  };
 
   return (
     <DancePageContainer>
@@ -55,21 +64,15 @@ function DancePage() {
                 setPoseList={setPoseList}
                 poseList={poseList}
                 ref={danceVideoRef}
+                detector={detector!}
               />
               <DanceCam
-                poseList={poseList}
                 danceVideoRef={danceVideoRef}
-                setScoreList={setScoreList}
-                setVideoUrl={setVideoUrl}
+                detector={detector!}
+                poseList={poseList}
               />
             </ShadowContainer>
           }
-        />
-      </Routes>
-      <Routes>
-        <Route
-          path="/result"
-          element={<ResultPage scoreList={scoreList} videoUrl={videoUrl} />}
         />
       </Routes>
     </DancePageContainer>

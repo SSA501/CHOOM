@@ -6,8 +6,8 @@ function SideSubTitle(props: { title: string; contents: string[] }) {
     <TitleContainer>
       <TitleText>{props.title}</TitleText>
       <TitleBar />
-      {props.contents.map((content) => {
-        return <TitleText>{content}</TitleText>;
+      {props.contents.map((content, i) => {
+        return <TitleText key={i}>{content}</TitleText>;
       })}
     </TitleContainer>
   );
