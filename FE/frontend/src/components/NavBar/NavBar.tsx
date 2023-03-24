@@ -32,12 +32,11 @@ function NavBar() {
               챌린지
             </NavBtnLink>
           </NavLi>
-          {isLogin && (
+          {isLogin ? (
             <NavLi>
               <NavBtnLink to="/profile">프로필</NavBtnLink>
             </NavLi>
-          )}
-          {!isLogin && (
+          ) : (
             <NavLi>
               <LoginBtn onClick={showLoginModal}>로그인</LoginBtn>
             </NavLi>

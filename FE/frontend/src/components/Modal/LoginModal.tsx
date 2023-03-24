@@ -10,13 +10,16 @@ import {
 } from "./style";
 import { CgClose } from "react-icons/cg";
 import { ShadowContainer } from "../ShadowContainer/style";
+import { loginKakao } from "../../apis/api";
 
-function LoginModal(props: {
+interface LoginModalProps {
   setIsLogin: (isLogin: boolean) => void;
   setLoginModalOpen: (loginModalOpen: boolean) => void;
-}) {
+}
+
+function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
   const closeModal = () => {
-    props.setLoginModalOpen(false);
+    setLoginModalOpen(false);
     document.body.style.overflow = "auto";
   };
 
@@ -26,7 +29,7 @@ function LoginModal(props: {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (modalRef.current && !modalRef.current.contains(target)) {
-        props.setLoginModalOpen(false);
+        setLoginModalOpen(false);
       }
     };
 
@@ -37,20 +40,22 @@ function LoginModal(props: {
     };
   });
 
-  const loginGoogle = () => {
+  const handleLoginGoogle = () => {
     // TODO: 구글 로그인 기능 구현
     closeModal();
-    props.setIsLogin(true);
+    setIsLogin(true);
   };
-  const loginKaKao = () => {
-    // TODO: 카카오 로그인 기능 구현
-    closeModal();
-    props.setIsLogin(true);
-  };
-  const loginTiktok = () => {
+  const handleLoginTiktok = () => {
     // TODO: 틱톡 로그인 기능 구현
+
     closeModal();
-    props.setIsLogin(true);
+    setIsLogin(true);
+  };
+  const handleLoginKaKao = () => {
+    // TODO: 카톡 로그인 기능 구현
+    loginKakao();
+    setIsLogin(true);
+    closeModal();
   };
 
   return (
@@ -68,9 +73,9 @@ function LoginModal(props: {
           </CloseBtn>
           <ModalTitle>LOGIN</ModalTitle>
           <BtnDiv>
-            <Btn login loginType={"google"} handleClick={loginGoogle}></Btn>
-            <Btn login loginType={"kakao"} handleClick={loginKaKao}></Btn>
-            <Btn login loginType={"tiktok"} handleClick={loginTiktok}></Btn>
+            <Btn login loginType={"google"} handleClick={handleLoginGoogle} />
+            <Btn login loginType={"tiktok"} handleClick={handleLoginTiktok} />
+            <Btn login loginType={"kakao"} handleClick={handleLoginKaKao} />
           </BtnDiv>
           <LogoImg src="/assets/logo.png" alt="logo" />
         </ShadowContainer>
