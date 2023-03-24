@@ -14,7 +14,7 @@ public class FindMyDanceResponseDto {
     private int score;
     private String matchRate;
     private String videoPath;
-    private double videoLength;
+    private int videoLength;
     private String title;
     private String youtubeUrl;
     private String tiktokUrl;

@@ -12,7 +12,7 @@ public class AddMyDanceResponseDto {
     private int score;
     private String matchRate;
     private String videoPath;
-    private double videoLength;
+    private int videoLength;
     private String title;
 
     @Builder
