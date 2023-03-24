@@ -30,17 +30,17 @@ public class OriginalDanceController {
     private final OriginalDanceService originalDanceService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> searchChallenge(@RequestParam(name = "q") String keyword){
+    public ResponseEntity<BaseResponse> searchDance(@RequestParam(name = "q") String keyword){
         log.info("keyword : "+keyword);
-        List<SearchResponseDto> searchResponseDtoList = originalDanceService.searchChallenge(keyword);
+        List<SearchResponseDto> searchResponseDtoList = originalDanceService.searchDance(keyword);
         return new ResponseEntity<>(BaseResponse.success(searchResponseDtoList), HttpStatus.OK);
     }
 
     @GetMapping("/{videoId}")
-    public ResponseEntity<BaseResponse> detailChallenge(@PathVariable String videoId)
+    public ResponseEntity<BaseResponse> danceDetails(@PathVariable String videoId)
         throws IOException {
         log.info("videoId : "+videoId);
-        DetailChallengeDto detailChallengeDto = originalDanceService.detailChallenge(videoId);
+        DetailChallengeDto detailChallengeDto = originalDanceService.findDance(videoId);
         return new ResponseEntity<>(BaseResponse.success(detailChallengeDto), HttpStatus.OK);
     }
 

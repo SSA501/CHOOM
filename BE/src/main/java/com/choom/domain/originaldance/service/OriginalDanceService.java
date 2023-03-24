@@ -59,7 +59,7 @@ public class OriginalDanceService{
         }).setApplicationName("youtube-cmdline-search-sample").build();
     }
 
-    public List<SearchResponseDto> searchChallenge(String keyword) {
+    public List<SearchResponseDto> searchDance(String keyword) {
         log.info("Starting YouTube search... " +keyword);
         List<SearchResponseDto> searchResponseDtoList = new ArrayList<>();
 
@@ -173,7 +173,7 @@ public class OriginalDanceService{
         }
     }
 
-    public DetailChallengeDto detailChallenge(String videoId) throws IOException {
+    public DetailChallengeDto findDance(String videoId) throws IOException {
         String url = GOOGLE_YOUTUBE_URL+videoId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
