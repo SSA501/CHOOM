@@ -1,7 +1,8 @@
 import styled, { keyframes } from "styled-components";
 
 const ScrollingTextContainer = styled.div`
-  margin: 3em 0;
+  margin: 3em 0 5em;
+  position: relative;
 `;
 
 const flowAnimation = keyframes`
@@ -29,6 +30,16 @@ const FlowText = styled.div`
   animation: ${flowAnimation} 20s linear infinite;
 `;
 
+const GreenBox = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 3em;
+  background-color: var(--green-color);
+  transform: rotate(2deg);
+  z-index: -1;
+  top: 6px;
+`;
+
 const RecentVideosContainer = styled.div`
   padding: 3em 10em;
   display: grid;
@@ -41,5 +52,6 @@ export {
   ScrollingTextContainer,
   FlowTextContainer,
   FlowText,
+  GreenBox,
   RecentVideosContainer,
 };
