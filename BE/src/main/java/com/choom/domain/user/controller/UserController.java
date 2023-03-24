@@ -32,8 +32,8 @@ public class UserController {
     }
 
     @PostMapping("/login/token")
-    public ResponseEntity<BaseResponse> reIssueToken(@RequestHeader("Cookie") String refreshToken) {
-        TokenDto token = authService.reIssueToken(refreshToken);
+    public ResponseEntity<BaseResponse> reissueToken(@RequestHeader("Cookie") String refreshToken) {
+        TokenDto token = authService.reissueToken(refreshToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", "refreshToken="+ token.getRefreshToken());
         UserLoginResponseDto userLoginResponseDto = new UserLoginResponseDto(token.getAccessToken());

@@ -48,7 +48,7 @@ public class AuthService {
         return token;
     }
 
-    public TokenDto reIssueToken(String refreshToken) {
+    public TokenDto reissueToken(String refreshToken) {
         RefreshToken oldToken = redisService.findRefreshTokenByToken(refreshToken);
         if (refreshToken.equals(oldToken.getToken())) {
             User user = userService.findUserById(oldToken.getUserId())
