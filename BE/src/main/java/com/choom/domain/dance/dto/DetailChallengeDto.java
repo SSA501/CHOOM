@@ -1,8 +1,7 @@
-package com.choom.domain.originaldance.dto;
+package com.choom.domain.dance.dto;
 
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DetailChallengeDto {
-    SearchResponseDto originalDance;
+    SearchResponseDto dance;
 
     @Builder
     public DetailChallengeDto(SearchResponseDto searchResponseDto) {
-        this.originalDance = searchResponseDto;
+        this.dance = searchResponseDto;
     }
 }

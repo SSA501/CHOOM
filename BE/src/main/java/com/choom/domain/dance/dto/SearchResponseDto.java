@@ -1,4 +1,4 @@
-package com.choom.domain.originaldance.dto;
+package com.choom.domain.dance.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

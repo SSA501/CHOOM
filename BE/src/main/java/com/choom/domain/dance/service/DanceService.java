@@ -1,9 +1,9 @@
-package com.choom.domain.originaldance.service;
+package com.choom.domain.dance.service;
 
-import com.choom.domain.originaldance.dto.DetailChallengeDto;
-import com.choom.domain.originaldance.dto.SearchResponseDto;
-import com.choom.domain.originaldance.entity.OriginalDance;
-import com.choom.domain.originaldance.entity.OriginalDanceRepository;
+import com.choom.domain.dance.dto.DetailChallengeDto;
+import com.choom.domain.dance.dto.SearchResponseDto;
+import com.choom.domain.dance.entity.Dance;
+import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.global.service.FileService;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -32,9 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
-public class OriginalDanceService{
+public class DanceService {
 
-    private final OriginalDanceRepository originalDanceRepository;
+    private final DanceRepository danceRepository;
     private final FileService fileService;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -136,13 +136,13 @@ public class OriginalDanceService{
         }
 
         String videoPath = GOOGLE_YOUTUBE_URL + videoId;
-        OriginalDance originalDance= originalDanceRepository.findByVideoPath(videoPath).orElse(null);
+        Dance dance = danceRepository.findByVideoPath(videoPath).orElse(null);
 
         int userCount = 0;
         int status = 0;
-        if(originalDance != null){
-            userCount = originalDance.getUserCount();
-            status = originalDance.getStatus();
+        if(dance != null){
+            userCount = dance.getUserCount();
+            status = dance.getStatus();
         }
 
         //1분 이내인 경우
@@ -162,14 +162,14 @@ public class OriginalDanceService{
         return searchResponseDto;
     }
 
-    public void addCoordinate(Long originalDanceId, MultipartFile jsonFile) throws IOException {
+    public void addCoordinate(Long danceId, MultipartFile jsonFile) throws IOException {
         // JSON파일 서버에 저장
         String jsonPath = fileService.fileUpload("coordinate", jsonFile);
         log.info("변경 된 jsonPath : "+jsonPath);
         // DB에 파일 위치 UPDATE
-        OriginalDance originalDance = originalDanceRepository.findById(originalDanceId).orElse(null);
-        if(originalDance != null){
-            originalDance.updateJsonPath(jsonPath);
+        Dance dance = danceRepository.findById(danceId).orElse(null);
+        if(dance != null){
+            dance.updateJsonPath(jsonPath);
         }
     }
 
