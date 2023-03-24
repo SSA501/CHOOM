@@ -21,13 +21,14 @@ public class DanceDetailsDto {
     private int userCount;
     private String videoId;
     private int status;
+    private String publishedAt;
 
     void changeStatus(int status){
         this.status = status;
     }
 
     @Builder
-    public DanceDetailsDto(String title, int sec, String videoId, String description, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status) {
+    public DanceDetailsDto(String title, int sec, String videoId, String description, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
         this.url = url;
         this.title = title;
         this.description = description;
@@ -38,5 +39,6 @@ public class DanceDetailsDto {
         this.userCount = userCount;
         this.videoId = videoId;
         this.status = status;
+        this.publishedAt = publishedAt;
     }
 }

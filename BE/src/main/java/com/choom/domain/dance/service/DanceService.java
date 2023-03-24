@@ -49,7 +49,7 @@ public class DanceService {
 
     private static final String GOOGLE_YOUTUBE_URL =  "https://www.youtube.com/shorts/";
     private static final String YOUTUBE_SEARCH_FIELDS1 = "items(id/videoId,snippet/title,snippet/channelTitle)";
-    private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
+    private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/publishedAt, snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
 
     private static String YOUTUBE_APIKEY;
     @Value("${apikey.youtube}")
@@ -128,6 +128,8 @@ public class DanceService {
             throw new IllegalArgumentException("유튜브 동영상 id가 올바르지 않습니다...");
         }
         Video videoDetail = videoDetails.execute().getItems().get(0);
+
+        log.info("결과 : videoDetail : "+videoDetail.toString());
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
         if(time.equals("P0D") || time.contains("M")){ // P0D는 라이브 방송
@@ -152,7 +154,7 @@ public class DanceService {
             userCount = dance.getUserCount();
             status = dance.getStatus();
         }
-
+        String publishedAt = String.valueOf(videoDetail.getSnippet().getPublishedAt()).split("T")[0];
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
         DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
@@ -166,6 +168,7 @@ public class DanceService {
             .userCount(userCount)
             .videoId(videoId)
             .status(status)
+            .publishedAt(publishedAt)
             .build();
         return danceDetailDto;
     }
