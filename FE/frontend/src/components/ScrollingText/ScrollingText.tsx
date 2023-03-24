@@ -1,5 +1,10 @@
 import React from "react";
-import { FlowText, FlowTextContainer, ScrollingTextContainer } from "./style";
+import {
+  FlowText,
+  FlowTextContainer,
+  GreenBox,
+  ScrollingTextContainer,
+} from "./style";
 
 function ScrollingText() {
   let flowText = "";
@@ -12,12 +17,13 @@ function ScrollingText() {
       <FlowTextContainer>
         <FlowText>{flowText}</FlowText>
       </FlowTextContainer>
+      <GreenBox />
       {/* <RecentVideosContainer>
-        {videoData?.map(({ id, videoSrc, thumbnailSrc }) => (
+        {videoData?.map(({ id, videoPath, thumbnailSrc }) => (
           <div style={{ width: "450px" }} key={id}>
             <Video
               id={id}
-              videoSrc={videoSrc}
+              videoPath={videoPath}
               thumbnailSrc={thumbnailSrc}
               frameColor={"black"}
             />
