@@ -1,9 +1,11 @@
 package com.choom.domain.dance.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
+import com.choom.domain.dance.dto.DanceDetailDto;
 import com.choom.global.model.BaseTimeEntity;
 import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -59,5 +61,21 @@ public class Dance extends BaseTimeEntity {
 
     public void updateJsonPath(String jsonPath) {
         this.jsonPath = jsonPath;
+    }
+
+    @Builder
+    public Dance(Long id, String videoPath, String jsonPath,
+        List<Bookmark> bookmarkList,
+        List<MyDance> myDanceList, DanceDetailDto danceDetailDto) {
+        this.id = id;
+        this.title = danceDetailDto.getTitle();
+        this.url = danceDetailDto.getUrl();
+        this.videoPath = videoPath;
+        this.jsonPath = jsonPath;
+        this.thumbnailPath = danceDetailDto.getThumbnailPath();
+        this.userCount = danceDetailDto.getUserCount();
+        this.status = danceDetailDto.getStatus();
+        this.bookmarkList = bookmarkList;
+        this.myDanceList = myDanceList;
     }
 }
