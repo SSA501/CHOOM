@@ -4,7 +4,7 @@ import reset from "styled-reset";
 // react icons 스타일
 export const iconStyle = {
   verticalAlign: "middle",
-  fontSize: "1.3rem",
+  fontSize: "1.5rem",
   cursor: "pointer",
 };
 
