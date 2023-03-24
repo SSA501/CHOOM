@@ -1,12 +1,9 @@
 package com.choom.global.auth;
 
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.choom.domain.user.entity.User;
+import com.choom.domain.user.service.AuthService;
 import com.choom.domain.user.service.UserService;
 import com.choom.global.util.JwtTokenUtil;
 import com.choom.global.util.ResponseBodyWriteUtil;
@@ -16,16 +13,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 /**
  * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
  */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private UserService userService;
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
+    private AuthService authService;
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, AuthService authService) {
         super(authenticationManager);
         this.userService = userService;
+        this.authService = authService;
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -33,7 +36,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         // Read the Authorization header, where the JWT Token should be
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING);
         // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX) || authService.isBlacklisted(header.substring(7))) {
             filterChain.doFilter(request, response);
             return;
         }

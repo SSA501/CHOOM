@@ -3,13 +3,11 @@ package com.choom.domain.user.service;
 import com.choom.domain.user.dto.KakaoOAuth2Dto;
 import com.choom.domain.user.dto.KakaoUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
-import com.choom.domain.user.entity.RefreshToken;
-import com.choom.domain.user.entity.SocialType;
-import com.choom.domain.user.entity.User;
-import com.choom.domain.user.entity.UserRepository;
+import com.choom.domain.user.entity.*;
 import com.choom.global.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +17,8 @@ public class AuthService {
     private final RedisService redisService;
     private final UserRepository userRepository;
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+    private final BlacklistRedisRepository blacklistRedisRepository;
 
     public TokenDto kakaoLogin(String code) {
         KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
@@ -48,12 +48,43 @@ public class AuthService {
     }
 
     public TokenDto reissueToken(String refreshToken) {
-        RefreshToken oldToken = redisService.findRefreshTokenByToken(refreshToken);
+        RefreshToken oldToken = refreshTokenRedisRepository.findByToken(refreshToken).orElse(null);
         if (refreshToken.equals(oldToken.getToken())) {
             User user = userRepository.findById(oldToken.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
             return issueToken(user);
         }
         return null;
+    }
+
+    public void logout(Long userId, String accessToken) {
+        RefreshToken token = refreshTokenRedisRepository.findById(userId).orElse(null);
+        if (token != null) {
+            refreshTokenRedisRepository.delete(token);
+            log.info("refreshToken지워졌니?"+refreshTokenRedisRepository.findById(userId).orElse(null));
+        }
+        blacklistRedisRepository.save(Blacklist.builder()
+                .token(accessToken)
+                .build());
+        log.info("블랙리스트?"+blacklistRedisRepository.findById(accessToken));
+    }
+
+    public boolean isBlacklisted(String token) {
+        if (blacklistRedisRepository.findById(token).isPresent()) {
+            log.info("넌 탈락임");
+            return true;
+        }
+        log.info("유효함");
+        return false;
+    }
+
+    public ResponseCookie setCookie(String refreshToken, Integer expiration) {
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(expiration)
+                .build();
+        return cookie;
     }
 }

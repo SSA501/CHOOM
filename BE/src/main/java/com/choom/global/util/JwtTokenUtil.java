@@ -30,12 +30,7 @@ public class JwtTokenUtil {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
-    public void setExpirationTime() {
-        //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-        JwtTokenUtil.refreshTokenExpirationTime = refreshTokenExpirationTime;
-        JwtTokenUtil.accessTokenExpirationTime = accessTokenExpirationTime;
 
-    }
     public static JWTVerifier getVerifier() {
         return JWT
                 .require(Algorithm.HMAC512(secretKey.getBytes()))

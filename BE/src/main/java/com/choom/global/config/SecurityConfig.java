@@ -1,5 +1,6 @@
 package com.choom.global.config;
 
+import com.choom.domain.user.service.AuthService;
 import com.choom.domain.user.service.UserService;
 import com.choom.global.auth.CustomUserDetailService;
 import com.choom.global.auth.JwtAuthenticationFilter;
@@ -30,6 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
+
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -59,11 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService, authService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
                 //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .antMatchers("/user").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/user/login/kakao").permitAll()
+                .anyRequest().authenticated()
                 .and().cors().configurationSource(corsConfigurationSource());
     }
 
