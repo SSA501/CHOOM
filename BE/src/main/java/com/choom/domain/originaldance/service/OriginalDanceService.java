@@ -1,5 +1,6 @@
 package com.choom.domain.originaldance.service;
 
+import com.choom.domain.originaldance.dto.DetailChallengeDto;
 import com.choom.domain.originaldance.dto.SearchResponseDto;
 import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.originaldance.entity.OriginalDanceRepository;
@@ -43,7 +44,7 @@ public class OriginalDanceService{
 
     private static final String GOOGLE_YOUTUBE_URL =  "https://www.youtube.com/shorts/";
     private static final String YOUTUBE_SEARCH_FIELDS1 = "items(id/videoId,snippet/title,snippet/channelTitle)";
-    private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/description,snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
+    private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
 
     private static String YOUTUBE_APIKEY;
     @Value("${apikey.youtube}")
@@ -80,7 +81,8 @@ public class OriginalDanceService{
                 if (searchResultList != null) {
                     for (SearchResult video : searchResultList) {
                         // 비동기로 검색 -> 검색 속도 향상
-                        SearchResponseDto searchResponseDto = getVideoDetail(video);
+                        String videoId = video.getId().getVideoId();
+                        SearchResponseDto searchResponseDto = getVideoDetail(videoId);
 
                         if (searchResponseDto != null)
                             searchResponseDtoList.add(searchResponseDto);
@@ -110,15 +112,14 @@ public class OriginalDanceService{
     }
 
     @Async
-    SearchResponseDto getVideoDetail(SearchResult video)throws IOException {
+    SearchResponseDto getVideoDetail(String videoId)throws IOException {
         YouTube.Videos.List videoDetails =  youtube.videos().list("contentDetails");
         videoDetails.setKey(YOUTUBE_APIKEY);
-        videoDetails.setId(video.getId().getVideoId());
+        videoDetails.setId(videoId);
         videoDetails.setPart("statistics,snippet,contentDetails");
         videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
 
         Video videoDetail = videoDetails.execute().getItems().get(0);
-
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
         if(time.equals("P0D") || time.contains("M")){ // P0D는 라이브 방송
@@ -134,26 +135,29 @@ public class OriginalDanceService{
             viewCount = videoDetail.getStatistics().getViewCount().longValue();
         }
 
-        String videoPath = GOOGLE_YOUTUBE_URL + video.getId().getVideoId();
+        String videoPath = GOOGLE_YOUTUBE_URL + videoId;
         OriginalDance originalDance= originalDanceRepository.findByVideoPath(videoPath).orElse(null);
 
         int userCount = 0;
+        int status = 0;
         if(originalDance != null){
             userCount = originalDance.getUserCount();
+            status = originalDance.getStatus();
         }
 
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
         SearchResponseDto searchResponseDto = SearchResponseDto.builder()
             .url(videoPath)
-            .title(video.getSnippet().getTitle())
-            .channelName(video.getSnippet().getChannelTitle())
+            .title(videoDetail.getSnippet().getTitle())
             .description(videoDetail.getSnippet().getDescription())
             .thumbnailPath(videoDetail.getSnippet().getThumbnails().getHigh().getUrl())
             .sec(s)
             .likeCount(likeCount)
             .viewCount(viewCount)
             .userCount(userCount)
+            .videoId(videoId)
+            .status(status)
             .build();
         return searchResponseDto;
     }
@@ -168,4 +172,25 @@ public class OriginalDanceService{
             originalDance.updateJsonPath(jsonPath);
         }
     }
+
+    public DetailChallengeDto detailChallenge(String videoId) throws IOException {
+        String url = GOOGLE_YOUTUBE_URL+videoId;
+
+        // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
+        SearchResponseDto searchResponseDto = getVideoDetail(videoId);
+        log.info("1차 검색 정보 : " + searchResponseDto);
+
+        // 2. 저장하기 (처음 참여한 경우에만)
+
+//        OriginalDance originalDance = originalDanceRepository.findByVideoPath(url).orElse(null);
+
+        // 3. 유저 순위 3명
+
+        DetailChallengeDto detailChallengeDto = DetailChallengeDto.builder()
+            .searchResponseDto(searchResponseDto)
+            .build();
+        return detailChallengeDto;
+    }
+
+
 }
