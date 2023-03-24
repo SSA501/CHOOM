@@ -36,7 +36,7 @@ public class OriginalDanceController {
         return new ResponseEntity<>(BaseResponse.success(searchResponseDtoList), HttpStatus.OK);
     }
 
-    @GetMapping("/detail/{videoId}")
+    @GetMapping("/{videoId}")
     public ResponseEntity<BaseResponse> detailChallenge(@PathVariable String videoId)
         throws IOException {
         log.info("videoId : "+videoId);
