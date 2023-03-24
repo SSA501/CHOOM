@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthService {
-    private final UserService userService;
     private final RedisService redisService;
     private final UserRepository userRepository;
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
@@ -27,7 +26,7 @@ public class AuthService {
         String nickname = userInfo.getNickname();
         String profileImage = userInfo.getProfileImage();
 
-        User user = userService.findUserByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
+        User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
 
         if (user == null) {
             user = User.builder()
@@ -51,8 +50,8 @@ public class AuthService {
     public TokenDto reissueToken(String refreshToken) {
         RefreshToken oldToken = redisService.findRefreshTokenByToken(refreshToken);
         if (refreshToken.equals(oldToken.getToken())) {
-            User user = userService.findUserById(oldToken.getUserId())
-                    .orElseThrow(() -> new IllegalAccessError("존재하지 않는 유저입니다."));
+            User user = userRepository.findById(oldToken.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
             return issueToken(user);
         }
         return null;
