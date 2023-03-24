@@ -1,6 +1,5 @@
 import React from "react";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
-import { ShadowContainer } from "../../components/ShadowContainer/style";
 import { DetailContainer, DetailPageContainer } from "./style";
 
 function DetailPage() {

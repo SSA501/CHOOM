@@ -3,7 +3,6 @@ import MainBanner from "../../components/MainBanner/MainBanner";
 import ScrollingText from "../../components/ScrollingText/ScrollingText";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
-import { pickRandomColor } from "../../utils/utils";
 import { TopContainer } from "./style";
 
 export interface VideoDataProps {
@@ -76,10 +75,6 @@ function MainPage() {
       status: 2,
     },
   ];
-
-  for (let video of popularVideoData) {
-    video.frameColor = pickRandomColor();
-  }
 
   return (
     <>
