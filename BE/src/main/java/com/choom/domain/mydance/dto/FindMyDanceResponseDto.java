@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FindMyDanceResponseDto {
     private Long id;
-    private Long originalDanceId;
+    private Long danceId;
     private int score;
     private String matchRate;
     private String videoPath;
@@ -23,7 +23,7 @@ public class FindMyDanceResponseDto {
     @Builder
     public FindMyDanceResponseDto(MyDance myDance) {
         this.id = myDance.getId();
-        this.originalDanceId = myDance.getOriginalDance().getId();
+        this.danceId = myDance.getDance().getId();
         this.score = myDance.getScore();
         this.matchRate = myDance.getMatchRate();
         this.videoPath = myDance.getVideoPath();

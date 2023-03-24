@@ -1,4 +1,4 @@
-package com.choom.domain.originaldance.entity;
+package com.choom.domain.dance.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
 import com.choom.global.model.BaseTimeEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OriginalDance extends BaseTimeEntity {
+public class Dance extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,10 +51,10 @@ public class OriginalDance extends BaseTimeEntity {
     @ColumnDefault("0")
     private int status;
 
-    @OneToMany(mappedBy = "originalDance", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dance", cascade = CascadeType.ALL)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "originalDance", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dance", cascade = CascadeType.ALL)
     private List<MyDance> myDanceList = new ArrayList<>();
 
     public void updateJsonPath(String jsonPath) {

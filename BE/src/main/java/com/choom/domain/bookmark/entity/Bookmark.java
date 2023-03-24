@@ -4,7 +4,7 @@ import com.choom.global.model.BaseTimeEntity;
 
 import javax.persistence.*;
 
-import com.choom.domain.originaldance.entity.OriginalDance;
+import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +24,6 @@ public class Bookmark extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORIGINALDANCE_ID")
-    private OriginalDance originalDance;
+    @JoinColumn(name = "DANCE_ID")
+    private Dance dance;
 }

@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AddMyDanceResponseDto {
     private Long id;
-    private Long originalDanceId;
+    private Long danceId;
     private int score;
     private String matchRate;
     private String videoPath;
@@ -18,7 +18,7 @@ public class AddMyDanceResponseDto {
     @Builder
     public AddMyDanceResponseDto(MyDance myDance) {
         this.id = myDance.getId();
-        this.originalDanceId = myDance.getOriginalDance().getId();
+        this.danceId = myDance.getDance().getId();
         this.score = myDance.getScore();
         this.matchRate =myDance.getMatchRate();
         this.videoPath = myDance.getVideoPath();
