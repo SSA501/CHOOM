@@ -51,6 +51,10 @@ public class MyDance extends BaseTimeEntity {
     @JoinColumn(name = "ORIGINALDANCE_ID")
     private OriginalDance originalDance;
 
+    public void updateYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
+
     @Builder
     public MyDance(int score, String matchRate, String videoPath, double videoLength, String title, User user, OriginalDance originalDance, String tiktokUrl, String youtubeUrl) {
         this.score = score;
