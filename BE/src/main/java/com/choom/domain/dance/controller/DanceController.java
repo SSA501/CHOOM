@@ -2,6 +2,7 @@ package com.choom.domain.dance.controller;
 
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
+import com.choom.domain.dance.dto.DancePopularDto;
 import com.choom.domain.dance.service.DanceService;
 import com.choom.global.model.BaseResponse;
 import java.io.IOException;
@@ -32,6 +33,13 @@ public class DanceController {
         log.info("keyword : "+keyword);
         List<DanceDetailsDto> danceDetailDtoList = danceService.searchDance(keyword);
         return new ResponseEntity<>(BaseResponse.success(danceDetailDtoList), HttpStatus.OK);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<BaseResponse> popularDance() {
+        log.info("start popularDance");
+        List<DancePopularDto> dancePopularDtoList = danceService.findPopularDance();
+        return new ResponseEntity<>(BaseResponse.success(dancePopularDtoList), HttpStatus.OK);
     }
 
     @GetMapping("/{videoId}")

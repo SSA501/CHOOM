@@ -2,6 +2,7 @@ package com.choom.domain.dance.service;
 
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
+import com.choom.domain.dance.dto.DancePopularDto;
 import com.choom.domain.dance.dto.DanceRankUserDto;
 import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
@@ -227,5 +228,13 @@ public class DanceService {
             .build();
 
         return danceDetailWithRankDto;
+    }
+
+    public List<DancePopularDto> findPopularDance() {
+        List<Dance> danceList = danceRepository.findPopularDance();
+        List<DancePopularDto> dancePopularDtoList = danceList.stream().map(DancePopularDto::new).collect(
+            Collectors.toList());
+        return dancePopularDtoList;
+
     }
 }
