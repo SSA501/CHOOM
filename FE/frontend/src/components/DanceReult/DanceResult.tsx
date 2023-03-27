@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import DanceChart from "../../components/DanceChart/DanceChart";
 
 interface Score {
@@ -12,12 +11,10 @@ function DanceResult(props: {
   danceVideoRef: React.MutableRefObject<any>;
   setMyUrl: (myUrl: string) => void;
 }) {
-  const navigate = useNavigate();
-
   const handleBackBtnClick = () => {
     props.setMyUrl("");
-    navigate("/dance");
   };
+
   return (
     <div>
       <DanceChart

@@ -1,11 +1,18 @@
 import React, {
   useState,
+  useEffect,
   useRef,
   forwardRef,
   useImperativeHandle,
 } from "react";
 import { CgEditFlipH } from "react-icons/cg";
-import { MdSlowMotionVideo, MdVolumeUp, MdPlayArrow } from "react-icons/md";
+import {
+  MdSlowMotionVideo,
+  MdVolumeUp,
+  MdPlayArrow,
+  MdVolumeOff,
+  MdStop,
+} from "react-icons/md";
 import CircleBtn from "../CircleBtn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
 import { ChallengeVideo } from "./style";
@@ -29,6 +36,10 @@ const DanceVideo = forwardRef(
 
     const [videoUrl, setVideoUrl] = useState<string>("");
     const video = useRef<HTMLVideoElement>(null);
+    const [playRate, setPlayRate] = useState(1.0);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const [isMuted, setIsMuted] = useState(video.current?.muted);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useImperativeHandle(ref, () => ({
       playVideo,
@@ -89,12 +100,61 @@ const DanceVideo = forwardRef(
     };
 
     const playVideo = () => {
+      if (video.current) video.current.currentTime = 0;
       video.current?.play();
     };
 
     const changeVideoTime = (time: number) => {
       if (video.current) video.current.currentTime = time;
     };
+
+    // 비디오 재생
+    const handelPlayBtnClick = () => {
+      setIsPlaying(true);
+    };
+
+    const handelStopBtnClick = () => {
+      setIsPlaying(false);
+    };
+
+    useEffect(() => {
+      isPlaying ? video.current?.play() : video.current?.pause();
+
+      const handleEnded = () => {
+        setIsPlaying(false);
+      };
+      if (video.current) video.current.addEventListener("ended", handleEnded);
+    }, [isPlaying]);
+
+    // 비디오 속도 변경
+    const handelChangeRateBtnClick = () => {
+      if (playRate === 1.0) setPlayRate(2.0);
+      else if (playRate === 2.0) setPlayRate(0.5);
+      else setPlayRate(1.0);
+    };
+
+    useEffect(() => {
+      if (video.current) video.current.playbackRate = playRate;
+    }, [playRate]);
+
+    // 거울모드
+    const handelFlipBtnClick = () => {
+      setIsFlipped(!isFlipped);
+      if (video.current) {
+        isFlipped
+          ? (video.current.style.transform = "")
+          : (video.current.style.transform = "scaleX(-1)");
+      }
+    };
+
+    // 볼륨조절
+    const handelChangeVolumeBtnClick = () => {
+      setIsMuted(!isMuted);
+    };
+
+    useEffect(() => {
+      if (video.current) video.current.muted = isMuted!;
+    }, [isMuted]);
 
     return (
       <div>
@@ -110,22 +170,27 @@ const DanceVideo = forwardRef(
             <BtnContainer>
               <CircleBtn
                 icon={MdSlowMotionVideo}
+                onClick={handelChangeRateBtnClick}
                 label={"재생 속도"}
                 disabled={props.poseList.length === 0 ? "disabled" : ""}
               />
               <CircleBtn
                 icon={CgEditFlipH}
+                onClick={handelFlipBtnClick}
                 label={"좌우 반전"}
                 disabled={props.poseList.length === 0 ? "disabled" : ""}
               />
               <CircleBtn
-                icon={MdVolumeUp}
+                icon={isMuted ? MdVolumeOff : MdVolumeUp}
+                onClick={handelChangeVolumeBtnClick}
                 label={"음량"}
                 disabled={props.poseList.length === 0 ? "disabled" : ""}
               />
+
               <CircleBtn
-                icon={MdPlayArrow}
-                label={"재생"}
+                icon={isPlaying ? MdStop : MdPlayArrow}
+                onClick={isPlaying ? handelStopBtnClick : handelPlayBtnClick}
+                label={isPlaying ? "정지" : "재생"}
                 disabled={props.poseList.length === 0 ? "disabled" : ""}
               />
             </BtnContainer>

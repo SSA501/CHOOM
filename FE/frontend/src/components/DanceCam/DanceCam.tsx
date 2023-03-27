@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import CircleBtn from "../CircleBtn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
 import { CamContainer, MyCam, MyCanvas } from "./style";
@@ -67,6 +66,7 @@ function DanceCam(props: {
   danceVideoRef: React.MutableRefObject<any>;
   detector: poseDetection.PoseDetector;
   poseList: Pose[];
+  myUrl?: string;
   setMyUrl: (myUrl: string) => void;
   setScoreList: (socreList: Score[]) => void;
 }) {
@@ -82,10 +82,9 @@ function DanceCam(props: {
   let scoreTemp: number = 0;
   let scoreTempList: Score[] = [];
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     setupCam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
   // 웹캠연결
@@ -99,6 +98,7 @@ function DanceCam(props: {
       handleDataAvailable(event);
 
     // 비디오가 load 될때까지 기다림
+
     await new Promise<void>((resolve) => {
       cam.current!.onloadedmetadata = () => {
         resolve();
@@ -115,7 +115,6 @@ function DanceCam(props: {
       const blob = new Blob(recordedChunks, { type: "video/webm" });
       const url = URL.createObjectURL(blob);
       props.setMyUrl(url);
-      navigate("/dance/result");
     }
   };
 
@@ -141,6 +140,7 @@ function DanceCam(props: {
       // 녹화종료
       props.setScoreList(scoreTempList);
       mediaRecorder?.stop();
+      if (cam.current) cam.current.srcObject = null;
       return;
     }
   };

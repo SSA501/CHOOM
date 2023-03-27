@@ -16,7 +16,7 @@ function App() {
         <Route path="/challenge" element={<SearchPage />} />
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/dance/:danceId/*" element={<DancePage />} />
+        <Route path="/dance/:danceId" element={<DancePage />} />
         <Route path="/login/oauth2/kakao/*" element={<KakaoRedirectPage />} />
       </Route>
     </Routes>
