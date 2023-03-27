@@ -43,8 +43,6 @@ public class KakaoOAuth2Dto {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            log.info("KAKAO_APIKEY : "+KAKAO_APIKEY);
-
             //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
