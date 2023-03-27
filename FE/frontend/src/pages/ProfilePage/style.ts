@@ -1,89 +1,75 @@
 import styled, { css } from "styled-components";
 
-const ProfileDiv = styled.div`
+const ProfileContainer = styled.div`
+  width: 65%;
+  min-width: 1000px;
+  height: fit-content;
+  margin-inline: auto;
+`;
+
+const ListContainer = styled.div`
   width: 100%;
-  height: -webkit-calc(100vh - 160px);
-`;
-
-const LeftDiv = styled.div`
-  width: 28%;
-  min-width: 360px;
-  height: 100%;
-  text-align: center;
-  float: left;
-`;
-
-const RightDiv = styled.div`
-  width: 72%;
-  height: 100%;
-  padding-left: 40px;
-  padding-right: 100px;
-  float: left;
-`;
-
-const Header = styled.h1`
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 86px;
-  padding-top: 16px;
-  color: #000000;
+  height: fit-content;
 `;
 
 const ListHeader = styled.div`
   position: relative;
-  width: 100%;
-  height: 70px;
-  margin-top: 20px;
-  border-bottom: 5px solid #3a3a3a;
-
-  & > span {
-    font-size: 24px;
-    line-height: 60px;
-  }
+  width: -webkit-calc(100% + 12px);
+  height: 66px;
+  border-top: 2px solid #3a3a3a;
+  margin-bottom: 20px;
 `;
 
 const ListHeaderBtn = styled.button<{ selected: boolean }>`
-  width: 150px;
-  height: 70px;
+  width: 140px;
+  height: 66px;
   font-style: normal;
-  font-weight: 400;
-  font-size: 28px;
-  line-height: 40px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  margin-right: 15px;
+  color: #848484;
+  transform: translate(0, -2px);
+  border-radius: 0px 0px 25px 25px;
+
   ${(props) =>
     props.selected &&
     css`
-      color: var(--blue-color);
+      color: var(--black-color);
+      border: 3px solid #000000;
+      box-shadow: var(--green-color) 4px 4px;
     `}
+
+  & > svg {
+    font-size: 24px !important;
+    margin-right: 6px;
+  }
 `;
 
 const DropBtn = styled.button`
   position: absolute;
-  top: 16px;
-  right: 4px;
+  top: 10px;
+  right: 60px;
   width: 165px;
   height: 41px;
-  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
   line-height: 29px;
   float: right;
+
+  & > svg {
+    vertical-align: text-bottom !important;
+    font-size: 24px !important;
+  }
 `;
 
 const VideoList = styled.div`
   width: 100%;
-  height: -webkit-calc(100vh - 170px);
+  height: fit-content;
   padding-inline: 40px;
   display: flex;
   flex-wrap: wrap;
-  overflow-y: scroll;
-
-  -ms-overflow-style: none; /* IE */
-  scrollbar-width: none; /* FireFox */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera, Edge */
-  }
 `;
 
 const VideoItem = styled.div`
@@ -92,10 +78,8 @@ const VideoItem = styled.div`
 `;
 
 export {
-  ProfileDiv,
-  LeftDiv,
-  RightDiv,
-  Header,
+  ProfileContainer,
+  ListContainer,
   ListHeader,
   ListHeaderBtn,
   DropBtn,

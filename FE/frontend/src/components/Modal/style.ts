@@ -40,7 +40,6 @@ const ModalTitle = styled.p`
 `;
 
 const ModalContent = styled.p`
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
   font-size: 28px;
@@ -52,7 +51,6 @@ const BtnDiv = styled.div`
   padding-top: 55px;
   margin: auto;
   text-align: center;
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
