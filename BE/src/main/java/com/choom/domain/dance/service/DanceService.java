@@ -2,7 +2,9 @@ package com.choom.domain.dance.service;
 
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
+import com.choom.domain.dance.dto.PopularDanceDto;
 import com.choom.domain.dance.dto.DanceRankUserDto;
+import com.choom.domain.dance.dto.DanceStatusDto;
 import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.mydance.entity.MyDance;
@@ -18,6 +20,10 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
+import com.sapher.youtubedl.YoutubeDL;
+import com.sapher.youtubedl.YoutubeDLException;
+import com.sapher.youtubedl.YoutubeDLRequest;
+import com.sapher.youtubedl.YoutubeDLResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -148,6 +154,11 @@ public class DanceService {
         String url = GOOGLE_YOUTUBE_URL + videoId;
         Dance dance = danceRepository.findByUrl(url).orElse(null);
 
+        Long id = null;
+        if(dance != null){
+            id = dance.getId();
+        }
+
         int userCount = 0;
         int status = 0;
         if(dance != null){
@@ -158,9 +169,9 @@ public class DanceService {
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
         DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
+            .id(id)
             .url(url)
-            .title(videoDetail.getSnippet().getTitle())
-            .description(videoDetail.getSnippet().getDescription())
+            .videoDetail(videoDetail)
             .thumbnailPath(videoDetail.getSnippet().getThumbnails().getHigh().getUrl())
             .sec(s)
             .likeCount(likeCount)
@@ -173,15 +184,16 @@ public class DanceService {
         return danceDetailDto;
     }
 
-    public void addCoordinate(Long danceId, MultipartFile jsonFile) throws IOException {
+    @Transactional
+    public void saveResult(Long danceId, MultipartFile jsonFile) throws IOException {
         // JSON파일 서버에 저장
         String jsonPath = fileService.fileUpload("coordinate", jsonFile);
         log.info("변경 된 jsonPath : "+jsonPath);
         // DB에 파일 위치 UPDATE
-        Dance dance = danceRepository.findById(danceId).orElse(null);
-        if(dance != null){
-            dance.updateJsonPath(jsonPath);
-        }
+        Dance dance = danceRepository.findById(danceId)
+            .orElseThrow(()->new IllegalArgumentException("존재하지 않는 Dance id값 입니다."));
+        dance.updateJsonPath(jsonPath);
+        dance.changeStatus(2); //분석 완료 상태로 변경
     }
 
     @Transactional
@@ -209,13 +221,7 @@ public class DanceService {
             List<MyDance> myDanceList = myDanceRepository.findRankingUser(dance);
             danceRankUserDtoList = myDanceList.stream().map(myDance ->
                 DanceRankUserDto.builder()
-                    .title(myDance.getTitle())
-                    .videoLength(myDance.getVideoLength())
-                    .userId(myDance.getUser().getId())
-                    .nickname(myDance.getUser().getNickname())
-                    .score(myDance.getScore())
-                    .youtubeUrl(myDance.getYoutubeUrl())
-                    .tiktokUrl(myDance.getTiktokUrl())
+                    .myDance(myDance)
                     .build()
             ).collect(
                 Collectors.toList());
@@ -227,5 +233,66 @@ public class DanceService {
             .build();
 
         return danceDetailWithRankDto;
+    }
+
+    public List<PopularDanceDto> findPopularDance() {
+        List<Dance> danceList = danceRepository.findPopularDance();
+        List<PopularDanceDto> popularDanceDtoList = danceList.stream()
+            .map(PopularDanceDto::new)
+            .collect( Collectors.toList());
+        return popularDanceDtoList;
+    }
+
+    @Transactional
+    public DanceStatusDto checkDanceStatus(Long danceId) throws YoutubeDLException {
+        Dance dance = danceRepository.findById(danceId)
+            .orElseThrow(()->new IllegalArgumentException("존재하지 않는 Dance id값 입니다."));
+        int status  = dance.getStatus();
+        DanceStatusDto danceStatusDto = null;
+        if(status == 0){ // 분석 안된 상태
+            log.info("아직 분석 안 된 영상!!");
+            dance.changeStatus(1);
+
+            // 동영상 다운로드
+            String url = dance.getUrl();
+
+            String videopath = youtubeDownload(url);
+            dance.saveVideoPath(videopath);
+
+            danceStatusDto = DanceStatusDto.builder()
+                .status(0)
+                .videoPath(videopath)
+                .build();
+
+        }else if(status == 1){ // 분석 중인 상태
+            log.info("분석 중 인 영상!!"); // 분석 완료 될때까지 기다려야됨???
+            danceStatusDto = DanceStatusDto.builder()
+                .status(1)
+                .build();
+        }else{ // 분석 완료인 상태
+            log.info("이미 분석 완료 된 영상!!");
+            danceStatusDto = DanceStatusDto.builder()
+                .status(2)
+                .jsonPath(dance.getJsonPath())
+                .build();
+        }
+        return danceStatusDto;
+    }
+
+    public String youtubeDownload(String url) throws YoutubeDLException {
+        // Destination directory
+        String directory = System.getProperty("user.home")+"/youtube";
+
+        // Build request
+        YoutubeDLRequest request = new YoutubeDLRequest(url, directory);
+        request.setOption("ignore-errors");		// --ignore-errors
+        request.setOption("output", "%(id)s.mp4");	// --output "%(id)s"
+        request.setOption("retries", 10);		// --retries 10
+
+        YoutubeDL.setExecutablePath(directory+"/youtube-dl");
+
+        // Make request and return response
+        YoutubeDLResponse response = YoutubeDL.execute(request);
+        return response.getDirectory();
     }
 }
