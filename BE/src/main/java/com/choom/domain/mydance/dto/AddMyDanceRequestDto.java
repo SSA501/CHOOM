@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class AddMyDanceRequestDto {
-    private Long originalDanceId;
-    private double videoLength;
+    private Long danceId;
+    private int videoLength;
     private String title;
     private String matchRate;
     private int score;

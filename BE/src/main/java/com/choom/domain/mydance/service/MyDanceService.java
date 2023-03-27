@@ -1,13 +1,13 @@
 package com.choom.domain.mydance.service;
 
+import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
 import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
 import com.choom.domain.mydance.dto.AddShortsResponseDto;
 import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
-import com.choom.domain.originaldance.entity.OriginalDance;
-import com.choom.domain.originaldance.entity.OriginalDanceRepository;
+import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.service.FileService;
@@ -56,7 +56,7 @@ public class MyDanceService {
     private final FileService fileService;
     private final UserRepository userRepository;
     private final MyDanceRepository myDanceRepository;
-    private final OriginalDanceRepository originalDanceRepository;
+    private final DanceRepository danceRepository;
 
     /** Global instance of the HTTP transport. */
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -116,7 +116,7 @@ public class MyDanceService {
         // user 더미데이터
         User user = userRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-        OriginalDance originalDance = originalDanceRepository.findById(myDanceAddRequestDto.getOriginalDanceId())
+        Dance dance = danceRepository.findById(myDanceAddRequestDto.getDanceId())
                 .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
         MyDance myDance = MyDance.builder()
                 .score(myDanceAddRequestDto.getScore())
@@ -125,7 +125,7 @@ public class MyDanceService {
                 .title(myDanceAddRequestDto.getTitle())
                 .videoPath(videoPath)
                 .user(user)
-                .originalDance(originalDance)
+                .dance(dance)
                 .build();
         MyDance insertResult = myDanceRepository.save(myDance);
 
@@ -331,7 +331,7 @@ public class MyDanceService {
     }
 
     // 일치율 계산 부분 (front에서 하기로 해서 안 씀!)
-    private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
+    private HashMap<String, Object> calculate(Long danceId, String myDanceCoordinatePath) throws IOException {
         HashMap<String, Object> result = new HashMap<>();
         ArrayList<Double> matchRates = new ArrayList<Double>();
         double similaritySum = 0.0;

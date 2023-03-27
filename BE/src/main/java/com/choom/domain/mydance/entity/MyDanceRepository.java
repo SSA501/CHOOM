@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MyDanceRepository extends JpaRepository<MyDance, Long> {
+public interface MyDanceRepository extends JpaRepository<MyDance, Long>, MyDanceCustomRepository{
     Page<MyDance> findPageByUser(User user, Pageable pageable);
 }
