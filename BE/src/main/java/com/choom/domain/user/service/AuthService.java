@@ -9,16 +9,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
     private final RedisService redisService;
     private final UserRepository userRepository;
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
+
 
     public TokenDto kakaoLogin(String code) {
         KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
@@ -29,16 +32,22 @@ public class AuthService {
         User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
 
         if (user == null) {
-            user = User.builder()
-                    .identifier(identifier)
-                    .nickname(nickname)
-                    .profileImage(profileImage)
-                    .socialType(SocialType.KAKAO)
-                    .build();
-            userRepository.save(user);
+            User newUser = addUser(identifier, nickname, profileImage, SocialType.KAKAO);
+            return issueToken(newUser);
         }
 
         return issueToken(user);
+    }
+
+    @Transactional
+    public User addUser(String identifier, String nickname, String profileImage, SocialType socialType) {
+        User user = User.builder()
+                .identifier(identifier)
+                .nickname(nickname)
+                .profileImage(profileImage)
+                .socialType(socialType)
+                .build();
+        return userRepository.save(user);
     }
 
     public TokenDto issueToken(User user) {
