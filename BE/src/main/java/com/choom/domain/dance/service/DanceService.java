@@ -286,14 +286,13 @@ public class DanceService {
         // Build request
         YoutubeDLRequest request = new YoutubeDLRequest(url, directory);
         request.setOption("ignore-errors");		// --ignore-errors
-        request.setOption("output", "%(id)s");	// --output "%(id)s"
+        request.setOption("output", "%(id)s.mp4");	// --output "%(id)s"
         request.setOption("retries", 10);		// --retries 10
 
         YoutubeDL.setExecutablePath(directory+"/youtube-dl");
 
         // Make request and return response
         YoutubeDLResponse response = YoutubeDL.execute(request);
-
         return response.getDirectory();
     }
 }
