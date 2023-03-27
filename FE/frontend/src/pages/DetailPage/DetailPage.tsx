@@ -1,18 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
 import ChallengeRank from "../../components/ChallengeRank/ChallengeRank";
 import {
-  ChallengeDetailContainer,
+  InnerShadowContainer,
   ChallengeDetailTitle,
-  DetailContainer,
   DetailPageContainer,
   VideoContainer,
+  DetailTopContainer,
+  DetailBtnContainer,
+  DetailContainer,
 } from "./style";
 
 function DetailPage() {
+  const navigate = useNavigate();
   const videoData = {
     dance: {
+      danceId: 123,
       videoId: "khcSrutAcTo",
       url: "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
       thumbnailPath:
@@ -28,8 +33,8 @@ function DetailPage() {
     },
     myDance: [
       {
-        userId: 1,
-        nickname: "sdfsdf",
+        userId: 0,
+        nickname: "닉네임최대닉네임최대",
         score: 99,
         videoLength: 0,
         title: "내가",
@@ -79,8 +84,8 @@ function DetailPage() {
             height="640px"
           /> */}
       <DetailContainer>
-        <div>
-          <ChallengeDetailContainer>
+        <DetailTopContainer>
+          <InnerShadowContainer>
             <ChallengeDetailTitle>DETAIL</ChallengeDetailTitle>
             <ChallengeDetail
               title={videoData?.dance.title}
@@ -89,13 +94,14 @@ function DetailPage() {
               viewCount={videoData?.dance.viewCount}
               publishedAt={videoData?.dance.publishedAt}
             />
-          </ChallengeDetailContainer>
-          <ChallengeDetailContainer>
+          </InnerShadowContainer>
+          <InnerShadowContainer>
             <ChallengeDetailTitle>RANK</ChallengeDetailTitle>
             {videoData?.myDance.length > 0 ? (
               videoData?.myDance.map(
                 ({ userId, nickname, score, youtubeUrl, tiktokUrl }) => (
                   <ChallengeRank
+                    key={userId}
                     userId={userId}
                     nickname={nickname}
                     score={score}
@@ -107,11 +113,16 @@ function DetailPage() {
             ) : (
               <div>아직 이 챌린지를 연습한 사람이 없어요! 연습해볼까요?</div>
             )}
-          </ChallengeDetailContainer>
-        </div>
-        <div>
-          <Btn btnText={"챌린지 시작하기"} handleClick={() => {}} />
-        </div>
+          </InnerShadowContainer>
+        </DetailTopContainer>
+        <DetailBtnContainer>
+          <Btn
+            btnText={"챌린지 시작하기"}
+            handleClick={() => {
+              navigate(`/dance/${videoData?.dance.danceId}`);
+            }}
+          />
+        </DetailBtnContainer>
       </DetailContainer>
     </DetailPageContainer>
   );

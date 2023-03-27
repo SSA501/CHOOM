@@ -18,7 +18,10 @@ const RankContainer = styled.div`
 const RankInnerDiv = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  p {
+    flex: 1;
+    text-align: center;
+  }
 `;
 
 export { RankOuterContainer, RankContainer, RankInnerDiv };

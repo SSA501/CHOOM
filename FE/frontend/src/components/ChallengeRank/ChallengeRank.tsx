@@ -21,7 +21,7 @@ function ChallengeRank({
       <RankContainer>
         <h3>{score}점</h3>
         <RankInnerDiv>
-          <span>{nickname}</span>
+          <p>{nickname}</p>
           <div>
             <a href={youtubeUrl}>
               <img

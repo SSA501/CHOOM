@@ -1,6 +1,10 @@
 import React from "react";
 import { MdOutlineMode } from "react-icons/md";
-import { ChallengeTitleContainer, TableContainer } from "./style";
+import {
+  ChallengeDetailContainer,
+  ChallengeTitleContainer,
+  TableContainer,
+} from "./style";
 
 interface ChallengeDetailProps {
   title: string;
@@ -18,7 +22,7 @@ function ChallengeDetail({
   publishedAt,
 }: ChallengeDetailProps) {
   return (
-    <div>
+    <ChallengeDetailContainer>
       <ChallengeTitleContainer>
         <h3>{title}</h3>
         <div>
@@ -50,7 +54,7 @@ function ChallengeDetail({
           <p>{publishedAt}</p>
         </div>
       </TableContainer>
-    </div>
+    </ChallengeDetailContainer>
   );
 }
 

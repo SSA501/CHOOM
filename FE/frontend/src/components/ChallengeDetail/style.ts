@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+const ChallengeDetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
 const ChallengeTitleContainer = styled.div`
   padding: 1em 0;
   display: flex;
@@ -9,7 +15,7 @@ const ChallengeTitleContainer = styled.div`
   h3 {
     padding-right: 2em;
     line-height: 1.2em;
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-weight: 600;
   }
   div {
@@ -33,7 +39,7 @@ const ChallengeTitleContainer = styled.div`
 `;
 
 const TableContainer = styled.div`
-  margin: 1em 10% 0;
+  margin-top: 3em;
   background-color: var(--purple-color);
   border-radius: 25px;
   text-align: center;
@@ -52,4 +58,4 @@ const TableContainer = styled.div`
   }
 `;
 
-export { ChallengeTitleContainer, TableContainer };
+export { ChallengeDetailContainer, ChallengeTitleContainer, TableContainer };
