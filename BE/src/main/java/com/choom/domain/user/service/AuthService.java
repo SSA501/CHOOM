@@ -57,24 +57,22 @@ public class AuthService {
         return null;
     }
 
-    public void logout(Long userId, String accessToken) {
-        RefreshToken token = refreshTokenRedisRepository.findById(userId).orElse(null);
-        if (token != null) {
-            refreshTokenRedisRepository.delete(token);
-            log.info("refreshToken지워졌니?"+refreshTokenRedisRepository.findById(userId).orElse(null));
-        }
+    public String logout(Long userId, String accessToken) {
         blacklistRedisRepository.save(Blacklist.builder()
                 .token(accessToken)
                 .build());
-        log.info("블랙리스트?"+blacklistRedisRepository.findById(accessToken));
+        RefreshToken token = refreshTokenRedisRepository.findById(userId).orElse(null);
+        if (token != null) {
+            return redisService.deleteToken(token);
+        }
+        return null;
     }
 
     public boolean isBlacklisted(String token) {
         if (blacklistRedisRepository.findById(token).isPresent()) {
-            log.info("넌 탈락임");
+            log.info("BlacklistedAccessToken : " + token);
             return true;
         }
-        log.info("유효함");
         return false;
     }
 

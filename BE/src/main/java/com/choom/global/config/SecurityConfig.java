@@ -4,6 +4,7 @@ import com.choom.domain.user.service.AuthService;
 import com.choom.domain.user.service.UserService;
 import com.choom.global.auth.CustomUserDetailService;
 import com.choom.global.auth.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,17 +23,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CustomUserDetailService customUserDetailService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private AuthService authService;
+    private final CustomUserDetailService customUserDetailService;
+    private final UserService userService;
+    private final AuthService authService;
 
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     @Bean

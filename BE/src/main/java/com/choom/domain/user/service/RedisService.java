@@ -33,11 +33,14 @@ public class RedisService {
     }
 
     @Transactional
-    public void deleteToken(RefreshToken token) {
+    public String deleteToken(RefreshToken token) {
         try {
+            String refreshToken = token.getToken();
             refreshTokenRedisRepository.delete(token);
+            return refreshToken;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+        return null;
     }
 }

@@ -52,20 +52,9 @@ public class UserController {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
         Long userId = customUserDetails.getUserId();
         String accessToken = token.substring(7);
-        String refreshToken = refreshTokenRedisRepository.findById(userId).orElse(null).getToken();
-        authService.logout(userId, accessToken);
+        String refreshToken = authService.logout(userId, accessToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", authService.setCookie(refreshToken, 0).toString());
         return new ResponseEntity<>(BaseResponse.success(null), headers, HttpStatus.OK);
-    }
-
-//  test
-    @GetMapping()
-    public BaseResponse test() {
-        log.info("INFO");
-        log.debug("DEBUG");
-        log.warn("WARN");
-        log.error("ERROR");
-        return BaseResponse.success(null);
     }
 }
