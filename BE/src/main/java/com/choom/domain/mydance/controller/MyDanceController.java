@@ -1,9 +1,6 @@
 package com.choom.domain.mydance.controller;
 
-import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
-import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
-import com.choom.domain.mydance.dto.AddShortsResponseDto;
-import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
+import com.choom.domain.mydance.dto.*;
 import com.choom.domain.mydance.service.MyDanceService;
 import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +65,14 @@ public class MyDanceController {
         log.info("myDanceId : " + myDanceId);
         AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId);
         return new ResponseEntity<>(BaseResponse.success(addShortsResponseDto), HttpStatus.OK);
+    }
+
+    @PutMapping("/{myDanceId}/title")
+    public ResponseEntity<BaseResponse> modifyTitle(@PathVariable Long myDanceId,
+                                                    @RequestBody ModifyMyDanceRequestDto modifyMyDanceRequestDto) {
+        log.info("myDanceId : " + myDanceId);
+        log.info("modifyMyDanceRequestDto : " + modifyMyDanceRequestDto);
+        FindMyDanceResponseDto findMyDanceResponseDto = myDanceService.modifyTitle(myDanceId, modifyMyDanceRequestDto);
+        return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDto), HttpStatus.OK);
     }
 }
