@@ -6,7 +6,7 @@ const DetailPageContainer = styled.div`
   /* max-width: 1728px; */
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 
   @media screen and (max-width: 1500px) {
@@ -20,11 +20,7 @@ const VideoContainer = styled.div`
   max-width: 50%;
 `;
 
-const DetailContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 3vw;
-`;
+const DetailContainer = styled.div``;
 
 const ChallengeTitleContainer = styled.div`
   padding: 1em 0;
