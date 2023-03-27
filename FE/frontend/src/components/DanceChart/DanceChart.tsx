@@ -26,23 +26,19 @@ interface Score {
   time: number;
 }
 
-function DanceChart(props: { scoreList: Score[] }) {
+function DanceChart(props: {
+  scoreList: Score[];
+  danceVideoRef: React.MutableRefObject<any>;
+}) {
   const chartRef = useRef();
-
-  console.log(props.scoreList);
 
   const options = {
     responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Chart.js Line Chart",
-      },
+    legend: {
+      position: "top" as const,
     },
   };
+
   const labels = props.scoreList.map((v) => v.time);
   const data = {
     labels,
@@ -57,7 +53,9 @@ function DanceChart(props: { scoreList: Score[] }) {
   };
 
   const handelClickChart = (event: any) => {
-    console.log(getElementAtEvent(chartRef.current!, event));
+    const { index } = getElementAtEvent(chartRef.current!, event)[0];
+    props.danceVideoRef.current.changeVideoTime(data.labels[index]);
+    props.danceVideoRef.current.playVideo();
   };
 
   return (

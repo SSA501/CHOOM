@@ -30,6 +30,8 @@ const GlobalStyle = createGlobalStyle`
     /* Colors */
     --purple-color:#EBB1FF;
     --green-color:#B6F56A;
+    --blue-color:#95CAFE;
+    --skyblue-color:#7CF7FF;
     --lightgray-color:#F2F2F2;
     --darkgray-color:#3A3A3A;
     --black-color:#000000;
