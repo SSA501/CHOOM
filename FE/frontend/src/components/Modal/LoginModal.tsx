@@ -8,13 +8,19 @@ import {
   BtnDiv,
   LogoImg,
 } from "./style";
-import { IoCloseSharp } from "react-icons/io5";
+import { CgClose } from "react-icons/cg";
+import { ShadowContainer } from "../ShadowContainer/style";
+import { loginKakao } from "../../apis/api";
 
-function LoginModal(props: {
+interface LoginModalProps {
+  setIsLogin: (isLogin: boolean) => void;
   setLoginModalOpen: (loginModalOpen: boolean) => void;
-}) {
+}
+
+function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
   const closeModal = () => {
-    props.setLoginModalOpen(false);
+    setLoginModalOpen(false);
+    document.body.style.overflow = "auto";
   };
 
   const modalRef = useRef<HTMLDivElement>(null);
@@ -23,7 +29,7 @@ function LoginModal(props: {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (modalRef.current && !modalRef.current.contains(target)) {
-        props.setLoginModalOpen(false);
+        setLoginModalOpen(false);
       }
     };
 
@@ -34,36 +40,45 @@ function LoginModal(props: {
     };
   });
 
-  const loginGoogle = () => {
-    alert("구글 로그인");
+  const handleLoginGoogle = () => {
+    // TODO: 구글 로그인 기능 구현
+    closeModal();
+    setIsLogin(true);
   };
-  const loginKaKao = () => {
-    alert("카카오 로그인");
+  const handleLoginTiktok = () => {
+    // TODO: 틱톡 로그인 기능 구현
+
+    closeModal();
+    setIsLogin(true);
   };
-  const loginTiktok = () => {
-    alert("틱톡 로그인");
+  const handleLoginKaKao = () => {
+    // TODO: 카톡 로그인 기능 구현
+    loginKakao();
+    setIsLogin(true);
+    closeModal();
   };
 
   return (
     <div>
       <Background />
-      <Modal ref={modalRef} width={500} height={400}>
-        <CloseBtn onClick={closeModal}>
-          <IoCloseSharp fontSize="30px" />
-        </CloseBtn>
-        <ModalTitle>LOGIN</ModalTitle>
-        <BtnDiv>
-          <Btn login loginType={"google"} handleClick={loginGoogle}>
-            구글로그인
-          </Btn>
-          <Btn login loginType={"kakao"} handleClick={loginKaKao}>
-            카카오로그인
-          </Btn>
-          <Btn login loginType={"tiktok"} handleClick={loginTiktok}>
-            틱톡로그인
-          </Btn>
-        </BtnDiv>
-        <LogoImg src="/assets/logo.png" alt="로고이미지" />
+      <Modal ref={modalRef} width={"500px"} height={"400px"}>
+        <ShadowContainer
+          width={"500px"}
+          height={"400px"}
+          bgColor={"white"}
+          padding={"3em 0px"}
+        >
+          <CloseBtn onClick={closeModal}>
+            <CgClose fontSize="30px" />
+          </CloseBtn>
+          <ModalTitle>LOGIN</ModalTitle>
+          <BtnDiv>
+            <Btn login loginType={"google"} handleClick={handleLoginGoogle} />
+            <Btn login loginType={"tiktok"} handleClick={handleLoginTiktok} />
+            <Btn login loginType={"kakao"} handleClick={handleLoginKaKao} />
+          </BtnDiv>
+          <LogoImg src="/assets/logo.png" alt="logo" />
+        </ShadowContainer>
       </Modal>
     </div>
   );

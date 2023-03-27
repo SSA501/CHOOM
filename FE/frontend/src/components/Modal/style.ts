@@ -4,63 +4,67 @@ const Background = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background: black;
   opacity: 0.5;
   overflow: hidden;
+  z-index: 999;
 `;
 
-const Modal = styled.div<{ width: number; height: number }>`
+const Modal = styled.div<{ width: string; height: string }>`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
-  z-index: 999;
-  background-color: white;
-  border: 4px solid black;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   text-align: center;
+  z-index: 999;
 `;
 
 const CloseBtn = styled.button`
   position: absolute;
-  right: 20px;
-  top: 20px;
+  top: 25px;
+  right: 30px;
 `;
 
 const ModalTitle = styled.p`
-  @import url("https://fonts.cdnfonts.com/css/libre-baskerville");
-  font-family: "Libre Baskerville", sans-serif;
+  font-family: "Montserrat";
   font-style: normal;
-  font-weight: 600;
-  font-size: 2rem;
-  line-height: 40px;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 39px;
   text-align: center;
   color: black;
-  padding-block: 50px;
 `;
 
 const ModalContent = styled.p`
   font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  padding-block: 50px;
+  font-size: 28px;
+  line-height: 33px;
 `;
 
 const BtnDiv = styled.div`
   width: 100%;
+  padding-top: 55px;
   margin: auto;
   text-align: center;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+
+  & > span {
+    font-size: 26px;
+  }
 `;
 
 const AcceptBtn = styled.button`
   width: 112.4px;
-  font-family: "Libre Baskerville";
-  font-style: normal;
   font-weight: 400;
   font-size: 24px;
   line-height: 30px;
@@ -69,7 +73,6 @@ const AcceptBtn = styled.button`
 
 const CancelBtn = styled.button`
   width: 112.4px;
-  font-family: "Libre Baskerville";
   font-style: normal;
   font-weight: 400;
   font-size: 24px;

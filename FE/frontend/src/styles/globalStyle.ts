@@ -1,24 +1,39 @@
-import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
+import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
+
+// react icons 스타일
+export const iconStyle = {
+  verticalAlign: "middle",
+  fontSize: "1.5rem",
+  cursor: "pointer",
+};
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
 
   @font-face {
-    font-family: 'Pretendard-Regular';
+    font-family: "Combined";
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
   }
 
+  @font-face {
+    font-family: 'Combined';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    unicode-range: U+0041-005A, U+0061-007A;
+}
+
   :root {
     /* Colors */
-    --blue-color: #08439D;
-    --green-color: #00A25E;
-    --yellow-color: #FFE550;
-    --pink-color: #F7B5CE;
-    --orange-color: #EB6D15;
-    --red-color: #EB6D15;
+    --purple-color:#EBB1FF;
+    --green-color:#B6F56A;
+    --lightgray-color:#F2F2F2;
+    --darkgray-color:#3A3A3A;
+    --black-color:#000000;
+    --white-color:#FFFFFF;
   }
   
   *, *::before, *::after {
@@ -26,10 +41,9 @@ const GlobalStyle = createGlobalStyle`
   }
   
   html, body {
-    color: var(--default-font-color);
     width: 100%;
     height: 100%;
-    font-family: 'Pretendard-Regular', -apple-system, Helvetica Neue, sans-serif;
+    font-family: 'Combined', -apple-system, Helvetica Neue, sans-serif;
   }
   button {
     border: none;
@@ -59,6 +73,6 @@ const GlobalStyle = createGlobalStyle`
   textarea {
     font-family: inherit;
   }
-`
+`;
 
-export {GlobalStyle}
+export { GlobalStyle };

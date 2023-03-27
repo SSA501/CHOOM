@@ -1,38 +1,31 @@
-import ReactPlayer from "react-player";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
+import Btn from "../Btn/Btn";
 
-interface VideoContainerProps {
-  bgFrame?: string;
-  ratio: number;
-}
+const VideoContainer = styled.div`
+  width: 270px;
+  /* height: 480px; */
+  position: relative;
 
-const VideoContainer = styled.div<VideoContainerProps>`
-  ${({ bgFrame, ratio }) => css`
-    position: relative;
+  iframe,
+  video {
     width: 100%;
-    /* width: ${bgFrame ? "" : ""};
-    height: ${bgFrame ? "626px" : "594px"}; */
-    border: ${bgFrame ? `12px solid var(--${bgFrame}-color)` : null};
-    padding-top: ${ratio
-      ? `${ratio}%`
-      : "56.25%"}; /* default aspect ratio is 16:9 */
-  `}
+    border-radius: 1rem;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 1rem;
+  }
 `;
 
-const ReactPlayerStyled = styled(ReactPlayer)`
+const BtnDetail = styled(Btn)`
+  width: fit-content;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+  top: 1em;
+  left: 1em;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
 `;
 
-const ThumbnailImg = styled.img`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-`;
-
-export { VideoContainer, ReactPlayerStyled, ThumbnailImg };
+export { VideoContainer, BtnDetail };

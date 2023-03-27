@@ -5,7 +5,7 @@ import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/pose";
 
 import { STATE } from "../../apis/params";
-import { DanceImg } from "./style";
+import { MyImg } from "./style";
 
 interface Kpt {
   x: number;
@@ -17,9 +17,9 @@ interface Pose {
   keypoints: Kpt[];
 }
 
-function MyImg(props: {
+function DanceImg(props: {
   setTitle: (title: string) => void;
-  setPoses: (poses: Pose[]) => void;
+  setposeList: (poseList: Pose[]) => void;
 }) {
   const [imageSrc, setImageSrc] = useState<string>("");
 
@@ -43,22 +43,22 @@ function MyImg(props: {
   async function renderResult() {
     let detector = await createDetector();
     const img = document.getElementById("img") as HTMLImageElement;
-    let poses: any;
+    let poseList: any;
 
     if (detector != null) {
       try {
-        poses = await detector.estimatePoses(img);
+        poseList = await detector.estimatePoses(img);
       } catch (error) {
         detector.dispose();
         alert(error);
       }
     }
 
-    if (poses && poses.length > 0) {
+    if (poseList && poseList.length > 0) {
       alert("분석완료");
       const newKpts: Kpt[] = [];
 
-      poses[0].keypoints.map((kpt: Kpt) => {
+      poseList[0].keypoints.map((kpt: Kpt) => {
         newKpts.push({
           x: (kpt.x * 270) / img.naturalWidth,
           y: (kpt.y * 480) / img.naturalHeight,
@@ -67,8 +67,8 @@ function MyImg(props: {
         });
         return newKpts;
       });
-      let newPoses: Pose[] = [{ keypoints: newKpts }];
-      props.setPoses(newPoses);
+      let newposeList: Pose[] = [{ keypoints: newKpts }];
+      props.setposeList(newposeList);
     }
   }
   return (
@@ -83,7 +83,7 @@ function MyImg(props: {
         />
 
         {imageSrc && (
-          <DanceImg
+          <MyImg
             src={imageSrc}
             id="img"
             alt="preview-img"
@@ -96,4 +96,4 @@ function MyImg(props: {
   );
 }
 
-export default MyImg;
+export default DanceImg;

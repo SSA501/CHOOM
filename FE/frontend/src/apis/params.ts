@@ -5,7 +5,7 @@ export const DEFAULT_RADIUS = 4;
 
 export const STATE = {
   model: poseDetection.SupportedModels.BlazePose,
-  camera: { targetFPS: 5, sizeOption: { width: 270, height: 480 } },
+  camera: { targetFPS: 25, sizeOption: { width: 270, height: 480 } },
   detectorConfig: {
     runtime: "mediapipe" as "mediapipe",
     solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/pose",
@@ -14,7 +14,7 @@ export const STATE = {
 };
 
 export const BLAZEPOSE_CONFIG = {
-  maxPoses: 1,
+  maxposeList: 1,
   type: "full",
   scoreThreshold: 0.1,
   render3D: false,
