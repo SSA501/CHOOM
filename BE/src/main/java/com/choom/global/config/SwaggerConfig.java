@@ -21,10 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
-import static com.google.common.collect.Lists.newArrayList;
-
-
 @Configuration
 @EnableOpenApi
 public class SwaggerConfig {
@@ -68,8 +64,8 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        Server serverLocal = new Server("local server", "http://localhost:8080", "for local usages", Collections.emptyList(), Collections.emptyList());
-        Server testServer = new Server("deploy server", "https://i8a401.p.ssafy.io/", "for deploy server", Collections.emptyList(), Collections.emptyList());
+        Server serverLocal = new Server("local server", "http://localhost:8081", "for local usages", Collections.emptyList(), Collections.emptyList());
+        Server testServer = new Server("deploy server", "https://j8a501.p.ssafy.io/", "for deploy server", Collections.emptyList(), Collections.emptyList());
         return new Docket(DocumentationType.OAS_30)
             .servers(serverLocal, testServer)
             .securityContexts(Arrays.asList(securityContext()))
@@ -84,10 +80,3 @@ public class SwaggerConfig {
             .build();
     }
 }
-
-
-
-
-
-
-
