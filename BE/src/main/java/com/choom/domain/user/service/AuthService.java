@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AuthService {
     private final RedisService redisService;
     private final UserRepository userRepository;
@@ -48,6 +47,11 @@ public class AuthService {
                 .socialType(socialType)
                 .build();
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     public TokenDto issueToken(User user) {
