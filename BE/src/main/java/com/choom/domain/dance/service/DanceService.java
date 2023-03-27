@@ -164,6 +164,7 @@ public class DanceService {
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
         DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
+            .id(dance.getId())
             .url(url)
             .videoDetail(videoDetail)
             .thumbnailPath(videoDetail.getSnippet().getThumbnails().getHigh().getUrl())

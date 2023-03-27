@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DanceDetailsDto {
 
+    private Long id;
     private String title;
     private String description;
     private String url;
@@ -25,7 +26,8 @@ public class DanceDetailsDto {
     private String publishedAt;
 
     @Builder
-    public DanceDetailsDto(Video videoDetail, int sec, String videoId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
+    public DanceDetailsDto(Long id, Video videoDetail, int sec, String videoId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
+        this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
         this.description = videoDetail.getSnippet().getDescription();
