@@ -57,7 +57,8 @@ public class AuthService {
     }
 
     public TokenDto reissueToken(String refreshToken) {
-        RefreshToken oldToken = refreshTokenRedisRepository.findByToken(refreshToken).orElse(null);
+        RefreshToken oldToken = refreshTokenRedisRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new IllegalArgumentException("해당 토큰 값을 찾을 수 없습니다."));
         if (refreshToken.equals(oldToken.getToken())) {
             User user = userRepository.findById(oldToken.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
