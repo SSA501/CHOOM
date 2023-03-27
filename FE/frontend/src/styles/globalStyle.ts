@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-    unicode-range: U+0041-005A, U+0061-007A;
+    unicode-range: U+0041-005A, U+0061-007A, U+0030-0039;
 }
 
   :root {
