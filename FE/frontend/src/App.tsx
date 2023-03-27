@@ -6,6 +6,7 @@ import DancePage from "./pages/DancePage/DancePage";
 import SearchPage from "./pages/SearchPage/SearchPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import DetailPage from "./pages/DetailPage/DetailPage";
+import KakaoRedirectPage from "./pages/KakaoRedirectPage/KakaoRedirectPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dance/:danceId/*" element={<DancePage />} />
+        <Route path="/login/oauth2/kakao/*" element={<KakaoRedirectPage />} />
       </Route>
     </Routes>
   );
