@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.UUID;
 
@@ -45,8 +47,9 @@ public class FileService {
 
         // 원본 파일에서 uuid 자르기
         String filename = resource.getFilename().substring(36);
+        log.info("filename : "+filename);
 
-        String downloadName = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        String downloadName = URLEncoder.encode(filename, StandardCharsets.UTF_8).replaceAll("\\+","%20");
         String contentType = Files.probeContentType(resource.getFile().toPath());
 
         headers.add("Content-type", contentType);
