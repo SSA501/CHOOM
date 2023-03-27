@@ -1,4 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+interface NormalBtnProps {
+  width?: string;
+  padding?: string;
+  margin?: string;
+}
 
 const LoginBtn = styled.button<{ loginType?: "kakao" | "google" | "tiktok" }>`
   position: relative;
@@ -21,23 +27,22 @@ const Icon = styled.img`
   transform: translate(-50%, -50%);
 `;
 
-const NomalBtn = styled.button`
-  height: 67px;
-  padding: 14px 55px;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 29px;
-  color: white;
-  border-radius: 50px;
-  background-color: black;
+const NomalBtn = styled.button<NormalBtnProps>`
+  ${({ width, padding, margin }) => css`
+    width: ${width || "fit-content"};
+    padding: ${padding || "0.5em 2.5em"};
+    margin: ${margin || "0 auto"};
+    font-size: 24px;
+    color: white;
+    border-radius: 50px;
+    background-color: black;
+    border: 3px solid black;
+  `}
 
   // TODO: 버튼 hover 고려해보기
   &:hover {
     color: black;
     background-color: white;
-    border: 3px solid black;
   }
 `;
 

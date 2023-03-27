@@ -79,70 +79,70 @@ function ProfilePage() {
     {
       id: 1,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 2,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 3,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 4,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 5,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 6,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 7,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 8,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 9,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
     {
       id: 10,
       videoName: "Zior Park - CHRISTIAN",
-      videoSrc: "https://youtube.com/shorts/TIA-NZsr0Hg",
+      videoPath: "https://youtube.com/shorts/TIA-NZsr0Hg",
       thumbnailSrc:
         "https://i.ytimg.com/vi/TIA-NZsr0Hg/hq720.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAhEwsDnxjP2irgSYefdVYaXTXrEA",
     },
@@ -152,8 +152,10 @@ function ProfilePage() {
     <VideoItem>
       <Video
         id={item.id}
-        videoSrc={item.videoSrc}
+        title={item.title}
+        videoPath={item.videoPath}
         thumbnailSrc={item.thumbnailSrc}
+        handleClickVideo={() => {}}
       />
       <p>{item.videoName}</p>
     </VideoItem>

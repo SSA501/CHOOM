@@ -12,8 +12,9 @@ root.render(
   // <React.StrictMode>
   <BrowserRouter>
     <GlobalStyle />
-    <IconContext.Provider value={{ style: iconStyle }} />
-    <App />
+    <IconContext.Provider value={{ style: iconStyle }}>
+      <App />
+    </IconContext.Provider>
   </BrowserRouter>
   // </React.StrictMode>
 );
