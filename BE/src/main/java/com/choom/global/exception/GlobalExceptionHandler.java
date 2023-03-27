@@ -55,4 +55,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(SearchKeywordException.class)
+    public ResponseEntity<ErrorResponse> handleSearchKeyword(SearchKeywordException e){
+        log.warn("SearchKeywordException", e);
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .statusCode(400)
+                .message(e.getMessage())
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
