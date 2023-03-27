@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
     private final RedisService redisService;
     private final UserRepository userRepository;
@@ -22,6 +23,7 @@ public class AuthService {
     private final BlacklistRedisRepository blacklistRedisRepository;
 
 
+    @Transactional
     public TokenDto kakaoLogin(String code) {
         KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
