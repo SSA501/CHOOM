@@ -154,6 +154,11 @@ public class DanceService {
         String url = GOOGLE_YOUTUBE_URL + videoId;
         Dance dance = danceRepository.findByUrl(url).orElse(null);
 
+        Long id = null;
+        if(dance != null){
+            id = dance.getId();
+        }
+
         int userCount = 0;
         int status = 0;
         if(dance != null){
@@ -164,7 +169,7 @@ public class DanceService {
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
         DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
-            .id(dance.getId())
+            .id(id)
             .url(url)
             .videoDetail(videoDetail)
             .thumbnailPath(videoDetail.getSnippet().getThumbnails().getHigh().getUrl())
