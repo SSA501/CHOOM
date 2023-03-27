@@ -23,29 +23,40 @@ function ChallengeRank({
         <RankInnerDiv>
           <p>{nickname}</p>
           <div>
-            <a href={youtubeUrl}>
+            {youtubeUrl !== "" ? (
+              <a href={youtubeUrl}>
+                <img
+                  width={"32px"}
+                  style={{ marginRight: "1em" }}
+                  src={"/assets/icon_youtube_shorts.png"}
+                  alt="쇼츠 챌린지 링크"
+                />
+              </a>
+            ) : (
               <img
                 width={"32px"}
                 style={{ marginRight: "1em" }}
-                src={
-                  youtubeUrl !== ""
-                    ? "/assets/icon_youtube_shorts.png"
-                    : "/assets/icon_youtube_shorts_disable.png"
-                }
-                alt="쇼츠 챌린지 링크"
+                src={"/assets/icon_youtube_shorts_disable.png"}
+                alt="쇼츠 챌린지 링크 없음"
               />
-            </a>
-            <a href={tiktokUrl}>
+            )}
+            {tiktokUrl !== "" ? (
+              <a href={tiktokUrl}>
+                <img
+                  width={"42px"}
+                  style={{ marginRight: "1em" }}
+                  src={"/assets/icon_tiktok.png"}
+                  alt="틱톡 챌린지 링크"
+                />
+              </a>
+            ) : (
               <img
                 width={"42px"}
-                src={
-                  tiktokUrl !== ""
-                    ? "/assets/icon_tiktok.png"
-                    : "/assets/icon_tiktok_disable.png"
-                }
-                alt="쇼츠 챌린지 링크"
+                style={{ marginRight: "1em" }}
+                src={"/assets/icon_tiktok_disable.png"}
+                alt="틱톡 챌린지 링크 없음"
               />
-            </a>
+            )}
           </div>
         </RankInnerDiv>
       </RankContainer>
