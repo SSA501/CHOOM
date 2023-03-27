@@ -23,7 +23,6 @@ const ListHeader = styled.div`
 const ListHeaderBtn = styled.button<{ selected: boolean }>`
   width: 140px;
   height: 66px;
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
@@ -53,7 +52,6 @@ const DropBtn = styled.button`
   right: 60px;
   width: 165px;
   height: 41px;
-  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-size: 20px;

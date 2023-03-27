@@ -44,7 +44,6 @@ const Nickname = styled.input.attrs((props) => ({
   transform: translate(-50%, -50%);
   width: 300px;
   height: 60px;
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
   font-size: 36px;
@@ -61,7 +60,6 @@ const ErrorMsg = styled.p`
   top: 73%;
   left: 50%;
   transform: translate(-50%, 0);
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -73,7 +71,6 @@ const ErrorMsg = styled.p`
 const InfoDetail = styled.table`
   width: 420px;
   height: fit-content;
-  font-family: "Pretendard";
   font-style: normal;
   text-align: center;
   margin-inline: auto;

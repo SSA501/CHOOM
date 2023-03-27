@@ -23,7 +23,6 @@ const Menu = styled.div<{ dropMenu?: boolean; top: string; right: string }>`
 const MenuBtn = styled.button<{ dropMenu?: boolean; color: string }>`
   width: 110px;
   height: 64px;
-  font-family: "Inter";
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
