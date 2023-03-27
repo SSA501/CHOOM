@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import DanceChart from "../../components/DanceChart/DanceChart";
 
 interface Score {
@@ -7,7 +6,6 @@ interface Score {
 }
 
 function ResultPage(props: { scoreList: Score[]; videoUrl: string }) {
-  const [playTime, setPlayTime] = useState(0);
   return (
     <div>
       <p>ResultPage</p>

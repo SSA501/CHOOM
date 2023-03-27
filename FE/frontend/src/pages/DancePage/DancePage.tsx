@@ -1,37 +1,53 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import ResultPage from "../ResultPage/ResultPage";
+
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
 import { ShadowContainer } from "../../components/ShadowContainer/style";
 import { DancePageContainer, SideInfoContainer } from "./style";
 import SideTitle from "../../components/SideTitle/SideTitle";
-interface Kpt {
-  x: number;
-  y: number;
-  z: number;
-  score: number;
-}
+import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
+import * as poseDetection from "@tensorflow-models/pose-detection";
+
 interface Pose {
-  keypoints: Kpt[];
+  keypoints: poseDetection.Keypoint[];
 }
-interface Score {
-  score: number;
-  time: number;
-}
+
 function DancePage() {
-  const [poseList, setPoseList] = useState<Pose[]>(
-    JSON.parse(localStorage.getItem("poseList") || "[]")
-  );
-  const [scoreList, setScoreList] = useState<Score[]>([]);
-  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [poseList, setPoseList] = useState<Pose[]>([]);
+  const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const danceVideoRef = useRef<any>();
+
+  const contents = [
+    "1️⃣ 알아서 잘해보세요",
+    "2️⃣ 어쩌라고요",
+    "3️⃣ 그냥 녹화하면 됩니다^^",
+  ];
+
+  // 모델 불러오기
+  useEffect(() => {
+    createDetector();
+  }, []);
+
+  const createDetector = async () => {
+    const model = poseDetection.SupportedModels.BlazePose;
+    const detectorConfig = {
+      runtime: "mediapipe" as "mediapipe",
+      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/pose",
+    };
+    const createdDetector = await poseDetection.createDetector(
+      model,
+      detectorConfig
+    );
+    createdDetector.estimatePoses(new ImageData(450, 800));
+    setDetector(createdDetector);
+  };
 
   return (
     <DancePageContainer>
       <SideInfoContainer>
-        <SideTitle title={["챌린지", "연습하기✨"]}></SideTitle>
-        <SideTitle title={["챌린지", "연습하기✨"]}></SideTitle>
+        <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
+        <SideSubTitle title="챌린지 연습 방법 ❓" contents={contents} />
       </SideInfoContainer>
       <Routes>
         <Route
@@ -48,21 +64,15 @@ function DancePage() {
                 setPoseList={setPoseList}
                 poseList={poseList}
                 ref={danceVideoRef}
+                detector={detector!}
               />
               <DanceCam
-                poseList={poseList}
                 danceVideoRef={danceVideoRef}
-                setScoreList={setScoreList}
-                setVideoUrl={setVideoUrl}
+                detector={detector!}
+                poseList={poseList}
               />
             </ShadowContainer>
           }
-        />
-      </Routes>
-      <Routes>
-        <Route
-          path="/result"
-          element={<ResultPage scoreList={scoreList} videoUrl={videoUrl} />}
         />
       </Routes>
     </DancePageContainer>
