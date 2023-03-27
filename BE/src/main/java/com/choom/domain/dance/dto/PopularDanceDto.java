@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class DancePopularDto {
+public class PopularDanceDto {
     private Long id;
     private String title;
     private String url;
@@ -16,7 +16,7 @@ public class DancePopularDto {
     private int userCount;
     private int status;
 
-    public DancePopularDto(Dance dance) {
+    public PopularDanceDto(Dance dance) {
         this.id = dance.getId();
         this.title = dance.getTitle();
         this.url = dance.getUrl();
@@ -27,7 +27,7 @@ public class DancePopularDto {
     }
 
     @Builder
-    public DancePopularDto(Long id, String title, String url, String videoPath,
+    public PopularDanceDto(Long id, String title, String url, String videoPath,
         String thumbnailPath,
         int userCount, int status) {
         this.id = id;
