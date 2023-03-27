@@ -28,9 +28,16 @@ public class SearchController {
     }
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> findSearch() {
-        log.info("findSearch");
+    public ResponseEntity<BaseResponse> searchList() {
+        log.info("searchList");
         List<SearchResponseDto> searchResponseDtoList = searchService.findSearch();
         return new ResponseEntity<>(BaseResponse.success(searchResponseDtoList), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{searchId}")
+    public ResponseEntity<BaseResponse> removeSearch(@PathVariable Long searchId) {
+        log.info("searchId : " + searchId);
+        searchService.removeSearch(searchId);
+        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 }

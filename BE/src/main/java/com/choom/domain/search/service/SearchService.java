@@ -67,4 +67,12 @@ public class SearchService {
                 .keyword(search.getKeyword())
                 .build()).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void removeSearch(Long searchId) {
+        Search search = searchRepository.findById(searchId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 검색어를 찾을 수 없습니다"));
+
+        searchRepository.deleteById(searchId);
+    }
 }
