@@ -2,6 +2,7 @@ package com.choom.domain.mydance.controller;
 
 import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
 import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
+import com.choom.domain.mydance.dto.AddShortsResponseDto;
 import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
 import com.choom.domain.mydance.service.MyDanceService;
 import com.choom.global.model.BaseResponse;
@@ -60,5 +61,12 @@ public class MyDanceController {
         log.info("pageable : " + pageable);
         Page<FindMyDanceResponseDto> findMyDanceResponseDtoList = myDanceService.findAllMyDance(pageable);
         return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDtoList), HttpStatus.OK);
+    }
+
+    @PutMapping("/{myDanceId}/shorts")
+    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId) {
+        log.info("myDanceId : " + myDanceId);
+        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId);
+        return new ResponseEntity<>(BaseResponse.success(addShortsResponseDto), HttpStatus.OK);
     }
 }
