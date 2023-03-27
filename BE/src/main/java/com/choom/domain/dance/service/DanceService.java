@@ -237,8 +237,9 @@ public class DanceService {
 
     public List<DancePopularDto> findPopularDance() {
         List<Dance> danceList = danceRepository.findPopularDance();
-        List<DancePopularDto> dancePopularDtoList = danceList.stream().map(DancePopularDto::new).collect(
-            Collectors.toList());
+        List<DancePopularDto> dancePopularDtoList = danceList.stream()
+            .map(DancePopularDto::new)
+            .collect( Collectors.toList());
         return dancePopularDtoList;
     }
 
