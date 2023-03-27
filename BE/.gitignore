@@ -9,6 +9,9 @@ application-local.yml
 # application-aws.yml
 application-aws.yml
 
+# client_secrets.json
+client_secrets.json
+
 # Created by https://www.toptal.com/developers/gitignore/api/java,intellij,git,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,git,gradle
 
