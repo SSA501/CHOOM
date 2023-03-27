@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 import SmallMenu from "../../components/SmallMenu/SmallMenu";
 import NormalModal from "../../components/Modal/NormalModal";
 import {
-  ProfileDiv,
-  RightDiv,
+  ProfileContainer,
+  ListContainer,
   ListHeader,
   ListHeaderBtn,
   DropBtn,
   VideoList,
   VideoItem,
 } from "./style";
-import { CgShapeTriangle } from "react-icons/cg";
+import { MdOutlineVideocam } from "react-icons/md";
+import { CgHeart, CgZeit } from "react-icons/cg";
 import Video from "../../components/Video/Video";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 
@@ -40,14 +41,20 @@ function ProfilePage() {
 
   const changVideoList = (mode: string) => {
     setVideoList(mode);
-    if (mode === "History") setSelectHistory(true);
-    else setSelectHistory(false);
+    if (mode === "History") {
+      setSelectHistory(true);
+      setSelectedDropMenu(historyDropMenuItemList[0].name);
+    } else {
+      setSelectHistory(false);
+      setSelectedDropMenu(likesDropMenuItemList[0].name);
+    }
   };
 
-  const dropMenuItemList = [
+  const historyDropMenuItemList = [
     {
       name: "높은 등급순",
       handleClick: () => {
+        // TODO: 정렬 기능 추가
         setSelectedDropMenu("높은 등급순");
         setDropMenuOpen(!dropMenuOpen);
       },
@@ -55,6 +62,7 @@ function ProfilePage() {
     {
       name: "낮은 등급순",
       handleClick: () => {
+        // TODO: 정렬 기능 추가
         setSelectedDropMenu("낮은 등급순");
         setDropMenuOpen(!dropMenuOpen);
       },
@@ -62,6 +70,7 @@ function ProfilePage() {
     {
       name: "최신순",
       handleClick: () => {
+        // TODO: 정렬 기능 추가
         setSelectedDropMenu("최신순");
         setDropMenuOpen(!dropMenuOpen);
       },
@@ -69,6 +78,26 @@ function ProfilePage() {
     {
       name: "오래된순",
       handleClick: () => {
+        // TODO: 정렬 기능 추가
+        setSelectedDropMenu("오래된순");
+        setDropMenuOpen(!dropMenuOpen);
+      },
+    },
+  ];
+
+  const likesDropMenuItemList = [
+    {
+      name: "최신순",
+      handleClick: () => {
+        // TODO: 정렬 기능 추가
+        setSelectedDropMenu("최신순");
+        setDropMenuOpen(!dropMenuOpen);
+      },
+    },
+    {
+      name: "오래된순",
+      handleClick: () => {
+        // TODO: 정렬 기능 추가
         setSelectedDropMenu("오래된순");
         setDropMenuOpen(!dropMenuOpen);
       },
@@ -162,39 +191,39 @@ function ProfilePage() {
   ));
 
   return (
-    <ProfileDiv>
+    <ProfileContainer>
       <ProfileCard showNormalModal={showNormalModal} />
-
-      <RightDiv>
+      <ListContainer>
         <ListHeader>
           <ListHeaderBtn
             selected={selectHistory}
             onClick={() => changVideoList("History")}
           >
-            History
+            <MdOutlineVideocam />
+            기록
           </ListHeaderBtn>
-          <span>|</span>
           <ListHeaderBtn
             selected={!selectHistory}
             onClick={() => changVideoList("Likes")}
           >
-            Likes
+            <CgHeart />
+            즐겨찾기
           </ListHeaderBtn>
           <DropBtn onClick={showDropMenu}>
-            {dropMenuOpen && <CgShapeTriangle fontSize={"18px"} />}
-            {!dropMenuOpen && (
-              <CgShapeTriangle
-                style={{ transform: "scaleY(-1)" }}
-                fontSize={"18px"}
-              />
-            )}
-            {" " + selectedDropMenu}
+            {dropMenuOpen && <CgZeit />}
+            {!dropMenuOpen && <CgZeit style={{ transform: "scaleY(-1)" }} />}
+            {selectedDropMenu}
           </DropBtn>
           {dropMenuOpen && (
             <SmallMenu
-              itemList={dropMenuItemList}
-              top="75px"
-              right="18px"
+              itemList={
+                videoList === "History"
+                  ? historyDropMenuItemList
+                  : likesDropMenuItemList
+              }
+              top="60px"
+              right="60px"
+              dropMenu={true}
             ></SmallMenu>
           )}
         </ListHeader>
@@ -202,7 +231,7 @@ function ProfilePage() {
           <VideoList>비디오 목록 비디오 목록 비디오 목록</VideoList>
         )}
         {videoList === "Likes" && <VideoList>{videoItemList}</VideoList>}
-      </RightDiv>
+      </ListContainer>
 
       {normalModalOpen && (
         <NormalModal
@@ -210,7 +239,7 @@ function ProfilePage() {
           acceptModal={() => withdrawMember()}
         />
       )}
-    </ProfileDiv>
+    </ProfileContainer>
   );
 }
 

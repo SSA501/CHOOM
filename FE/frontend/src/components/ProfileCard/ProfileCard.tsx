@@ -60,7 +60,11 @@ function ProfileCard(props: ProfileProps) {
       },
     },
     { name: "로그아웃", handleClick: () => logout() },
-    { name: "탈퇴하기", handleClick: () => props.showNormalModal() },
+    {
+      name: "탈퇴하기",
+      color: "red",
+      handleClick: () => props.showNormalModal(),
+    },
   ];
 
   const logout = () => {
