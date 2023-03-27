@@ -1,4 +1,3 @@
-import { symbol } from "prop-types";
 import styled from "styled-components";
 
 const ProfileImg = styled.div<{ BgImg: string }>`
