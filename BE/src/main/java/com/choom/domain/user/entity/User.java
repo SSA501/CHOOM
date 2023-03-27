@@ -1,18 +1,16 @@
 package com.choom.domain.user.entity;
 
 import com.choom.domain.bookmark.entity.Bookmark;
-import com.choom.global.model.BaseTimeEntity;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.search.entity.Search;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
+import com.choom.global.model.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 

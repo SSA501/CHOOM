@@ -1,5 +1,6 @@
 package com.choom.global.service;
 
+import com.choom.global.exception.FileDeleteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -10,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.UUID;
 
@@ -44,13 +47,20 @@ public class FileService {
 
         // 원본 파일에서 uuid 자르기
         String filename = resource.getFilename().substring(36);
+        log.info("filename : "+filename);
 
-        String downloadName = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        String downloadName = URLEncoder.encode(filename, StandardCharsets.UTF_8).replaceAll("\\+","%20");
         String contentType = Files.probeContentType(resource.getFile().toPath());
 
         headers.add("Content-type", contentType);
         headers.add("Content-Disposition", "attachment; filename=" + downloadName);
 
         return resource;
+    }
+
+    public void fileDelete(String path) {
+        File file = new File(path);
+        if (!file.delete())
+            throw new FileDeleteException("파일 삭제에 실패했습니다");
     }
 }

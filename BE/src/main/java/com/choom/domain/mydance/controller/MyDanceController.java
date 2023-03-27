@@ -2,11 +2,15 @@ package com.choom.domain.mydance.controller;
 
 import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
 import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
+import com.choom.domain.mydance.dto.AddShortsResponseDto;
+import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
 import com.choom.domain.mydance.service.MyDanceService;
 import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +28,11 @@ public class MyDanceController {
     private final MyDanceService myDanceService;
 
     @PostMapping()
-    public BaseResponse addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
-                                   @RequestPart MultipartFile videoFile,
-                                   @RequestPart MultipartFile jsonFile) throws IOException {
-        log.info("MyDanceAddRequestDto : " + myDanceAddRequestDto);
-        AddMyDanceResponseDto myDanceAddResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile, jsonFile);
-        return BaseResponse.success(myDanceAddResponseDto);
+    public ResponseEntity<BaseResponse> addMyDance(@RequestPart AddMyDanceRequestDto addMyDanceRequestDto,
+                                   @RequestPart MultipartFile videoFile) throws IOException {
+        log.info("AddMyDanceRequestDto : " + addMyDanceRequestDto);
+        AddMyDanceResponseDto addMyDanceResponseDto = myDanceService.addMyDance(addMyDanceRequestDto, videoFile);
+        return new ResponseEntity<>(BaseResponse.success(addMyDanceResponseDto), HttpStatus.OK);
     }
 
     @GetMapping("/{myDanceId}/download")
@@ -37,5 +40,33 @@ public class MyDanceController {
         log.info("myDanceId : " + myDanceId);
         HttpHeaders headers = new HttpHeaders();
         return new ResponseEntity<Resource>(myDanceService.downloadMyDance(myDanceId, headers), headers, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{myDanceId}")
+    public ResponseEntity<BaseResponse> removeMyDance(@PathVariable Long myDanceId) {
+        log.info("myDanceId : " + myDanceId);
+        myDanceService.removeMyDance(myDanceId);
+        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
+    }
+
+    @GetMapping("/{myDanceId}")
+    public ResponseEntity<BaseResponse> myDanceDetails(@PathVariable Long myDanceId) {
+        log.info("myDanceId : " + myDanceId);
+        FindMyDanceResponseDto findMyDanceResponseDto = myDanceService.findMyDance(myDanceId);
+        return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDto), HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<BaseResponse> myDanceList(Pageable pageable) {
+        log.info("pageable : " + pageable);
+        Page<FindMyDanceResponseDto> findMyDanceResponseDtoList = myDanceService.findAllMyDance(pageable);
+        return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDtoList), HttpStatus.OK);
+    }
+
+    @PutMapping("/{myDanceId}/shorts")
+    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId) {
+        log.info("myDanceId : " + myDanceId);
+        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId);
+        return new ResponseEntity<>(BaseResponse.success(addShortsResponseDto), HttpStatus.OK);
     }
 }

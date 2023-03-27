@@ -17,10 +17,16 @@ import java.net.URL;
 @Component
 public class KakaoOAuth2Dto {
     private static String KAKAO_APIKEY;
+    private static String KAKAO_REDIRECT_URI;
 
     @Value("${apikey.kakao}")
-    public void setKey(String value){
+    public void setKakaoApikey(String value){
         KAKAO_APIKEY = value;
+    }
+
+    @Value("${redirect-uri.kakao}")
+    public void setKakaoRedirectUri(String value){
+        KAKAO_REDIRECT_URI = value;
     }
 
     public KakaoUserInfoDto getUserInfo(String code) {
@@ -37,8 +43,6 @@ public class KakaoOAuth2Dto {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            log.info("KAKAO_APIKEY : "+KAKAO_APIKEY);
-
             //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
@@ -48,7 +52,7 @@ public class KakaoOAuth2Dto {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=" + KAKAO_APIKEY);
-            sb.append("&redirect_uri=http://localhost:8081/user/login/kakao");
+            sb.append("&redirect_uri="+ KAKAO_REDIRECT_URI);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();

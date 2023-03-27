@@ -30,19 +30,13 @@ public class JwtTokenUtil {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
-    public void setExpirationTime() {
-        //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-        JwtTokenUtil.refreshTokenExpirationTime = refreshTokenExpirationTime;
-        JwtTokenUtil.accessTokenExpirationTime = accessTokenExpirationTime;
 
-    }
     public static JWTVerifier getVerifier() {
         return JWT
                 .require(Algorithm.HMAC512(secretKey.getBytes()))
                 .withIssuer(ISSUER)
                 .build();
     }
-    // expires 계산한 후에 getToken(expires, identifier) 메서드로 토큰 만드는게 나을까? 중복되는 느낌이라 고민
     public static String getAccessToken(String identifier) {
         Date expires = JwtTokenUtil.getTokenExpiration(accessTokenExpirationTime);
         return JWT.create()
