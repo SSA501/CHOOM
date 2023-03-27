@@ -1,7 +1,7 @@
 package com.choom.domain.search.service;
 
 import com.choom.domain.search.dto.AddSearchRequestDto;
-import com.choom.domain.search.dto.AddSearchResponseDto;
+import com.choom.domain.search.dto.SearchResponseDto;
 import com.choom.domain.search.entity.Search;
 import com.choom.domain.search.entity.SearchRepository;
 import com.choom.domain.user.entity.User;
@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,7 +25,7 @@ public class SearchService {
     private final SearchRepository searchRepository;
 
     @Transactional
-    public AddSearchResponseDto addSearch(AddSearchRequestDto addSearchRequestDto) {
+    public SearchResponseDto addSearch(AddSearchRequestDto addSearchRequestDto) {
         String keyword = addSearchRequestDto.getKeyword();
 
         // 검색 키워드가 url일 때는 예외 처리
@@ -45,8 +48,23 @@ public class SearchService {
                 .build();
         Search insertResult = searchRepository.save(search);
 
-        return AddSearchResponseDto.builder()
+        return SearchResponseDto.builder()
                 .searchId(insertResult.getId())
+                .keyword(insertResult.getKeyword())
                 .build();
+    }
+
+    public List<SearchResponseDto> findSearch() {
+        // user 더미데이터
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        List<Search> searchList = searchRepository.findTop8ByUserOrderByCreatedAtDesc(user);
+
+        // Search -> SearchResponseDto
+        return searchList.stream().map(search -> SearchResponseDto.builder()
+                .searchId(search.getId())
+                .keyword(search.getKeyword())
+                .build()).collect(Collectors.toList());
     }
 }
