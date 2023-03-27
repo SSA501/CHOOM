@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class AddMyDanceRequestDto {
     private Long danceId;
-    private double videoLength;
+    private int videoLength;
     private String title;
     private String matchRate;
     private int score;

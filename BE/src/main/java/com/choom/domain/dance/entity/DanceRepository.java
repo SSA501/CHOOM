@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DanceRepository extends JpaRepository<Dance, Long> {
 
-   Optional<Dance> findByVideoPath(String videoPath);
+   Optional<Dance> findByUrl(String url);
 
 
 }
