@@ -52,7 +52,7 @@ public class DanceController {
         return new ResponseEntity<>(BaseResponse.success(danceDetailWithRankDto), HttpStatus.OK);
     }
 
-    @PutMapping("/status/{danceId}")
+    @PutMapping("/{danceId}/status")
     public ResponseEntity<BaseResponse> checkDanceStatus(@PathVariable Long danceId)
         throws YoutubeDLException {
         log.info("danceId : "+danceId);
