@@ -10,7 +10,7 @@ import {
 } from "./style";
 import { CgClose } from "react-icons/cg";
 import { ShadowContainer } from "../ShadowContainer/style";
-import { loginKakao } from "../../apis/api";
+import { redirectKakao } from "../../apis/api";
 
 interface LoginModalProps {
   setIsLogin: (isLogin: boolean) => void;
@@ -47,14 +47,12 @@ function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
   };
   const handleLoginTiktok = () => {
     // TODO: 틱톡 로그인 기능 구현
-
     closeModal();
     setIsLogin(true);
   };
+
   const handleLoginKaKao = () => {
-    // TODO: 카톡 로그인 기능 구현
-    loginKakao();
-    setIsLogin(true);
+    redirectKakao();
     closeModal();
   };
 

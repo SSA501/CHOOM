@@ -1,19 +1,34 @@
 import React, { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { loginKakao } from "../../apis/api";
+import Spinner from "../../components/Spinner/Spinner";
+import { useAppDispatch } from "../../constants/types";
+import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
 
 function KakaoRedirectPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  let kakaoCode = searchParams.get("code");
-  // let kakaoCode = new URL(window.location.href).searchParams.get("code");
+  let kakaoCode = searchParams?.get("code");
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log(kakaoCode);
-    // TODO: 백엔드에 코드 전달
-  }, [kakaoCode]);
+    if (kakaoCode) {
+      loginKakao(kakaoCode)
+        .then((res) => {
+          console.log(res);
+          // dispatch(updateLoginStatus);
+          // dispatch(updateAccessToken(accessToken));
+          // navigate(-2);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [dispatch, kakaoCode, navigate]);
 
   return (
-    <div>
-      <div>카카오 로그인 중입니다...</div>
+    <div style={{ textAlign: "center" }}>
+      <Spinner />
+      <p>카카오 로그인 중입니다...</p>
     </div>
   );
 }

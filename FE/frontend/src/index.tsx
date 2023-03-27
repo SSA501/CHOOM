@@ -5,7 +5,7 @@ import App from "./App";
 import { iconStyle, GlobalStyle } from "./styles/globalStyle";
 import { IconContext } from "react-icons/lib";
 import { Provider } from "react-redux";
-import store, { persistor } from "./store";
+import store, { persistor } from "./store/store";
 import { PersistGate } from "redux-persist/integration/react";
 
 const root = ReactDOM.createRoot(

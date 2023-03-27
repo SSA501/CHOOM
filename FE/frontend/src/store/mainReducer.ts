@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const mainReducer = createSlice({
   name: "main",
@@ -6,7 +6,15 @@ const mainReducer = createSlice({
     isLogin: false,
     accessToken: "",
   },
-  reducers: {},
+  reducers: {
+    updateLoginStatus: (state) => {
+      state.isLogin = true;
+    },
+    updateAccessToken: (state, action: PayloadAction<string>) => {
+      state.accessToken = action.payload;
+    },
+  },
 });
 
+export const { updateLoginStatus, updateAccessToken } = mainReducer.actions;
 export default mainReducer;
