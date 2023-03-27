@@ -1,7 +1,6 @@
 package com.choom.domain.dance.dto;
 
 import com.choom.domain.dance.entity.Dance;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -24,18 +23,5 @@ public class PopularDanceDto {
         this.thumbnailPath = dance.getThumbnailPath();
         this.userCount = dance.getUserCount();
         this.status = dance.getStatus();
-    }
-
-    @Builder
-    public PopularDanceDto(Long id, String title, String url, String videoPath,
-        String thumbnailPath,
-        int userCount, int status) {
-        this.id = id;
-        this.title = title;
-        this.url = url;
-        this.videoPath = videoPath;
-        this.thumbnailPath = thumbnailPath;
-        this.userCount = userCount;
-        this.status = status;
     }
 }
