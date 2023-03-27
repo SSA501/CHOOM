@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getPopularChallenge } from "../../apis/api";
 import MainBanner from "../../components/MainBanner/MainBanner";
 import ScrollingText from "../../components/ScrollingText/ScrollingText";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -17,7 +18,7 @@ export interface VideoDataProps {
 }
 
 function MainPage() {
-  const popularVideoData: VideoDataProps[] = [
+  const [popularVideoData, setPopularVideoData] = useState<VideoDataProps[]>([
     {
       id: 1,
       videoPath:
@@ -74,7 +75,14 @@ function MainPage() {
       userCount: 2,
       status: 2,
     },
-  ];
+  ]);
+
+  // useEffect(() => {
+  //   getPopularChallenge().then((res) => {
+  //     // console.log(res.data);
+  //     setPopularVideoData(res.data);
+  //   });
+  // }, [popularVideoData]);
 
   return (
     <>

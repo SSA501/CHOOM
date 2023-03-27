@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
@@ -14,8 +14,7 @@ import {
 } from "./style";
 
 function DetailPage() {
-  const navigate = useNavigate();
-  const videoData = {
+  const [challengeData, setChallengeData] = useState({
     dance: {
       danceId: 123,
       videoId: "khcSrutAcTo",
@@ -63,17 +62,21 @@ function DetailPage() {
         tiktokUrl: "",
       },
     ],
-  };
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // TODO: 챌린지 상세 데이터 받아오기
+    // setChallengeData(videoData);
+  }, [challengeData]);
+
+  const { url, title, userCount, sec, viewCount, publishedAt, danceId } =
+    challengeData?.dance;
 
   return (
     <DetailPageContainer>
       <VideoContainer>
-        <iframe
-          src={videoData?.dance.url}
-          title={videoData?.dance.title}
-          width="360px"
-          height="640px"
-        />
+        <iframe src={url} title={title} width="360px" height="640px" />
       </VideoContainer>
       {/* TODO : DB 비디오 주소로 변경 */}
       {/* <video
@@ -88,17 +91,17 @@ function DetailPage() {
           <InnerShadowContainer>
             <ChallengeDetailTitle>DETAIL</ChallengeDetailTitle>
             <ChallengeDetail
-              title={videoData?.dance.title}
-              userCount={videoData?.dance.userCount}
-              sec={videoData?.dance.sec}
-              viewCount={videoData?.dance.viewCount}
-              publishedAt={videoData?.dance.publishedAt}
+              title={title}
+              userCount={userCount}
+              sec={sec}
+              viewCount={viewCount}
+              publishedAt={publishedAt}
             />
           </InnerShadowContainer>
           <InnerShadowContainer>
             <ChallengeDetailTitle>RANK</ChallengeDetailTitle>
-            {videoData?.myDance.length > 0 ? (
-              videoData?.myDance.map(
+            {challengeData?.myDance.length > 0 ? (
+              challengeData?.myDance.map(
                 ({ userId, nickname, score, youtubeUrl, tiktokUrl }) => (
                   <ChallengeRank
                     key={userId}
@@ -119,7 +122,7 @@ function DetailPage() {
           <Btn
             btnText={"챌린지 시작하기"}
             handleClick={() => {
-              navigate(`/dance/${videoData?.dance.danceId}`);
+              navigate(`/dance/${danceId}`);
             }}
           />
         </DetailBtnContainer>

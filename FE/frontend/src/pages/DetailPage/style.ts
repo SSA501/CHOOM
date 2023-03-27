@@ -19,6 +19,10 @@ const VideoContainer = styled.div`
   width: 360px;
   height: 640px;
   max-width: 50%;
+  iframe,
+  video {
+    border-radius: 25px;
+  }
 `;
 
 const DetailContainer = styled.div`
