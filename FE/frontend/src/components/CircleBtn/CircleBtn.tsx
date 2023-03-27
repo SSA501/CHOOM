@@ -15,7 +15,7 @@ function CircleBtn(props: {
           <props.icon />
         </Btn>
       ) : (
-        <Btn>
+        <Btn onClick={props.onClick}>
           <props.icon />
         </Btn>
       )}

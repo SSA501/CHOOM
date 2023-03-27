@@ -12,7 +12,6 @@ const Btn = styled.button`
   font-size: 20px;
   margin-top: 20px;
   line-height: 10px;
-  cursor: pointer;
 
   & > svg {
     font-size: 28px;
@@ -26,6 +25,9 @@ const Btn = styled.button`
     border: 2px solid #999999;
     background-color: #cccccc;
     color: #666666;
+    svg {
+      cursor: not-allowed !important;
+    }
   }
 `;
 

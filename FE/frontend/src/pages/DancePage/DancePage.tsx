@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-
+import DanceResult from "../../components/DanceReult/DanceResult";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
 import { ShadowContainer } from "../../components/ShadowContainer/style";
@@ -12,10 +12,16 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 interface Pose {
   keypoints: poseDetection.Keypoint[];
 }
+interface Score {
+  score: number;
+  time: number;
+}
 
 function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>([]);
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
+  const [myUrl, setMyUrl] = useState<string>();
+  const [scoreList, setScoreList] = useState<Score[]>([]);
   const danceVideoRef = useRef<any>();
 
   const contents = [
@@ -49,32 +55,48 @@ function DancePage() {
         <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
         <SideSubTitle title="챌린지 연습 방법 ❓" contents={contents} />
       </SideInfoContainer>
-      <Routes>
-        <Route
-          path=""
-          element={
-            <ShadowContainer
-              padding="8px"
-              margin="8px 16px 16px 8px"
-              display="flex"
-              justifyContent="space-evenly"
-              flexWrap="wrap"
-            >
-              <DanceVideo
-                setPoseList={setPoseList}
-                poseList={poseList}
-                ref={danceVideoRef}
-                detector={detector!}
-              />
+
+      <ShadowContainer
+        padding="8px"
+        margin="8px 16px 16px 8px"
+        display="flex"
+        justifyContent="space-evenly"
+        flexWrap="wrap"
+      >
+        <DanceVideo
+          setPoseList={setPoseList}
+          poseList={poseList}
+          ref={danceVideoRef}
+          detector={detector!}
+          myUrl={myUrl}
+        />
+        <Routes>
+          <Route
+            path=""
+            element={
               <DanceCam
                 danceVideoRef={danceVideoRef}
                 detector={detector!}
                 poseList={poseList}
+                setMyUrl={setMyUrl}
+                setScoreList={setScoreList}
               />
-            </ShadowContainer>
-          }
-        />
-      </Routes>
+            }
+          />
+        </Routes>
+        <Routes>
+          <Route
+            path="/result"
+            element={
+              <DanceResult
+                scoreList={scoreList}
+                danceVideoRef={danceVideoRef}
+                setMyUrl={setMyUrl}
+              />
+            }
+          />
+        </Routes>
+      </ShadowContainer>
     </DancePageContainer>
   );
 }

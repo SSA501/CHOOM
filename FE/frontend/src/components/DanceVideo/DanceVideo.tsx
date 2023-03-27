@@ -21,6 +21,7 @@ const DanceVideo = forwardRef(
       setPoseList: (poseList: Pose[]) => void;
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
+      myUrl?: string;
     },
     ref: React.ForwardedRef<any>
   ) => {
@@ -31,11 +32,13 @@ const DanceVideo = forwardRef(
 
     useImperativeHandle(ref, () => ({
       playVideo,
+      changeVideoTime,
     }));
 
     // 비디오 업로드
     const uploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = (event.target as HTMLInputElement)?.files?.[0];
+
       if (file !== undefined) {
         setVideoUrl(URL.createObjectURL(file));
       }
@@ -55,6 +58,7 @@ const DanceVideo = forwardRef(
     const runFrame = async () => {
       if (video.current?.paused) {
         alert("완료");
+        console.log(poseListTemp);
         props.setPoseList(poseListTemp);
         return;
       }
@@ -68,12 +72,13 @@ const DanceVideo = forwardRef(
       const estimatePoseList = await props.detector.estimatePoses(
         video.current!
       );
+
       if (estimatePoseList.length > 0) {
         const newKpts: poseDetection.Keypoint[] = [];
         estimatePoseList[0].keypoints.map((kpt: poseDetection.Keypoint) => {
           newKpts.push({
-            x: kpt.x / 2,
-            y: kpt.y / 2,
+            x: (kpt.x * 450) / video.current?.videoWidth!,
+            y: (kpt.y * 800) / video.current?.videoHeight!,
             z: kpt.z,
             score: kpt.score,
           });
@@ -87,52 +92,69 @@ const DanceVideo = forwardRef(
       video.current?.play();
     };
 
+    const changeVideoTime = (time: number) => {
+      if (video.current) video.current.currentTime = time;
+    };
+
     return (
       <div>
-        <MainContainer>
-          <ChallengeVideo
-            src={videoUrl}
-            width={450}
-            height={800}
-            ref={video}
-            controls
-          />
-          <BtnContainer>
-            <CircleBtn
-              icon={MdSlowMotionVideo}
-              label={"재생 속도"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
+        {!props.myUrl ? (
+          <MainContainer>
+            <ChallengeVideo
+              src={videoUrl}
+              width={450}
+              height={800}
+              ref={video}
             />
-            <CircleBtn
-              icon={CgEditFlipH}
-              label={"좌우 반전"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
-            />
-            <CircleBtn
-              icon={MdVolumeUp}
-              label={"음량"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
-            />
-            <CircleBtn
-              icon={MdPlayArrow}
-              label={"재생"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
-            />
-          </BtnContainer>
-        </MainContainer>
 
-        <div>
-          <input
-            type="file"
-            id="videofile"
-            name="video"
-            accept="video/*"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              uploadVideo(e);
-            }}
-          />
-          <button onClick={() => startEstimate()}>시작</button>
-        </div>
+            <BtnContainer>
+              <CircleBtn
+                icon={MdSlowMotionVideo}
+                label={"재생 속도"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+              <CircleBtn
+                icon={CgEditFlipH}
+                label={"좌우 반전"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+              <CircleBtn
+                icon={MdVolumeUp}
+                label={"음량"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+              <CircleBtn
+                icon={MdPlayArrow}
+                label={"재생"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+            </BtnContainer>
+          </MainContainer>
+        ) : (
+          <MainContainer>
+            <ChallengeVideo
+              src={props.myUrl}
+              width={450}
+              height={800}
+              ref={video}
+              controls
+            />
+          </MainContainer>
+        )}
+        {!props.myUrl && (
+          <div>
+            <input
+              type="file"
+              id="videofile"
+              name="video"
+              accept="video/*"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                uploadVideo(e);
+              }}
+            />
+            <button onClick={() => startEstimate()}>시작</button>
+          </div>
+        )}
       </div>
     );
   }
