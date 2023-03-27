@@ -2,6 +2,7 @@ package com.choom.domain.mydance.controller;
 
 import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
 import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
+import com.choom.domain.mydance.dto.AddShortsResponseDto;
 import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
 import com.choom.domain.mydance.service.MyDanceService;
 import com.choom.global.model.BaseResponse;
@@ -27,10 +28,10 @@ public class MyDanceController {
     private final MyDanceService myDanceService;
 
     @PostMapping()
-    public ResponseEntity<BaseResponse> addMyDance(@RequestPart AddMyDanceRequestDto myDanceAddRequestDto,
+    public ResponseEntity<BaseResponse> addMyDance(@RequestPart AddMyDanceRequestDto addMyDanceRequestDto,
                                    @RequestPart MultipartFile videoFile) throws IOException {
-        log.info("MyDanceAddRequestDto : " + myDanceAddRequestDto);
-        AddMyDanceResponseDto addMyDanceResponseDto = myDanceService.addMyDance(myDanceAddRequestDto, videoFile);
+        log.info("AddMyDanceRequestDto : " + addMyDanceRequestDto);
+        AddMyDanceResponseDto addMyDanceResponseDto = myDanceService.addMyDance(addMyDanceRequestDto, videoFile);
         return new ResponseEntity<>(BaseResponse.success(addMyDanceResponseDto), HttpStatus.OK);
     }
 
@@ -60,5 +61,12 @@ public class MyDanceController {
         log.info("pageable : " + pageable);
         Page<FindMyDanceResponseDto> findMyDanceResponseDtoList = myDanceService.findAllMyDance(pageable);
         return new ResponseEntity<>(BaseResponse.success(findMyDanceResponseDtoList), HttpStatus.OK);
+    }
+
+    @PutMapping("/{myDanceId}/shorts")
+    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId) {
+        log.info("myDanceId : " + myDanceId);
+        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId);
+        return new ResponseEntity<>(BaseResponse.success(addShortsResponseDto), HttpStatus.OK);
     }
 }
