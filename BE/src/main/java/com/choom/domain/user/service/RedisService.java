@@ -1,11 +1,15 @@
 package com.choom.domain.user.service;
 
+import com.choom.domain.user.entity.Blacklist;
+import com.choom.domain.user.entity.BlacklistRedisRepository;
 import com.choom.domain.user.entity.RefreshToken;
 import com.choom.domain.user.entity.RefreshTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -14,10 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class RedisService {
 
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
+    private final BlacklistRedisRepository blacklistRedisRepository;
 
     @Transactional
     public void saveToken(Long userId, String refreshToken) {
-        RefreshToken token = findRefreshTokenByUserId(userId);
+        RefreshToken token = refreshTokenRedisRepository.findById(userId).orElse(null);
         if (token != null) {
             deleteToken(token);
         }
@@ -27,21 +32,15 @@ public class RedisService {
                 .build());
     }
 
-    public RefreshToken findRefreshTokenByToken(String token) {
-        return refreshTokenRedisRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("만료된 토큰값입니다"));
-    }
-
-    public RefreshToken findRefreshTokenByUserId(Long userId) {
-        return refreshTokenRedisRepository.findById(userId).orElse(null);
-    }
-
     @Transactional
-    public void deleteToken(RefreshToken token) {
+    public String deleteToken(RefreshToken token) {
         try {
+            String refreshToken = token.getToken();
             refreshTokenRedisRepository.delete(token);
+            return refreshToken;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+        return null;
     }
 }
