@@ -1,5 +1,6 @@
 package com.choom.domain.dance.dto;
 
+import com.choom.domain.mydance.entity.MyDance;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,15 +20,13 @@ public class DanceRankUserDto {
     String tiktokUrl;
 
     @Builder
-    public DanceRankUserDto(Long userId, String nickname, int score, int videoLength,
-        String title,
-        String youtubeUrl, String tiktokUrl) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.score = score;
-        this.videoLength = videoLength;
-        this.title = title;
-        this.youtubeUrl = youtubeUrl;
-        this.tiktokUrl = tiktokUrl;
+    public DanceRankUserDto(MyDance myDance) {
+        this.userId = myDance.getUser().getId();
+        this.nickname = myDance.getTitle();
+        this.score = myDance.getScore();
+        this.videoLength = myDance.getVideoLength();
+        this.title = myDance.getTitle();
+        this.youtubeUrl = myDance.getYoutubeUrl();
+        this.tiktokUrl = myDance.getTiktokUrl();
     }
 }

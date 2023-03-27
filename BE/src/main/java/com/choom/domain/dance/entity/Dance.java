@@ -63,6 +63,14 @@ public class Dance extends BaseTimeEntity {
         this.jsonPath = jsonPath;
     }
 
+    public void changeStatus(int status){
+        this.status = status;
+    }
+
+    public void saveVideoPath(String videoPath){
+        this.videoPath = videoPath;
+    }
+
     @Builder
     public Dance(Long id, String videoPath, String jsonPath,
         List<Bookmark> bookmarkList,

@@ -1,5 +1,6 @@
 package com.choom.domain.dance.dto;
 
+import com.google.api.services.youtube.model.Video;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,15 +24,11 @@ public class DanceDetailsDto {
     private int status;
     private String publishedAt;
 
-    void changeStatus(int status){
-        this.status = status;
-    }
-
     @Builder
-    public DanceDetailsDto(String title, int sec, String videoId, String description, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
+    public DanceDetailsDto(Video videoDetail, int sec, String videoId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
         this.url = url;
-        this.title = title;
-        this.description = description;
+        this.title = videoDetail.getSnippet().getTitle();
+        this.description = videoDetail.getSnippet().getDescription();
         this.thumbnailPath = thumbnailPath;
         this.sec = sec;
         this.likeCount = likeCount;
