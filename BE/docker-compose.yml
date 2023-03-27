@@ -1,0 +1,39 @@
+# docker-compose.yml
+version: "3.7"
+
+services:
+  db-mysql:
+    container_name: db-mysql
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'choom123!'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: 'choom'
+      MYSQL_PASSWORD: 'choom123!'
+      MYSQL_DATABASE: 'choom'
+      TZ: Asia/Seoul
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql --user 1000
+    ports:
+      - '3306:3306'
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+
+  db-redis:
+    container_name: db-redis
+    image: redis:alpine
+    hostname: db-redis
+    labels:
+      - "name=db-redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
+    command: redis-server --port 6379
+
+  backend:
+    build: .
+    ports:
+      - 8081:8081
+    restart: always
