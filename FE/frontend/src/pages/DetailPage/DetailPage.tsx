@@ -1,13 +1,12 @@
 import React from "react";
-import { MdOutlineMode } from "react-icons/md";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
 import ChallengeRank from "../../components/ChallengeRank/ChallengeRank";
 import {
-  ChallengeTitleContainer,
+  ChallengeDetailContainer,
+  ChallengeDetailTitle,
   DetailContainer,
   DetailPageContainer,
-  TableContainer,
   VideoContainer,
 } from "./style";
 
@@ -81,40 +80,18 @@ function DetailPage() {
           /> */}
       <DetailContainer>
         <div>
-          <ChallengeDetail title={"detail"}>
-            <ChallengeTitleContainer>
-              <h3>{videoData?.dance.title}</h3>
-              <div>
-                <MdOutlineMode />
-                <span>제목 편집</span>
-              </div>
-            </ChallengeTitleContainer>
-            <TableContainer>
-              <div>
-                <strong>참여수</strong>
-                <p>
-                  {videoData?.dance.userCount}
-                  <span>명</span>
-                </p>
-              </div>
-              <div>
-                <strong>동영상 길이</strong>
-                <p>
-                  {videoData?.dance.sec}
-                  <span>초</span>
-                </p>
-              </div>
-              <div>
-                <strong>조회수</strong>
-                <p>{videoData?.dance.viewCount.toLocaleString("en")}</p>
-              </div>
-              <div>
-                <strong>업로드 날짜</strong>
-                <p>{videoData?.dance.publishedAt}</p>
-              </div>
-            </TableContainer>
-          </ChallengeDetail>
-          <ChallengeDetail title={"rank"}>
+          <ChallengeDetailContainer>
+            <ChallengeDetailTitle>DETAIL</ChallengeDetailTitle>
+            <ChallengeDetail
+              title={videoData?.dance.title}
+              userCount={videoData?.dance.userCount}
+              sec={videoData?.dance.sec}
+              viewCount={videoData?.dance.viewCount}
+              publishedAt={videoData?.dance.publishedAt}
+            />
+          </ChallengeDetailContainer>
+          <ChallengeDetailContainer>
+            <ChallengeDetailTitle>RANK</ChallengeDetailTitle>
             {videoData?.myDance.length > 0 ? (
               videoData?.myDance.map(
                 ({ userId, nickname, score, youtubeUrl, tiktokUrl }) => (
@@ -130,7 +107,7 @@ function DetailPage() {
             ) : (
               <div>아직 이 챌린지를 연습한 사람이 없어요! 연습해볼까요?</div>
             )}
-          </ChallengeDetail>
+          </ChallengeDetailContainer>
         </div>
         <div>
           <Btn btnText={"챌린지 시작하기"} handleClick={() => {}} />
