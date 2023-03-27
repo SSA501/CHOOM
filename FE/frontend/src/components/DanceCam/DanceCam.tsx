@@ -58,6 +58,11 @@ const JOINTS = [
   [27, 31],
 ];
 
+const PALLETE = {
+  red: "rgba(255, 0, 0, 0.5)",
+  green: "rgba(0,255,0,0.5)",
+};
+
 function DanceCam(props: {
   danceVideoRef: React.MutableRefObject<any>;
   detector: poseDetection.PoseDetector;
@@ -68,10 +73,6 @@ function DanceCam(props: {
   const cam = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const similarity = require("cosine-similarity");
-  const pallete = {
-    red: "rgba(255, 0, 0, 0.5)",
-    green: "rgba(0,255,0,0.5)",
-  };
 
   let ctx: CanvasRenderingContext2D = canvas.current?.getContext("2d")!;
   let mediaRecorder: MediaRecorder;
@@ -149,20 +150,20 @@ function DanceCam(props: {
     drawCtx();
 
     const videoPose = props.poseList[countFrame];
-    drawGuide(videoPose.keypoints, pallete.green);
+    drawGuide(videoPose.keypoints, PALLETE.green);
 
     if (estimatePoseList && estimatePoseList.length > 0) {
-      const newKpts: poseDetection.Keypoint[] = [];
+      const newKptList: poseDetection.Keypoint[] = [];
       estimatePoseList[0].keypoints.map((kpt: poseDetection.Keypoint) => {
-        newKpts.push({
+        newKptList.push({
           x: (kpt.x * 450) / cam.current?.videoWidth!,
           y: (kpt.y * 800) / cam.current?.videoHeight!,
           z: kpt.z,
           score: kpt.score,
         });
-        return newKpts;
+        return newKptList;
       });
-      const score = calculateScore(newKpts, videoPose.keypoints);
+      const score = calculateScore(newKptList, videoPose.keypoints);
       scoreTemp += score;
 
       if (countFrame % 40 === 0) timeTemp = new Date();
@@ -174,7 +175,7 @@ function DanceCam(props: {
         });
         scoreTemp = 0;
       }
-      drawGuide(newKpts, pallete.red);
+      drawGuide(newKptList, PALLETE.red);
       if (scoreTempList.length > 0)
         drawScore(scoreTempList[scoreTempList.length - 1].score);
     }
