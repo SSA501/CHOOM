@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
 import DanceResult from "../../components/DanceReult/DanceResult";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
@@ -20,7 +19,7 @@ interface Score {
 function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>([]);
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
-  const [myUrl, setMyUrl] = useState<string>();
+  const [myUrl, setMyUrl] = useState<string>("");
   const [scoreList, setScoreList] = useState<Score[]>([]);
   const danceVideoRef = useRef<any>();
 
@@ -70,32 +69,23 @@ function DancePage() {
           detector={detector!}
           myUrl={myUrl}
         />
-        <Routes>
-          <Route
-            path=""
-            element={
-              <DanceCam
-                danceVideoRef={danceVideoRef}
-                detector={detector!}
-                poseList={poseList}
-                setMyUrl={setMyUrl}
-                setScoreList={setScoreList}
-              />
-            }
+
+        {myUrl?.length > 0 ? (
+          <DanceResult
+            scoreList={scoreList}
+            danceVideoRef={danceVideoRef}
+            setMyUrl={setMyUrl}
           />
-        </Routes>
-        <Routes>
-          <Route
-            path="/result"
-            element={
-              <DanceResult
-                scoreList={scoreList}
-                danceVideoRef={danceVideoRef}
-                setMyUrl={setMyUrl}
-              />
-            }
+        ) : (
+          <DanceCam
+            danceVideoRef={danceVideoRef}
+            detector={detector!}
+            poseList={poseList}
+            myUrl={myUrl}
+            setMyUrl={setMyUrl}
+            setScoreList={setScoreList}
           />
-        </Routes>
+        )}
       </ShadowContainer>
     </DancePageContainer>
   );
