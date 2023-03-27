@@ -9,10 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
     private final RedisService redisService;
     private final UserRepository userRepository;
@@ -20,6 +22,8 @@ public class AuthService {
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
 
+
+    @Transactional
     public TokenDto kakaoLogin(String code) {
         KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
@@ -29,16 +33,27 @@ public class AuthService {
         User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
 
         if (user == null) {
-            user = User.builder()
-                    .identifier(identifier)
-                    .nickname(nickname)
-                    .profileImage(profileImage)
-                    .socialType(SocialType.KAKAO)
-                    .build();
-            userRepository.save(user);
+            User newUser = addUser(identifier, nickname, profileImage, SocialType.KAKAO);
+            return issueToken(newUser);
         }
 
         return issueToken(user);
+    }
+
+    @Transactional
+    public User addUser(String identifier, String nickname, String profileImage, SocialType socialType) {
+        User user = User.builder()
+                .identifier(identifier)
+                .nickname(nickname)
+                .profileImage(profileImage)
+                .socialType(socialType)
+                .build();
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 
     public TokenDto issueToken(User user) {
@@ -48,7 +63,8 @@ public class AuthService {
     }
 
     public TokenDto reissueToken(String refreshToken) {
-        RefreshToken oldToken = refreshTokenRedisRepository.findByToken(refreshToken).orElse(null);
+        RefreshToken oldToken = refreshTokenRedisRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new IllegalArgumentException("해당 토큰 값을 찾을 수 없습니다."));
         if (refreshToken.equals(oldToken.getToken())) {
             User user = userRepository.findById(oldToken.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
