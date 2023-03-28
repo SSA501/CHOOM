@@ -1,19 +1,5 @@
 import styled from "styled-components";
 
-const SearchContainer = styled.div`
-  width: 40%;
-  margin: 0 auto;
-`;
-
-const SearchCircle = styled.div`
-  width: fit-content;
-  background-color: black;
-  color: white;
-  border-radius: 50px;
-  padding: 1em 2em;
-  margin: 0 auto;
-`;
-
 const SearchBarContainer = styled.div`
   border-bottom: 5px solid black;
   color: black;
@@ -35,10 +21,4 @@ const SearchInput = styled.input<{ value: string }>`
   transition: 1s linear 0.1;
 `;
 
-export {
-  SearchContainer,
-  SearchBarContainer,
-  SearchCircle,
-  SearchIcon,
-  SearchInput,
-};
+export { SearchBarContainer, SearchIcon, SearchInput };

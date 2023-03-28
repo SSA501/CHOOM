@@ -1,5 +1,7 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import RecentSearch from "../../components/RecentSearch/RecentSearch";
+import SideTitle from "../../components/SideTitle/SideTitle";
 
 function SearchPage() {
   const [searchParams, setSearchParams]: [URLSearchParams, Function] =
@@ -8,10 +10,13 @@ function SearchPage() {
 
   return query ? (
     <div>
+      <div>
+        <SideTitle title={["검색", ""]} />
+      </div>
       {query} <div>쇼츠</div> <div>틱톡</div>
     </div>
   ) : (
-    <div>최근검색어</div>
+    <RecentSearch />
   );
 }
 

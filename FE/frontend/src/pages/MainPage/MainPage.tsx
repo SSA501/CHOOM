@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getPopularChallenge } from "../../apis/api";
 import MainBanner from "../../components/MainBanner/MainBanner";
 import ScrollingText from "../../components/ScrollingText/ScrollingText";
+import SearchArea from "../../components/SearchArea/SearchArea";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { TopContainer } from "./style";
@@ -83,7 +84,7 @@ function MainPage() {
     <>
       <TopContainer>
         <MainBanner />
-        <SearchBar />
+        <SearchArea />
       </TopContainer>
       <ScrollingText />
       <VideoCarousel
