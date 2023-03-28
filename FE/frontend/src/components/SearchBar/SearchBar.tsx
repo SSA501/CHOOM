@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
 
-function SearchBar() {
+interface SearchBarProps {
+  currentQuery?: string | null;
+}
+
+function SearchBar({ currentQuery }: SearchBarProps) {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -23,6 +27,10 @@ function SearchBar() {
       });
     }
   };
+
+  useEffect(() => {
+    if (currentQuery) setInputValue(currentQuery);
+  }, [currentQuery]);
 
   return (
     <SearchBarContainer>
