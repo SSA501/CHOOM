@@ -23,9 +23,9 @@ public class BookmarkService {
 
     @Transactional
     public void addBookmark(User user, Long danceId) {
-        Optional<Bookmark> bookmark = bookmarkRepository.findBookmarkByUserIdAndDanceId(user.getId(), danceId);
+        Bookmark bookmark = bookmarkRepository.findBookmarkByUserIdAndDanceId(user.getId(), danceId).orElse(null);
         log.info("bookmark : " + bookmark);
-        if (bookmark.isEmpty()) {
+        if (bookmark == null) {
             Dance dance = danceRepository.findById(danceId)
                     .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
             Bookmark newBookmark = Bookmark.builder()
