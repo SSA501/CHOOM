@@ -7,7 +7,7 @@ import { DancePageContainer, SideInfoContainer } from "./style";
 import SideTitle from "../../components/SideTitle/SideTitle";
 import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-
+import SpinModal from "../../components/Modal/SpinModal";
 interface Pose {
   keypoints: poseDetection.Keypoint[];
 }
@@ -21,6 +21,9 @@ function DancePage() {
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const [myUrl, setMyUrl] = useState<string>("");
   const [scoreList, setScoreList] = useState<Score[]>([]);
+  const [score, setScore] = useState<number>(0);
+  const [loading, setloading] = useState<boolean>(true);
+  const [title, setTitle] = useState<string>("");
   const danceVideoRef = useRef<any>();
 
   const contents = [
@@ -35,6 +38,7 @@ function DancePage() {
   }, []);
 
   const createDetector = async () => {
+    document.body.style.overflow = "hidden";
     const model = poseDetection.SupportedModels.BlazePose;
     const detectorConfig = {
       runtime: "mediapipe" as "mediapipe",
@@ -44,17 +48,26 @@ function DancePage() {
       model,
       detectorConfig
     );
-    createdDetector.estimatePoses(new ImageData(450, 800));
+    await createdDetector.estimatePoses(new ImageData(450, 800));
+    setloading(false);
+    document.body.style.overflow = "auto";
     setDetector(createdDetector);
   };
 
   return (
     <DancePageContainer>
-      <SideInfoContainer>
-        <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
-        <SideSubTitle title="챌린지 연습 방법 ❓" contents={contents} />
-      </SideInfoContainer>
-
+      {loading && <SpinModal />}
+      {myUrl?.length > 0 ? (
+        <SideInfoContainer>
+          <SideTitle title={["챌린지", "결과보기🎉"]}></SideTitle>
+          <SideSubTitle title="소셜 공유 & 다운로드" />
+        </SideInfoContainer>
+      ) : (
+        <SideInfoContainer>
+          <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
+          <SideSubTitle title="챌린지 연습 방법 ❓" contents={contents} />
+        </SideInfoContainer>
+      )}
       <ShadowContainer
         padding="8px"
         margin="8px 16px 16px 8px"
@@ -68,6 +81,7 @@ function DancePage() {
           ref={danceVideoRef}
           detector={detector!}
           myUrl={myUrl}
+          setTitle={setTitle}
         />
 
         {myUrl?.length > 0 ? (
@@ -75,6 +89,8 @@ function DancePage() {
             scoreList={scoreList}
             danceVideoRef={danceVideoRef}
             setMyUrl={setMyUrl}
+            score={score}
+            title={title}
           />
         ) : (
           <DanceCam
@@ -84,6 +100,7 @@ function DancePage() {
             myUrl={myUrl}
             setMyUrl={setMyUrl}
             setScoreList={setScoreList}
+            setScore={setScore}
           />
         )}
       </ShadowContainer>
