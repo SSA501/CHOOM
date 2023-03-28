@@ -8,4 +8,4 @@ services:
       - 3000:3000
     restart: always
     volumes:
-      - /home/ubuntu/files:/src/app/public/choom
+      - /home/ubuntu/files:/app/build/choom
