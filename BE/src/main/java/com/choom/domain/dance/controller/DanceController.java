@@ -8,6 +8,7 @@ import com.choom.domain.dance.service.DanceService;
 import com.choom.global.model.BaseResponse;
 import com.sapher.youtubedl.YoutubeDLException;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,13 +48,14 @@ public class DanceController {
     @GetMapping("/{videoId}")
     public ResponseEntity<BaseResponse> danceDetails(@PathVariable String videoId) throws IOException {
         log.info("videoId : "+videoId);
-        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(videoId);
+        Long userId = 1L;
+        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(userId, videoId);
         return new ResponseEntity<>(BaseResponse.success(danceDetailWithRankDto), HttpStatus.OK);
     }
 
     @PutMapping("/{danceId}/status")
     public ResponseEntity<BaseResponse> checkDanceStatus(@PathVariable Long danceId)
-        throws YoutubeDLException {
+        throws YoutubeDLException, UnknownHostException {
         log.info("danceId : "+danceId);
         DanceStatusDto danceStatusDto = danceService.checkDanceStatus(danceId);
         return new ResponseEntity<>(BaseResponse.success(danceStatusDto), HttpStatus.OK);

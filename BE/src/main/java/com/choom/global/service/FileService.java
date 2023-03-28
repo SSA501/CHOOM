@@ -30,11 +30,10 @@ public class FileService {
 
         if (hostname.substring(0, 7).equals("DESKTOP")) {
             path = "C:/choom/" + type + "/";
-            file = new File(path + name);
         } else {
             path = "/var/lib/choom/" + type + "/";
-            file = new File(path + name);
         }
+        file = new File(path + name);
 
         if (!file.getParentFile().exists())
             file.getParentFile().mkdirs();
