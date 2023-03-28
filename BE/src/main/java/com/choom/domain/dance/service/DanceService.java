@@ -305,7 +305,7 @@ public class DanceService {
         request.setOption("output", "%(id)s.mp4");	// --output "%(id)s"
         request.setOption("retries", 10);		// --retries 10
 
-        YoutubeDL.setExecutablePath(path+"/youtube-dl");
+        YoutubeDL.setExecutablePath(path+"youtube-dl");
 
         // Make request and return response
         YoutubeDLResponse response = YoutubeDL.execute(request);
