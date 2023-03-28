@@ -94,8 +94,8 @@ public class AuthService {
 
     public ResponseCookie setCookie(String refreshToken, Integer expiration) {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .secure(true)
+//                .httpOnly(true)
+//                .secure(true)
                 .path("/")
                 .maxAge(expiration)
                 .build();
