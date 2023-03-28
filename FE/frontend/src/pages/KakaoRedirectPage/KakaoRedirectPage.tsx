@@ -19,7 +19,7 @@ function KakaoRedirectPage() {
           const accessToken = res.data.accessToken;
           dispatch(updateLoginStatus(true));
           dispatch(updateAccessToken(accessToken));
-          alert("로그인 완료");
+          // alert("로그인 완료");
           navigate(-1);
         })
         .catch((err) => console.log(err));

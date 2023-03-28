@@ -29,6 +29,11 @@ export const logout = async () => {
   await axiosInstance.post<any>(`/user/logout`);
 };
 
+// 탈퇴하기
+export const withdraw = async () => {
+  await axiosInstance.delete<any>(`/user`);
+};
+
 // 인기 챌린지 받아오기
 export const getPopularChallenge = async () => {
   const response = await axiosInstance.get("/dance/popular");
