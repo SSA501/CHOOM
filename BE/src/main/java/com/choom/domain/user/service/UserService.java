@@ -1,7 +1,7 @@
 package com.choom.domain.user.service;
 
-import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
+import com.choom.domain.user.dto.UserMyDanceDto;
 import com.choom.domain.user.dto.UserDetailsDto;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,18 +27,10 @@ public class UserService {
 
     @Transactional
     public UserDetailsDto findUserDetails(User user) {
-        List<MyDance> myDanceList = myDanceRepository.findMyDancesByUser((user));
-        double challengeTime = 0;
-        int scoreSum = 0;
-        for (MyDance myDance : myDanceList) {
-            challengeTime += myDance.getVideoLength();
-            scoreSum += myDance.getScore();
-        }
+        UserMyDanceDto userMyDanceDto = myDanceRepository.findMyDanceInfoByUser(user);
         return UserDetailsDto.builder()
                 .user(user)
-                .challengeCount(myDanceList.size())
-                .challengeTime(challengeTime)
-                .averageScore(scoreSum / myDanceList.size())
+                .userMyDanceDto(userMyDanceDto)
                 .build();
     }
 }

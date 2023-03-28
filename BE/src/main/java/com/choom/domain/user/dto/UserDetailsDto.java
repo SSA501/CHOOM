@@ -11,16 +11,12 @@ import lombok.NoArgsConstructor;
 public class UserDetailsDto {
     private String nickname;
     private String profileImage;
-    private int challengeCount;
-    private double challengeTime;
-    private int averageScore;
+    private UserMyDanceDto userMyDanceDto;
 
     @Builder
-    public UserDetailsDto(User user, int challengeCount, double challengeTime, int averageScore) {
+    public UserDetailsDto(User user, UserMyDanceDto userMyDanceDto) {
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
-        this.challengeCount = challengeCount;
-        this.challengeTime = challengeTime;
-        this.averageScore = averageScore;
+        this.userMyDanceDto = userMyDanceDto;
     }
 }
