@@ -126,7 +126,7 @@ function ProfileCard(props: ProfileProps) {
           <>
             <ProfileImgBG />
             <AddProfileImgBtn htmlFor="profile-img">
-              <CgMathPlus fontSize={"45px"} fontWeight={"900"} />
+              <CgMathPlus />
             </AddProfileImgBtn>
             <input
               id="profile-img"
@@ -177,16 +177,16 @@ function ProfileCard(props: ProfileProps) {
       <BtnContainer>
         {!editProfileMode && (
           <SettingBtn onClick={showSmallMenu}>
-            <TbSettings fontSize={"35px"} />
+            <TbSettings />
           </SettingBtn>
         )}
         {editProfileMode && (
           <>
             <EditProfileBtn onClick={cancelEditProfile}>
-              <CgCloseO fontSize={"35px"} />
+              <CgCloseO />
             </EditProfileBtn>
             <EditProfileBtn editAccept onClick={editProfile}>
-              <CgCheckO fontSize={"35px"} />
+              <CgCheckO />
             </EditProfileBtn>
           </>
         )}

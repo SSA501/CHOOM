@@ -16,6 +16,11 @@ const AddProfileImgBtn = styled.label`
   transform: translate(-50%, -50%);
   color: white;
   cursor: pointer;
+
+  & > svg {
+    font-weight: 900;
+    font-size: 45px !important;
+  }
 `;
 
 const ProfileImgBG = styled.div`
@@ -30,7 +35,7 @@ const ProfileImgBG = styled.div`
 
 const NicknameContainer = styled.div`
   position: relative;
-  width: 320px;
+  width: 340px;
   margin-left: 34px;
 `;
 
@@ -41,7 +46,7 @@ const Nickname = styled.input.attrs((props) => ({
   top: 49%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  width: 320px;
   height: 60px;
   font-style: normal;
   font-weight: 500;
@@ -101,6 +106,10 @@ const InfoDetail = styled.table`
 const BtnContainer = styled.div`
   position: relative;
   width: 100px;
+
+  svg {
+    font-size: 35px !important;
+  }
 `;
 
 const SettingBtn = styled.button`

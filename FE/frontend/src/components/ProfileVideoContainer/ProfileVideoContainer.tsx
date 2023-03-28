@@ -7,7 +7,7 @@ import VideoList from "../../components/VideoList/VideoList";
 import axios from "axios";
 
 function ProfilePage() {
-  const [videoList, setVideoList] = useState<string>("History");
+  const [videoList, setVideoList] = useState<"History" | "Likes">("History");
   const [videoItemList, setVideoItemList] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -15,20 +15,38 @@ function ProfilePage() {
   const [selectedDropMenu, setSelectedDropMenu] =
     useState<string>("높은 등급순");
   const [dropMenuOpen, setDropMenuOpen] = useState<boolean>(false);
-  const target = useRef(null);
+  const target = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    observer.observe(target.current!);
-  }, []);
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver(updatePage, options);
+    if (target.current) {
+      observer.observe(target.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [target]);
 
   useEffect(() => {
     console.log(page + "번 페이지 호출");
     setIsLoading(true);
     axios({
       method: "get",
-      url: "/assets/myChallengeList.json",
+      url: selectHistory
+        ? "/assets/myChallengeList.json"
+        : "/assets/myFavoriteList.json",
     }).then((response) => {
-      setVideoItemList([...videoItemList, ...response.data.data.content]);
+      setVideoItemList((prevList) => [
+        ...prevList,
+        ...response.data.data.content,
+      ]);
       setIsLoading(false);
     });
   }, [page]);
@@ -40,13 +58,11 @@ function ProfilePage() {
     }
   };
 
-  const observer = new IntersectionObserver(updatePage, { threshold: 1.0 });
-
   const showDropMenu = () => {
     setDropMenuOpen(!dropMenuOpen);
   };
 
-  const changVideoList = (mode: string) => {
+  const changVideoList = (mode: "History" | "Likes") => {
     setVideoList(mode);
     setPage(1);
     setVideoItemList([]);
@@ -148,7 +164,11 @@ function ProfilePage() {
           ></SmallMenu>
         )}
       </ListHeader>
-      <VideoList listOption={videoList} videoList={videoItemList} />
+      <VideoList
+        listOption={videoList}
+        videoList={videoItemList}
+        setVideoItemList={setVideoItemList}
+      />
       <div style={{ height: "30px" }} ref={target}></div>
     </ListContainer>
   );
