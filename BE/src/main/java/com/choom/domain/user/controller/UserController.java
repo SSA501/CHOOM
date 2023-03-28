@@ -82,6 +82,6 @@ public class UserController {
         if (isNicknameAvailable) {
             return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
         }
-        return new ResponseEntity<>(BaseResponse.custom(400, "이미 존재하는 닉네임입니다.", null), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(BaseResponse.custom(400, "이미 존재하는 닉네임입니다.", null), HttpStatus.BAD_REQUEST);
     }
 }
