@@ -24,9 +24,15 @@ public class DanceDetailsDto {
     private String videoId;
     private int status;
     private String publishedAt;
+    private boolean isBookmarked;
+
+    public void setBookmark(boolean isBookmarked){
+        this.isBookmarked = isBookmarked;
+    }
+
 
     @Builder
-    public DanceDetailsDto(Long id, Video videoDetail, int sec, String videoId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
+    public DanceDetailsDto(Long id, Video videoDetail, int sec, String videoId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt, boolean isBookmarked) {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
@@ -39,5 +45,6 @@ public class DanceDetailsDto {
         this.videoId = videoId;
         this.status = status;
         this.publishedAt = publishedAt;
+        this.isBookmarked = isBookmarked;
     }
 }

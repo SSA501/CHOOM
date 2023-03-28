@@ -1,5 +1,6 @@
 package com.choom.domain.dance.service;
 
+import com.choom.domain.bookmark.entity.BookmarkRepository;
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
@@ -49,6 +50,7 @@ public class DanceService {
 
     private final DanceRepository danceRepository;
     private final MyDanceRepository myDanceRepository;
+    private final BookmarkRepository  bookmarkRepository;
     private final FileService fileService;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -228,6 +230,11 @@ public class DanceService {
                     .build()
             ).collect(
                 Collectors.toList());
+
+            // 찜한 첼린지 인지 체크하기
+            if(bookmarkRepository.findBookmarkByUserIdAndDanceId(userId, dance.getId()).isPresent()){
+                danceDetailDto.setBookmark(true);
+            }
         }
 
         DanceDetailsWithRankDto danceDetailWithRankDto = DanceDetailsWithRankDto.builder()
