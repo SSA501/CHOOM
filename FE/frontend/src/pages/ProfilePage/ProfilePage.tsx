@@ -5,7 +5,7 @@ import NormalModal from "../../components/Modal/NormalModal";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import { ProfileContainer } from "./style";
 import { useAppDispatch } from "../../constants/types";
-import { withdraw } from "../../apis/api";
+import { withdraw } from "../../apis/user";
 import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
 
 function ProfilePage() {
@@ -20,9 +20,9 @@ function ProfilePage() {
   const withdrawMember = () => {
     withdraw()
       .then(() => {
-        // alert("탈퇴 완료!");
         dispatch(updateLoginStatus(false));
         dispatch(updateAccessToken(""));
+        alert("탈퇴 완료되었습니다.");
         navigate("/");
       })
       .catch((err) => console.log(err));

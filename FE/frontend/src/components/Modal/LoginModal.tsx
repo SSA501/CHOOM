@@ -10,7 +10,7 @@ import {
 } from "./style";
 import { CgClose } from "react-icons/cg";
 import { ShadowContainer } from "../ShadowContainer/style";
-import { redirectKakao } from "../../apis/api";
+import { redirectKakao } from "../../apis/user";
 
 interface LoginModalProps {
   setLoginModalOpen: (loginModalOpen: boolean) => void;

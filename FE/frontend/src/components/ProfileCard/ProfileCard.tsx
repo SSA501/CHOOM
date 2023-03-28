@@ -18,7 +18,7 @@ import { TbSettings } from "react-icons/tb";
 import { ShadowContainer } from "../ShadowContainer/style";
 import { useAppDispatch } from "../../constants/types";
 import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
-import { logout } from "../../apis/api";
+import { logout } from "../../apis/user";
 
 type ProfileInfo = {
   nickname: string;

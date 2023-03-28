@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { loginKakao } from "../../apis/api";
+import { loginKakao } from "../../apis/user";
 import Spinner from "../../components/Spinner/Spinner";
 import { useAppDispatch } from "../../constants/types";
 import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
