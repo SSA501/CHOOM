@@ -31,10 +31,14 @@ public class KakaoOAuth2Dto {
 
     public KakaoUserInfoDto getUserInfo(String code) {
         String accessToken = getAccessToken(code);
+        log.info("카카오 accessToken : " + accessToken);
         return getUserInfoByToken(accessToken);
     }
 
     private String getAccessToken(String code) {
+        log.info("인가 코드 : " + code);
+        log.info("리다이렉트 주소 : " + KAKAO_REDIRECT_URI);
+
         String access_Token="";
         String refresh_Token ="";
         String reqURL = "https://kauth.kakao.com/oauth/token";
@@ -52,7 +56,7 @@ public class KakaoOAuth2Dto {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=" + KAKAO_APIKEY);
-            sb.append("&redirect_uri="+ KAKAO_REDIRECT_URI);
+            sb.append("&redirect_uri=" + KAKAO_REDIRECT_URI);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
