@@ -75,4 +75,13 @@ public class UserController {
         headers.add("Set-Cookie", authService.setCookie(refreshToken, 0).toString());
         return new ResponseEntity<>(BaseResponse.success(null), headers, HttpStatus.OK);
     }
+
+    @GetMapping("/nickname/{nickname}")
+    public ResponseEntity<BaseResponse> checkNickname(@PathVariable String nickname) {
+        boolean isNicknameAvailable = userService.isNicknameAvailable(nickname);
+        if (isNicknameAvailable) {
+            return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(BaseResponse.custom(400, "이미 존재하는 닉네임입니다.", null), HttpStatus.BAD_REQUEST);
+    }
 }
