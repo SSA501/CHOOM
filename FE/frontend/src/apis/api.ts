@@ -24,6 +24,11 @@ export const loginKakao = async (code: string) => {
   return res.data;
 };
 
+// 로그아웃
+export const logout = async () => {
+  await axiosInstance.post<any>(`/user/logout`);
+};
+
 // 인기 챌린지 받아오기
 export const getPopularChallenge = async () => {
   const response = await axiosInstance.get("/dance/popular");
