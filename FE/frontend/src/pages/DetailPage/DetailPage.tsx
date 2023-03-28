@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
 import ChallengeRank from "../../components/ChallengeRank/ChallengeRank";
+import LikeBtn from "../../components/LikeBtn/LikeBtn";
 import {
   InnerShadowContainer,
   ChallengeDetailTitle,
@@ -11,6 +12,7 @@ import {
   DetailTopContainer,
   DetailBtnContainer,
   DetailContainer,
+  LikeBtnContainer,
 } from "./style";
 
 function DetailPage() {
@@ -24,7 +26,7 @@ function DetailPage() {
       title:
         "#뉴진스 #하입보이 #hypeboy #newjeans #지금무슨노래 #하입보이챌린지 #쇼츠 #shorts",
       userCount: 2,
-      likeCount: 3669,
+      likeCount: 3,
       status: 0,
       sec: 56,
       viewCount: 1426395,
@@ -64,14 +66,30 @@ function DetailPage() {
     ],
   });
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+
+  const handleLike = () => {
+    // TODO: 좋아요 추가
+  };
+  const handleLikeDelete = () => {
+    // TODO: 좋아요 삭제
+  };
 
   useEffect(() => {
     // TODO: 챌린지 상세 데이터 받아오기
     // setChallengeData(videoData);
   }, [challengeData]);
 
-  const { url, title, userCount, sec, viewCount, publishedAt, danceId } =
-    challengeData?.dance;
+  const {
+    url,
+    title,
+    userCount,
+    sec,
+    viewCount,
+    publishedAt,
+    danceId,
+    likeCount,
+  } = challengeData?.dance;
 
   return (
     <DetailPageContainer>
@@ -88,7 +106,7 @@ function DetailPage() {
 
       <DetailContainer>
         <DetailTopContainer>
-          <InnerShadowContainer>
+          <InnerShadowContainer position={"relative"}>
             <ChallengeDetailTitle>DETAIL</ChallengeDetailTitle>
             <ChallengeDetail
               title={title}
@@ -97,6 +115,15 @@ function DetailPage() {
               viewCount={viewCount}
               publishedAt={publishedAt}
             />
+            <LikeBtnContainer>
+              <LikeBtn
+                likeCount={likeCount}
+                isLiked={isLiked}
+                setIsLiked={setIsLiked}
+                handleLike={handleLike}
+                handleLikeDelete={handleLikeDelete}
+              />
+            </LikeBtnContainer>
           </InnerShadowContainer>
           <InnerShadowContainer>
             <ChallengeDetailTitle>RANK</ChallengeDetailTitle>

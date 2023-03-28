@@ -36,6 +36,10 @@ const InnerShadowContainer = styled(ShadowContainer)`
   height: 520px;
 `;
 
+const LikeBtnContainer = styled.div`
+  position: absolute;
+`;
+
 const ChallengeDetailTitle = styled.h2`
   text-transform: uppercase;
   font-size: 1.5rem;
@@ -61,6 +65,7 @@ export {
   VideoContainer,
   DetailContainer,
   InnerShadowContainer,
+  LikeBtnContainer,
   ChallengeDetailTitle,
   DetailTopContainer,
   DetailBtnContainer,
