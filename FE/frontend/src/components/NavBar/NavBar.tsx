@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../constants/types";
 import LoginModal from "../Modal/LoginModal";
 import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
 
 function NavBar() {
-  const [isLogin, setIsLogin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const isLogin = useAppSelector((state) => state.main.isLogin);
 
   const showLoginModal = () => {
     setLoginModalOpen(true);
@@ -43,12 +44,7 @@ function NavBar() {
           )}
         </NavUl>
       </NavContainer>
-      {loginModalOpen && (
-        <LoginModal
-          setIsLogin={setIsLogin}
-          setLoginModalOpen={setLoginModalOpen}
-        />
-      )}
+      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
     </header>
   );
 }

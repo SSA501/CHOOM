@@ -4,26 +4,34 @@ import ProfileVideoContainer from "../../components/ProfileVideoContainer/Profil
 import NormalModal from "../../components/Modal/NormalModal";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import { ProfileContainer } from "./style";
+import { useAppDispatch } from "../../constants/types";
+import { withdraw } from "../../apis/user";
+import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
 
 function ProfilePage() {
   const [normalModalOpen, setNormalModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const showNormalModal = () => {
     setNormalModalOpen(true);
   };
 
   const withdrawMember = () => {
-    // TODO: 탈퇴하기 기능 구현
-    alert("탈퇴 완료!");
-    navigate("/");
+    withdraw()
+      .then(() => {
+        dispatch(updateLoginStatus(false));
+        dispatch(updateAccessToken(""));
+        alert("탈퇴 완료되었습니다.");
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <ProfileContainer>
       <ProfileCard showNormalModal={showNormalModal} />
       <ProfileVideoContainer />
-
       {normalModalOpen && (
         <NormalModal
           setNormalModalOpen={setNormalModalOpen}

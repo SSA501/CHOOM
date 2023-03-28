@@ -16,6 +16,9 @@ import {
 import { CgCheckO, CgCloseO, CgMathPlus } from "react-icons/cg";
 import { TbSettings } from "react-icons/tb";
 import { ShadowContainer } from "../ShadowContainer/style";
+import { useAppDispatch } from "../../constants/types";
+import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
+import { logout } from "../../apis/user";
 
 type ProfileInfo = {
   nickname: string;
@@ -46,6 +49,7 @@ function ProfileCard(props: ProfileProps) {
   const [editProfileMode, setEditProfileMode] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const showSmallMenu = () => {
     setSmallMenuOpen(!smallMenuOpen);
@@ -59,7 +63,7 @@ function ProfileCard(props: ProfileProps) {
         showSmallMenu();
       },
     },
-    { name: "로그아웃", handleClick: () => logout() },
+    { name: "로그아웃", handleClick: () => handleLogout() },
     {
       name: "탈퇴하기",
       color: "red",
@@ -67,9 +71,14 @@ function ProfileCard(props: ProfileProps) {
     },
   ];
 
-  const logout = () => {
-    // TODO: 로그아웃 기능 구현
-    navigate("/");
+  const handleLogout = () => {
+    logout()
+      .then(() => {
+        dispatch(updateLoginStatus(false));
+        dispatch(updateAccessToken(""));
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getPopularChallenge } from "../../apis/api";
+import { getPopularChallenge } from "../../apis/challenge";
 import MainBanner from "../../components/MainBanner/MainBanner";
 import ScrollingText from "../../components/ScrollingText/ScrollingText";
 import SearchArea from "../../components/SearchArea/SearchArea";

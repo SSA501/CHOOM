@@ -7,8 +7,17 @@ import SearchPage from "./pages/SearchPage/SearchPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import DetailPage from "./pages/DetailPage/DetailPage";
 import KakaoRedirectPage from "./pages/KakaoRedirectPage/KakaoRedirectPage";
+import { useAppSelector } from "./constants/types";
+import { axiosInstance } from "./apis/instance";
 
 function App() {
+  const accessToken = useAppSelector((state) => state.main.accessToken);
+  if (accessToken) {
+    axiosInstance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${accessToken}`;
+  }
+
   return (
     <Routes>
       <Route path="/" element={<Layout />}>

@@ -1,12 +1,4 @@
-import axios from "axios";
-
-const axiosInstance = axios.create({
-  baseURL: "https://j8a501.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
-  headers: {
-    "Content-type": "application/json",
-  },
-});
+import { axiosInstance } from "./instance";
 
 // 카카오 코드 받기 위해 리다이렉트
 export const redirectKakao = () => {
@@ -23,15 +15,12 @@ export const loginKakao = async (code: string) => {
   return res.data;
 };
 
-// 인기 챌린지 받아오기
-export const getPopularChallenge = async () => {
-  const response = await axiosInstance.get("/dance/popular");
-  return response.data;
+// 로그아웃
+export const logout = async () => {
+  await axiosInstance.post<any>(`/user/logout`);
 };
 
-// 챌린지 제목 수정하기
-export const updateChallengeTitle = async () => {
-  const response = await axiosInstance.post("");
+// 탈퇴하기
+export const withdraw = async () => {
+  await axiosInstance.delete<any>(`/user`);
 };
-
-// 검색하기
