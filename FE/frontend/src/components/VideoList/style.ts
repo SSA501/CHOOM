@@ -14,7 +14,7 @@ const VideoListContainer = styled.div`
   }
 `;
 
-const VideoItem = styled.div<{ bgColor: string }>`
+const VideoItem = styled.div<{ bgColor: string; isLike?: boolean }>`
   position: relative;
   width: 290px;
   height: 500px;
@@ -44,6 +44,19 @@ const VideoItem = styled.div<{ bgColor: string }>`
     line-height: 38px;
     color: var(--white-color);
     background-color: var(--${(props) => props.bgColor}-color);
+  }
+
+  & > svg {
+    position: absolute;
+    top: 21px;
+    right: 21px;
+    font-size: 32px !important;
+    fill: ${(props) => (props.isLike ? "red" : "white")};
+
+    & > path:last-child {
+      stroke: ${(props) => (props.isLike ? "white" : "black")};
+      stroke-width: 1;
+    }
   }
 `;
 
