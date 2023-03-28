@@ -45,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.UnknownHostException;
 import java.util.*;
 
 @Service
@@ -147,7 +148,7 @@ public class MyDanceService {
     }
 
     @Transactional
-    public void removeMyDance(Long myDanceId) {
+    public void removeMyDance(Long myDanceId) throws UnknownHostException {
         MyDance myDance = myDanceRepository.findById(myDanceId)
                 .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
