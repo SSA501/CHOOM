@@ -30,7 +30,7 @@ services:
       - "mode=standalone"
     ports:
       - 6379:6379
-    command: redis-server --port 6379
+    command: redis-server --port 6379 --appendonly yes --replica-read-only no
 
   backend:
     build: .
