@@ -29,6 +29,7 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
+      setTitle: (title: string) => void;
     },
     ref: React.ForwardedRef<any>
   ) => {
@@ -50,6 +51,7 @@ const DanceVideo = forwardRef(
     const uploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = (event.target as HTMLInputElement)?.files?.[0];
 
+      props.setTitle(file?.name.split(".")[0]!);
       if (file !== undefined) {
         setVideoUrl(URL.createObjectURL(file));
       }
@@ -105,7 +107,9 @@ const DanceVideo = forwardRef(
     };
 
     const changeVideoTime = (time: number) => {
+      console.log(time);
       if (video.current) video.current.currentTime = time;
+      video.current?.play();
     };
 
     // 비디오 재생
