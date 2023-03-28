@@ -26,7 +26,7 @@ function DanceResult(props: {
         scoreList={props.scoreList}
         danceVideoRef={props.danceVideoRef}
       />
-      <Btn btnText={"챌린지 시작하기"} handleClick={handleBackBtnClick} />
+      <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
     </StyleContainer>
   );
 }
