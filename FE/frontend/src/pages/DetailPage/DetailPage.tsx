@@ -18,9 +18,9 @@ function DetailPage() {
     dance: {
       danceId: 123,
       videoId: "khcSrutAcTo",
-      url: "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailPath:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
+      url: "/assets/newjeans.mp4",
+      thumbnailSrc:
+        "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
       title:
         "#뉴진스 #하입보이 #hypeboy #newjeans #지금무슨노래 #하입보이챌린지 #쇼츠 #shorts",
       userCount: 2,
@@ -76,16 +76,16 @@ function DetailPage() {
   return (
     <DetailPageContainer>
       <VideoContainer>
-        <iframe src={url} title={title} width="360px" height="640px" />
+        <video
+          src={url}
+          autoPlay
+          controls
+          controlsList="nodownload"
+          width="360px"
+          height="640px"
+        />
       </VideoContainer>
-      {/* TODO : DB 비디오 주소로 변경 */}
-      {/* <video
-            src={url}
-            autoPlay
-            controls
-            width="360px"
-            height="640px"
-          /> */}
+
       <DetailContainer>
         <DetailTopContainer>
           <InnerShadowContainer>
