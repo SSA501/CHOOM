@@ -33,4 +33,8 @@ public class UserService {
                 .userMyDanceDto(userMyDanceDto)
                 .build();
     }
+
+    public boolean isNicknameAvailable(String nickname) {
+        return userRepository.findByNickname(nickname).isEmpty();
+    }
 }
