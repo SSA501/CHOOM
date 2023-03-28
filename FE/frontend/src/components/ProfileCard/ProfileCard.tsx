@@ -16,6 +16,9 @@ import {
 import { CgCheckO, CgCloseO, CgMathPlus } from "react-icons/cg";
 import { TbSettings } from "react-icons/tb";
 import { ShadowContainer } from "../ShadowContainer/style";
+import { useAppDispatch } from "../../constants/types";
+import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
+import { logout } from "../../apis/user";
 
 type ProfileInfo = {
   nickname: string;
@@ -46,6 +49,7 @@ function ProfileCard(props: ProfileProps) {
   const [editProfileMode, setEditProfileMode] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const showSmallMenu = () => {
     setSmallMenuOpen(!smallMenuOpen);
@@ -59,7 +63,7 @@ function ProfileCard(props: ProfileProps) {
         showSmallMenu();
       },
     },
-    { name: "로그아웃", handleClick: () => logout() },
+    { name: "로그아웃", handleClick: () => handleLogout() },
     {
       name: "탈퇴하기",
       color: "red",
@@ -67,9 +71,14 @@ function ProfileCard(props: ProfileProps) {
     },
   ];
 
-  const logout = () => {
-    // TODO: 로그아웃 기능 구현
-    navigate("/");
+  const handleLogout = () => {
+    logout()
+      .then(() => {
+        dispatch(updateLoginStatus(false));
+        dispatch(updateAccessToken(""));
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +135,7 @@ function ProfileCard(props: ProfileProps) {
           <>
             <ProfileImgBG />
             <AddProfileImgBtn htmlFor="profile-img">
-              <CgMathPlus fontSize={"45px"} fontWeight={"900"} />
+              <CgMathPlus />
             </AddProfileImgBtn>
             <input
               id="profile-img"
@@ -177,16 +186,16 @@ function ProfileCard(props: ProfileProps) {
       <BtnContainer>
         {!editProfileMode && (
           <SettingBtn onClick={showSmallMenu}>
-            <TbSettings fontSize={"35px"} />
+            <TbSettings />
           </SettingBtn>
         )}
         {editProfileMode && (
           <>
             <EditProfileBtn onClick={cancelEditProfile}>
-              <CgCloseO fontSize={"35px"} />
+              <CgCloseO />
             </EditProfileBtn>
             <EditProfileBtn editAccept onClick={editProfile}>
-              <CgCheckO fontSize={"35px"} />
+              <CgCheckO />
             </EditProfileBtn>
           </>
         )}

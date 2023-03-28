@@ -2,7 +2,7 @@
     "message": "정상",
     "statusCode": 200,
     "data":{
-    "content": [
+        "content": [
             {
                 "id": 1,
                 "userId": 1,

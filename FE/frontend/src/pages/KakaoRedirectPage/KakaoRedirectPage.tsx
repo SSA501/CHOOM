@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { loginKakao } from "../../apis/api";
+import { loginKakao } from "../../apis/user";
 import Spinner from "../../components/Spinner/Spinner";
 import { useAppDispatch } from "../../constants/types";
 import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
@@ -16,10 +16,11 @@ function KakaoRedirectPage() {
     if (kakaoCode) {
       loginKakao(kakaoCode)
         .then((res) => {
-          console.log(res);
-          // dispatch(updateLoginStatus);
-          // dispatch(updateAccessToken(accessToken));
-          // navigate(-2);
+          const accessToken = res.data.accessToken;
+          dispatch(updateLoginStatus(true));
+          dispatch(updateAccessToken(accessToken));
+          // alert("로그인 완료");
+          navigate(-1);
         })
         .catch((err) => console.log(err));
     }
