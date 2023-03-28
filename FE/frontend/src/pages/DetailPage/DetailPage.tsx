@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getChallengeDetail } from "../../apis/challenge";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
 import ChallengeRank from "../../components/ChallengeRank/ChallengeRank";
@@ -17,54 +18,55 @@ import {
 
 function DetailPage() {
   const [challengeData, setChallengeData] = useState({
-    dance: {
-      danceId: 123,
-      videoId: "khcSrutAcTo",
-      url: "/assets/newjeans.mp4",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
-      title:
-        "#뉴진스 #하입보이 #hypeboy #newjeans #지금무슨노래 #하입보이챌린지 #쇼츠 #shorts",
-      userCount: 2,
-      likeCount: 3,
-      status: 0,
-      sec: 56,
-      viewCount: 1426395,
-      publishedAt: "2023.03.10",
-    },
-    myDance: [
-      {
-        userId: 0,
-        nickname: "닉네임최대닉네임최대",
-        score: 99,
-        videoLength: 0,
-        title: "내가",
-        youtubeUrl: "",
-        tiktokUrl:
-          "https://www.tiktok.com/@n1mbostratus/video/7208437948126153985?q=%EC%B1%8C%EB%A6%B0%EC%A7%80",
-      },
-      {
-        userId: 1,
-        nickname: "sdfsdf",
-        score: 70,
-        videoLength: 0,
-        title: "내가만든쇼츠~",
-        youtubeUrl:
-          "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-        tiktokUrl: "",
-      },
-      {
-        userId: 2,
-        nickname: "sdfsdf",
-        score: 70,
-        videoLength: 0,
-        title: "내가만든쇼츠~",
-        youtubeUrl:
-          "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-        tiktokUrl: "",
-      },
-    ],
+    danceId: 123,
+    videoId: "khcSrutAcTo",
+    url: "/assets/newjeans.mp4",
+    thumbnailSrc:
+      "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
+    title:
+      "#뉴진스 #하입보이 #hypeboy #newjeans #지금무슨노래 #하입보이챌린지 #쇼츠 #shorts",
+    userCount: 2,
+    likeCount: 3,
+    status: 0,
+    sec: 56,
+    viewCount: 1426395,
+    publishedAt: "2023.03.10",
   });
+
+  const [rankData, setRankData] = useState([
+    {
+      userId: 0,
+      nickname: "닉네임최대닉네임최대",
+      score: 99,
+      videoLength: 0,
+      title: "내가",
+      youtubeUrl: "",
+      tiktokUrl:
+        "https://www.tiktok.com/@n1mbostratus/video/7208437948126153985?q=%EC%B1%8C%EB%A6%B0%EC%A7%80",
+    },
+    {
+      userId: 1,
+      nickname: "sdfsdf",
+      score: 70,
+      videoLength: 0,
+      title: "내가만든쇼츠~",
+      youtubeUrl:
+        "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
+      tiktokUrl: "",
+    },
+    {
+      userId: 2,
+      nickname: "sdfsdf",
+      score: 70,
+      videoLength: 0,
+      title: "내가만든쇼츠~",
+      youtubeUrl:
+        "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
+      tiktokUrl: "",
+    },
+  ]);
+
+  const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState<boolean>(false);
 
@@ -76,9 +78,15 @@ function DetailPage() {
   };
 
   useEffect(() => {
-    // TODO: 챌린지 상세 데이터 받아오기
-    // setChallengeData(videoData);
-  }, [challengeData]);
+    if (id) {
+      getChallengeDetail(id)
+        .then((res) => {
+          setChallengeData(res?.data?.dance);
+          setRankData(res?.data?.myDance);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [id]);
 
   const {
     url,
@@ -89,7 +97,7 @@ function DetailPage() {
     publishedAt,
     danceId,
     likeCount,
-  } = challengeData?.dance;
+  } = challengeData;
 
   return (
     <DetailPageContainer>
@@ -127,8 +135,8 @@ function DetailPage() {
           </InnerShadowContainer>
           <InnerShadowContainer>
             <ChallengeDetailTitle>RANK</ChallengeDetailTitle>
-            {challengeData?.myDance.length > 0 ? (
-              challengeData?.myDance.map(
+            {rankData?.length > 0 ? (
+              rankData?.map(
                 ({ userId, nickname, score, youtubeUrl, tiktokUrl }) => (
                   <ChallengeRank
                     key={userId}
