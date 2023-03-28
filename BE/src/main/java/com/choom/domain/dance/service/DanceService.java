@@ -310,6 +310,6 @@ public class DanceService {
         // Make request and return response
         YoutubeDLResponse response = YoutubeDL.execute(request);
 
-        return "/choom/youtube" + videoId;
+        return "/choom/youtube/" + videoId + ".mp4";
     }
 }
