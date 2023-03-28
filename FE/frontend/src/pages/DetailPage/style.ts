@@ -38,6 +38,8 @@ const InnerShadowContainer = styled(ShadowContainer)`
 
 const LikeBtnContainer = styled.div`
   position: absolute;
+  top: 0;
+  left: -6em;
 `;
 
 const ChallengeDetailTitle = styled.h2`

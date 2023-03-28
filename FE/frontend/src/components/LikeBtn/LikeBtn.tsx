@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { ReactComponent as SpeechBubble } from "./speechBubble.svg";
 import { LikeBtnContentContainer, LikeBtnOuterContainer } from "./style";
@@ -28,6 +28,11 @@ function LikeBtn({
   handleLikeDelete,
 }: LikeBtnProps) {
   const fillHeart = isLiked ? "red" : "";
+  const [localLikeCount, setLocalLikeCount] = useState<number>(0);
+
+  useEffect(() => {
+    setLocalLikeCount(likeCount);
+  }, [likeCount]);
 
   return (
     <LikeBtnOuterContainer>
@@ -40,14 +45,24 @@ function LikeBtn({
           }}
           onClick={(e) => {
             e.stopPropagation();
-            isLiked ? handleLike() : handleLikeDelete();
+            if (isLiked) {
+              handleLike();
+              if (localLikeCount >= 0) {
+                setLocalLikeCount((prev: number) => prev - 1);
+              } else {
+                setLocalLikeCount(0);
+              }
+            } else {
+              handleLikeDelete();
+              setLocalLikeCount((prev: number) => prev + 1);
+            }
             setIsLiked((prev: boolean) => !prev);
           }}
         >
           {isLiked ? <IoMdHeart /> : <IoMdHeartEmpty />}
         </span>
 
-        <span> {likeCount}</span>
+        <span> {localLikeCount}</span>
       </LikeBtnContentContainer>
     </LikeBtnOuterContainer>
   );

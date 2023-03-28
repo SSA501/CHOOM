@@ -8,7 +8,7 @@ const LikeBtnContentContainer = styled.div`
   width: 72px;
   position: absolute;
   text-align: center;
-  top: 37%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
 `;
