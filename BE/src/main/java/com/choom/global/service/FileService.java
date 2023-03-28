@@ -39,7 +39,7 @@ public class FileService {
             file.getParentFile().mkdirs();
 
         image.transferTo(file);
-        return path + name;
+        return "/choom/" + type + "/" + name;
     }
 
     public Resource fileDownload(String path, HttpHeaders headers) throws IOException {
