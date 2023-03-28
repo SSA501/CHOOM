@@ -24,7 +24,10 @@ import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;
 import com.sapher.youtubedl.YoutubeDLResponse;
+import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -197,7 +200,7 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceDetailsWithRankDto findDance(String videoId) throws IOException {
+    public DanceDetailsWithRankDto findDance(Long userId, String videoId) throws IOException {
         String url = GOOGLE_YOUTUBE_URL+videoId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
@@ -244,7 +247,8 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceStatusDto checkDanceStatus(Long danceId) throws YoutubeDLException {
+    public DanceStatusDto checkDanceStatus(Long danceId)
+        throws YoutubeDLException, UnknownHostException {
         Dance dance = danceRepository.findById(danceId)
             .orElseThrow(()->new IllegalArgumentException("존재하지 않는 Dance id값 입니다."));
         int status  = dance.getStatus();
@@ -252,7 +256,6 @@ public class DanceService {
         if(status == 0){ // 분석 안된 상태
             log.info("아직 분석 안 된 영상!!");
             dance.changeStatus(1);
-
             // 동영상 다운로드
             String url = dance.getUrl();
 
@@ -279,20 +282,34 @@ public class DanceService {
         return danceStatusDto;
     }
 
-    public String youtubeDownload(String url) throws YoutubeDLException {
-        // Destination directory
-        String directory = System.getProperty("user.home")+"/youtube";
+    public String youtubeDownload(String url) throws YoutubeDLException, UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        String path = "";
+        File file = null;
+
+        String videoId = url.split("/")[4];
+
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            path = "C:/choom/youtube/";
+        } else {
+            path = "/var/lib/choom/youtube/";
+        }
+        file = new File(path + videoId);
+
+        if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
 
         // Build request
-        YoutubeDLRequest request = new YoutubeDLRequest(url, directory);
+        YoutubeDLRequest request = new YoutubeDLRequest(url, path);
         request.setOption("ignore-errors");		// --ignore-errors
         request.setOption("output", "%(id)s.mp4");	// --output "%(id)s"
         request.setOption("retries", 10);		// --retries 10
 
-        YoutubeDL.setExecutablePath(directory+"/youtube-dl");
+        YoutubeDL.setExecutablePath(path+"/youtube-dl");
 
         // Make request and return response
         YoutubeDLResponse response = YoutubeDL.execute(request);
-        return response.getDirectory();
+
+        return "/choom/youtube" + videoId;
     }
 }
