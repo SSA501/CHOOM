@@ -37,3 +37,5 @@ services:
     ports:
       - 8081:8081
     restart: always
+    volumes:
+      - /home/ubuntu/files:/var/lib/choom
