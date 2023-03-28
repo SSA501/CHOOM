@@ -36,4 +36,14 @@ public class BookmarkService {
         }
         return;
     }
+
+    @Transactional
+    public void removeBookmark(User user, Long danceId) {
+        Bookmark bookmark = bookmarkRepository.findBookmarkByUserIdAndDanceId(user.getId(), danceId).orElse(null);
+        log.info("bookmark : " + bookmark);
+        if (bookmark != null) {
+            bookmarkRepository.delete(bookmark);
+        }
+        return;
+    }
 }

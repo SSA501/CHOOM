@@ -29,8 +29,15 @@ public class BookmarkController {
     public ResponseEntity<BaseResponse> addBookmark(@PathVariable Long danceId, @ApiIgnore Authentication authentication) throws IOException {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
         User user = customUserDetails.getUser();
-        log.info("유저 : " + user.toString());
         bookmarkService.addBookmark(user, danceId);
+        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{danceId}")
+    public ResponseEntity<BaseResponse> removeBookmark(@PathVariable Long danceId, @ApiIgnore Authentication authentication) throws IOException {
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
+        User user = customUserDetails.getUser();
+        bookmarkService.removeBookmark(user, danceId);
         return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 }
