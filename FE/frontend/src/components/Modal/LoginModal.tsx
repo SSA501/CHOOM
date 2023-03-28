@@ -13,11 +13,10 @@ import { ShadowContainer } from "../ShadowContainer/style";
 import { redirectKakao } from "../../apis/api";
 
 interface LoginModalProps {
-  setIsLogin: (isLogin: boolean) => void;
   setLoginModalOpen: (loginModalOpen: boolean) => void;
 }
 
-function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
+function LoginModal({ setLoginModalOpen }: LoginModalProps) {
   const closeModal = () => {
     setLoginModalOpen(false);
     document.body.style.overflow = "auto";
@@ -43,12 +42,10 @@ function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
   const handleLoginGoogle = () => {
     // TODO: 구글 로그인 기능 구현
     closeModal();
-    setIsLogin(true);
   };
   const handleLoginTiktok = () => {
     // TODO: 틱톡 로그인 기능 구현
     closeModal();
-    setIsLogin(true);
   };
 
   const handleLoginKaKao = () => {

@@ -7,8 +7,8 @@ const mainReducer = createSlice({
     accessToken: "",
   },
   reducers: {
-    updateLoginStatus: (state) => {
-      state.isLogin = true;
+    updateLoginStatus: (state, action: PayloadAction<boolean>) => {
+      state.isLogin = action.payload;
     },
     updateAccessToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;

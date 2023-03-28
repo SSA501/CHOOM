@@ -16,10 +16,11 @@ function KakaoRedirectPage() {
     if (kakaoCode) {
       loginKakao(kakaoCode)
         .then((res) => {
-          console.log(res);
-          // dispatch(updateLoginStatus);
-          // dispatch(updateAccessToken(accessToken));
-          // navigate(-2);
+          const accessToken = res.data.accessToken;
+          dispatch(updateLoginStatus(true));
+          dispatch(updateAccessToken(accessToken));
+          alert("로그인 완료");
+          navigate(-1);
         })
         .catch((err) => console.log(err));
     }
