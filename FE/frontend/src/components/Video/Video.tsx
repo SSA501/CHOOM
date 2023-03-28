@@ -20,20 +20,14 @@ function Video({ id, thumbnailSrc, videoPath, handleClickVideo }: VideoProps) {
     >
       {playingVideoId === id ? (
         <>
-          <iframe
-            src={videoPath}
-            title={videoPath}
-            width="270px"
-            height="480px"
-          />
-          {/* TODO : DB 비디오 주소로 변경 */}
-          {/* <video
+          <video
             src={videoPath}
             autoPlay
             controls
             width="270px"
             height="480px"
-          /> */}
+            controlsList="nodownload"
+          />
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
       ) : (

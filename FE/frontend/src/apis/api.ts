@@ -8,6 +8,7 @@ const axiosInstance = axios.create({
   },
 });
 
+// 카카오 코드 받기 위해 리다이렉트
 export const redirectKakao = () => {
   // 카카오 로그인 주소
   const CLIENT_ID = "113e58b998f18be80dd79db4ef86fee2";
@@ -16,17 +17,21 @@ export const redirectKakao = () => {
   window.location.href = KAKAO_AUTH_URL;
 };
 
-
+// 카카오 로그인
 export const loginKakao = async (code: string) => {
   const res = await axiosInstance.get<any>(`/user/login/kakao?code=${code}`);
   return res.data;
-}
+};
 
+// 인기 챌린지 받아오기
 export const getPopularChallenge = async () => {
   const response = await axiosInstance.get("/dance/popular");
   return response.data;
 };
 
+// 챌린지 제목 수정하기
 export const updateChallengeTitle = async () => {
   const response = await axiosInstance.post("");
 };
+
+// 검색하기
