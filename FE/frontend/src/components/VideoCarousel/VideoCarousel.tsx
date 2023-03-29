@@ -38,7 +38,7 @@ function VideoCarousel({
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
   const navigate = useNavigate();
-  const handleClickVideo = (videoID: number | string | undefined): void => {
+  const handleClickVideo = (videoID: string | null): void => {
     if (isSearch) {
       // 서치에서 보여주는 비디오일 경우 (DB에 저장 안되어 있는 경우) 저장 요청
       addDance(videoID)
@@ -87,29 +87,16 @@ function VideoCarousel({
           }}
         >
           <div>
-            {isSearch
-              ? videoData?.map(
-                  ({ youtubeId, videoPath, thumbnailPath, title }) => (
-                    <SwiperSlide key={youtubeId}>
-                      <Video
-                        title={title}
-                        videoPath={`${SERVER_URL}${videoPath}`}
-                        thumbnailPath={thumbnailPath}
-                        handleClickVideo={() => handleClickVideo(youtubeId)}
-                      />
-                    </SwiperSlide>
-                  )
-                )
-              : videoData?.map(({ id, videoPath, thumbnailPath, title }) => (
-                  <SwiperSlide key={id}>
-                    <Video
-                      title={title}
-                      videoPath={`${SERVER_URL}${videoPath}`}
-                      thumbnailPath={thumbnailPath}
-                      handleClickVideo={() => handleClickVideo(id)}
-                    />
-                  </SwiperSlide>
-                ))}
+            {videoData?.map(({ id, videoPath, thumbnailPath, title }) => (
+              <SwiperSlide key={id}>
+                <Video
+                  title={title}
+                  videoPath={`${SERVER_URL}${videoPath}`}
+                  thumbnailPath={thumbnailPath}
+                  handleClickVideo={() => handleClickVideo(id)}
+                />
+              </SwiperSlide>
+            ))}
           </div>
         </Swiper>
         <ArrowBtnContainer>
