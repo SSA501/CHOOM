@@ -38,18 +38,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             throws ServletException, IOException {
         // Read the Authorization header, where the JWT Token should be
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING);
+        String uri = request.getRequestURI();
+        log.info("uri : " + uri);
         // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX) || authService.isBlacklisted(header.substring(7))) {
+        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX) || authService.isBlacklisted(header.substring(7)) || uri.equals("/api/user/login/token")) {
             filterChain.doFilter(request, response);
             return;
         }
         try {
-            String uri = request.getRequestURI();
-            log.info("uri : " + uri);
-            if (uri.equals("/api/user/login/token")) {
-                filterChain.doFilter(request, response);
-                return;
-            }
             // If header is present, try grab user principal from database and perform authorization
             Authentication authentication = getAuthentication(request);
             // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
