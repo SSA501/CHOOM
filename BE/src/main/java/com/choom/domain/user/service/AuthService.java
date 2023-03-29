@@ -93,10 +93,11 @@ public class AuthService {
     }
 
     public ResponseCookie setCookie(String refreshToken, Integer expiration) {
+        log.info("create Cookie");
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
 //                .httpOnly(true)
 //                .secure(true)
-                .path("/")
+//                .path("/")
                 .maxAge(expiration)
                 .build();
         return cookie;
