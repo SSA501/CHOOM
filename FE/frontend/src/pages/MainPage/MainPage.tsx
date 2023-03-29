@@ -10,7 +10,7 @@ import { TopContainer } from "./style";
 export interface VideoDataProps {
   id: number;
   videoPath: string;
-  thumbnailSrc: string;
+  thumbnailPath: string;
   frameColor?: string;
   title: string;
   url: string;
@@ -23,7 +23,7 @@ function MainPage() {
     {
       id: 1,
       videoPath: "/assets/newjeans.mp4",
-      thumbnailSrc:
+      thumbnailPath:
         "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
       title: "하입보이",
       url: "https://youtu.be/videoId",
@@ -33,7 +33,7 @@ function MainPage() {
     {
       id: 2,
       videoPath: "/assets/newjeans.mp4",
-      thumbnailSrc:
+      thumbnailPath:
         "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
       title: "하입보이",
       url: "https://youtu.be/videoId",
@@ -44,7 +44,7 @@ function MainPage() {
       id: 3,
       videoPath: "/assets/newjeans.mp4",
       // videoPath: "https://www.youtube.com/shorts/fYQxthUKung",
-      thumbnailSrc:
+      thumbnailPath:
         "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
       title: "하입보이",
       url: "https://youtu.be/videoId",
@@ -54,7 +54,7 @@ function MainPage() {
     {
       id: 4,
       videoPath: "/assets/newjeans.mp4",
-      thumbnailSrc:
+      thumbnailPath:
         "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
       title: "하입보이",
       url: "https://youtu.be/videoId",
@@ -64,7 +64,7 @@ function MainPage() {
     {
       id: 5,
       videoPath: "/assets/newjeans.mp4",
-      thumbnailSrc:
+      thumbnailPath:
         "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
       title: "하입보이",
       url: "https://youtu.be/videoId",
@@ -73,12 +73,14 @@ function MainPage() {
     },
   ]);
 
-  // useEffect(() => {
-  //   getPopularChallenge().then((res) => {
-  //     // console.log(res.data);
-  //     setPopularVideoData(res.data);
-  //   });
-  // }, [popularVideoData]);
+  useEffect(() => {
+    getPopularChallenge()
+      .then((res) => {
+        console.log(res.data);
+        setPopularVideoData(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>

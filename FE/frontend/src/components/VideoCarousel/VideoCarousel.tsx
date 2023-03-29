@@ -19,6 +19,7 @@ import "swiper/css/navigation";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Btn from "../Btn/Btn";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../constants/url";
 
 interface VideoCarouselProps {
   videoData: VideoDataProps[];
@@ -76,13 +77,13 @@ function VideoCarousel({
           }}
         >
           <div>
-            {videoData?.map(({ id, videoPath, thumbnailSrc, title }) => (
+            {videoData?.map(({ id, videoPath, thumbnailPath, title }) => (
               <SwiperSlide key={id}>
                 <Video
                   id={id}
                   title={title}
-                  videoPath={videoPath}
-                  thumbnailSrc={thumbnailSrc}
+                  videoPath={`${SERVER_URL}${videoPath}`}
+                  thumbnailPath={thumbnailPath}
                   handleClickVideo={() => handleClickVideo(id)}
                 />
               </SwiperSlide>

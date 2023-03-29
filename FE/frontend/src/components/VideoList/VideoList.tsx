@@ -45,7 +45,7 @@ function VideoList(props: VideoListProps) {
           id={item.id}
           title={item.title}
           videoPath={item.videoPath}
-          thumbnailSrc={item.thumbnailSrc}
+          thumbnailPath={item.thumbnailPath}
           handleClickVideo={() => handleClickVideo(item.id)}
         />
         <div>{item.score}</div>
@@ -59,7 +59,7 @@ function VideoList(props: VideoListProps) {
             id={item.id}
             title={item.title}
             videoPath={item.youtubeUrl}
-            thumbnailSrc={item.thumbnailSrc}
+            thumbnailPath={item.thumbnailPath}
             handleClickVideo={() => handleClickVideo(item.id)}
           />
           <MdFavorite onClick={() => handleLike(item.id, item.isLike)} />
