@@ -141,6 +141,7 @@ function DanceCam(props: {
       // 녹화종료
       props.setScore(Math.round(sumScore / scoreTempList.length));
       props.setScoreList(scoreTempList);
+
       mediaRecorder?.stop();
       if (cam.current) cam.current.srcObject = null;
       return;
