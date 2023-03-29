@@ -60,7 +60,8 @@ public class UserController {
     }
 
     @PostMapping("/login/token")
-    public ResponseEntity<BaseResponse> reissueToken(@RequestHeader("Cookie") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
+    public ResponseEntity<BaseResponse> reissueToken(@CookieValue("refreshToken") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
+        log.info("Cookie로 받은 refreshToken : " + refreshToken);
         TokenDto token = authService.reissueToken(refreshToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", authService.setCookie(refreshToken, expiration).toString());
