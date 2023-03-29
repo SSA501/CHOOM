@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import DanceResult from "../../components/DanceReult/DanceResult";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
@@ -25,6 +26,9 @@ function DancePage() {
   const [loading, setloading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("");
   const danceVideoRef = useRef<any>();
+
+  const { danceId } = useParams();
+  console.log(danceId);
 
   const contents = [
     "1️⃣ 알아서 잘해보세요",
@@ -60,7 +64,12 @@ function DancePage() {
       {myUrl?.length > 0 ? (
         <SideInfoContainer>
           <SideTitle title={["챌린지", "결과보기🎉"]}></SideTitle>
-          <SideSubTitle title="소셜 공유 & 다운로드" />
+          <SideSubTitle
+            title="소셜 공유 & 다운로드"
+            score={score}
+            videoTitle={title}
+            myUrl={myUrl}
+          />
         </SideInfoContainer>
       ) : (
         <SideInfoContainer>

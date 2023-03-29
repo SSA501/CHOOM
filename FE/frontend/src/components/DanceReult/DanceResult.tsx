@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DanceChart from "../../components/DanceChart/DanceChart";
 import Btn from "../Btn/Btn";
 import DanceScore from "../DanceScore/DanceScore";
