@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import DanceResult from "../../components/DanceReult/DanceResult";
 import DanceCam from "../../components/DanceCam/DanceCam";
 import DanceVideo from "../../components/DanceVideo/DanceVideo";
@@ -9,6 +8,7 @@ import SideTitle from "../../components/SideTitle/SideTitle";
 import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import SpinModal from "../../components/Modal/SpinModal";
+
 interface Pose {
   keypoints: poseDetection.Keypoint[];
 }
@@ -26,9 +26,6 @@ function DancePage() {
   const [loading, setloading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("");
   const danceVideoRef = useRef<any>();
-
-  const { danceId } = useParams();
-  console.log(danceId);
 
   const contents = [
     "1️⃣ 알아서 잘해보세요",

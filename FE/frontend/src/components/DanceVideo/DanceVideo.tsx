@@ -5,6 +5,8 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
+import { useParams } from "react-router-dom";
+import { getChallengeStatus } from "../../apis/dance";
 import { CgEditFlipH } from "react-icons/cg";
 import {
   MdSlowMotionVideo,
@@ -41,11 +43,21 @@ const DanceVideo = forwardRef(
     const [isFlipped, setIsFlipped] = useState(false);
     const [isMuted, setIsMuted] = useState(video.current?.muted);
     const [isPlaying, setIsPlaying] = useState(false);
-
+    const { danceId } = useParams();
     useImperativeHandle(ref, () => ({
       playVideo,
       changeVideoTime,
     }));
+
+    useEffect(() => {
+      getChallengeStatus(danceId!)
+        .then((res) => {
+          console.log(res);
+
+          // setVideoUrl(URL.createObjectURL(file));
+        })
+        .catch((err) => console.log(err));
+    }, [danceId]);
 
     // 비디오 업로드
     const uploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
