@@ -60,10 +60,13 @@ public class UserController {
     }
 
     @PostMapping("/login/token")
-    public ResponseEntity<BaseResponse> reissueToken(@RequestHeader("Cookie") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
+    public ResponseEntity<BaseResponse> reissueToken(@CookieValue("refreshToken") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
+        log.info("Cookie로 받은 refreshToken : " + refreshToken);
         TokenDto token = authService.reissueToken(refreshToken);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", authService.setCookie(refreshToken, expiration).toString());
+        ResponseCookie cookie = authService.setCookie(token.getRefreshToken(), expiration);
+        headers.add("Set-Cookie", cookie.toString());
+        log.info("cookie 재발급 : " + cookie.toString());
         AccessTokenDto accessTokenDto = new AccessTokenDto(token.getAccessToken());
         return new ResponseEntity<>(BaseResponse.success(accessTokenDto), headers, HttpStatus.OK);
     }
@@ -75,7 +78,9 @@ public class UserController {
         String accessToken = token.substring(7);
         String refreshToken = authService.logout(userId, accessToken);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", authService.setCookie(refreshToken, 0).toString());
+        ResponseCookie cookie = authService.setCookie(refreshToken, 0);
+        headers.add("Set-Cookie", cookie.toString());
+        log.info("delete cookie : " + cookie.toString());
         return new ResponseEntity<>(BaseResponse.success(null), headers, HttpStatus.OK);
     }
 

@@ -65,9 +65,11 @@ public class MyDanceController {
     }
 
     @PutMapping("/{myDanceId}/shorts")
-    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId) {
+    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId,
+                                                  @RequestParam String code) {
         log.info("myDanceId : " + myDanceId);
-        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId);
+        log.info("code : " + code);
+        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId, code);
         return new ResponseEntity<>(BaseResponse.success(addShortsResponseDto), HttpStatus.OK);
     }
 }

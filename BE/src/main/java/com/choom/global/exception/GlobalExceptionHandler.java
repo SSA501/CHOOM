@@ -1,5 +1,6 @@
 package com.choom.global.exception;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.choom.global.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -63,5 +64,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(e.getMessage())
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleTokenExpired(TokenExpiredException e){
+        log.warn("TokenExpiredException", e);
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .statusCode(401)
+                .message("토큰이 만료되었습니다.")
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }
