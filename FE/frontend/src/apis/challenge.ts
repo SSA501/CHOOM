@@ -57,3 +57,15 @@ export const addDance = async (youtubeId: any) => {
   const response = await axiosInstance.post(`/dance/${youtubeId}`);
   return response.data;
 };
+
+// 즐겨찾기 추가
+export const addBookmark = async (danceId: number) => {
+  const response = await axiosInstance.post(`/bookmark/${danceId}`);
+  return response.data;
+};
+
+// 즐겨찾기 삭제
+export const removeBookmark = async (danceId: number) => {
+  const response = await axiosInstance.delete(`/bookmark/${danceId}`);
+  return response.data;
+};

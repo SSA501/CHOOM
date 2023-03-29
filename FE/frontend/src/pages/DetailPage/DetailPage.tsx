@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getChallengeDetail } from "../../apis/challenge";
+import {
+  addBookmark,
+  getChallengeDetail,
+  removeBookmark,
+} from "../../apis/challenge";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
 import ChallengeRank from "../../components/ChallengeRank/ChallengeRank";
@@ -75,10 +79,25 @@ function DetailPage() {
   const navigate = useNavigate();
 
   const handleLike = () => {
-    // TODO: 좋아요 추가
+    addBookmark(id)
+      .then((res) => {
+        console.log(res.data);
+        if (res.statusCode === 200) {
+          setIsLiked(true);
+        }
+      })
+      .catch((err) => console.log(err));
   };
+
   const handleLikeDelete = () => {
-    // TODO: 좋아요 삭제
+    removeBookmark(id)
+      .then((res) => {
+        console.log(res.data);
+        if (res.statusCode === 200) {
+          setIsLiked(false);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
