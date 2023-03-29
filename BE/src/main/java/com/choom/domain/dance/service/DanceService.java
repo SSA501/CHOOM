@@ -300,12 +300,14 @@ public class DanceService {
         }else if(status == 1){ // 분석 중인 상태
             log.info("분석 중 인 영상!!"); // 분석 완료 될때까지 기다려야됨???
             danceStatusDto = DanceStatusDto.builder()
+                .videoPath(dance.getVideoPath())
                 .status(1)
                 .build();
         }else{ // 분석 완료인 상태
             log.info("이미 분석 완료 된 영상!!");
             danceStatusDto = DanceStatusDto.builder()
                 .status(2)
+                .videoPath(dance.getVideoPath())
                 .jsonPath(dance.getJsonPath())
                 .build();
         }
