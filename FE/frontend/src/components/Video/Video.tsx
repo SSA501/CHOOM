@@ -1,14 +1,23 @@
 import React, { useState } from "react";
+import ReactPlayer from "react-player";
 import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
+  id: number | null;
+  url?: string;
   videoPath: string;
   thumbnailPath: string;
   title: string;
   handleClickVideo: () => void;
 }
 
-function Video({ thumbnailPath, videoPath, handleClickVideo }: VideoProps) {
+function Video({
+  id,
+  url,
+  thumbnailPath,
+  videoPath,
+  handleClickVideo,
+}: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<string>("");
 
   return (
@@ -19,14 +28,27 @@ function Video({ thumbnailPath, videoPath, handleClickVideo }: VideoProps) {
     >
       {playingVideoId === videoPath ? (
         <>
-          <video
-            src={videoPath}
-            autoPlay
-            controls
-            width="270px"
-            height="480px"
-            controlsList="nodownload"
-          />
+          {id ? (
+            <video
+              src={videoPath}
+              autoPlay
+              controls
+              width="270px"
+              height="480px"
+              controlsList="nodownload"
+            />
+          ) : (
+            <ReactPlayer
+              url={url}
+              width="270px"
+              height="480px"
+              controls
+              loop
+              muted
+              playing
+            />
+          )}
+
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
       ) : (
