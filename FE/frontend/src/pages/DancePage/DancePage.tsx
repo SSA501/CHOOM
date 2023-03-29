@@ -46,10 +46,11 @@ function DancePage() {
   useEffect(() => {
     if (poseList.length > 0) {
       const poseListJSON = JSON.stringify(poseList);
-      const blob = new Blob([poseListJSON], { type: "application/json" });
+      const file = new File([poseListJSON], "poseList", {
+        type: "application/json",
+      });
       const formData = new FormData();
-      formData.append("poseList", blob);
-      console.log(formData);
+      formData.append("poseList", file);
       updateChallenge(danceId!, formData)
         .then((res) => {
           console.log(res);
