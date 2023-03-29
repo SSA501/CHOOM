@@ -44,12 +44,18 @@ function DancePage() {
 
   // 분석 결과 저장
   useEffect(() => {
-    if (poseList.length > 0)
-      updateChallenge(danceId!, JSON.stringify(poseList))
+    if (poseList.length > 0) {
+      const poseListJSON = JSON.stringify(poseList);
+      const blob = new Blob([poseListJSON], { type: "application/json" });
+      const formData = new FormData();
+      formData.append("poseList", blob);
+
+      updateChallenge(danceId!, formData)
         .then((res) => {
           console.log(res);
         })
         .catch((err) => console.log(err));
+    }
   }, [danceId, poseList]);
 
   const createDetector = async () => {
