@@ -15,6 +15,7 @@ function ProfilePage() {
 
   const showNormalModal = () => {
     setNormalModalOpen(true);
+    document.body.style.overflow = "hidden";
   };
 
   const withdrawMember = () => {
@@ -26,6 +27,8 @@ function ProfilePage() {
         navigate("/");
       })
       .catch((err) => console.log(err));
+
+    document.body.style.overflow = "auto";
   };
 
   return (
