@@ -2,23 +2,22 @@ import React, { useState } from "react";
 import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
-  id: number;
   videoPath: string;
   thumbnailPath: string;
   title: string;
   handleClickVideo: () => void;
 }
 
-function Video({ id, thumbnailPath, videoPath, handleClickVideo }: VideoProps) {
-  const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
+function Video({ thumbnailPath, videoPath, handleClickVideo }: VideoProps) {
+  const [playingVideoId, setPlayingVideoId] = useState<string>("");
 
   return (
     <VideoContainer
-      key={id}
-      onMouseEnter={(): void => setPlayingVideoId(id)}
-      onMouseLeave={(): void => setPlayingVideoId(null)}
+      key={videoPath}
+      onMouseEnter={(): void => setPlayingVideoId(videoPath)}
+      onMouseLeave={(): void => setPlayingVideoId("")}
     >
-      {playingVideoId === id ? (
+      {playingVideoId === videoPath ? (
         <>
           <video
             src={videoPath}

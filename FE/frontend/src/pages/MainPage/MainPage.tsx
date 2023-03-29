@@ -7,13 +7,19 @@ import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { TopContainer } from "./style";
 
 export interface VideoDataProps {
-  youtubeId: number;
-  videoPath: string;
-  thumbnailPath: string;
+  id: number | null;
   title: string;
-  url: string;
+  url?: string;
+  thumbnailPath: string;
+  sec?: number;
+  likeCount?: number;
+  viewCount?: number;
   userCount: number;
+  youtubeId: string;
   status: number;
+  videoPath?: string;
+  publishedAt?: string;
+  bookmarked?: boolean;
 }
 
 function MainPage() {
@@ -25,6 +31,7 @@ function MainPage() {
     getPopularChallenge()
       .then((res) => {
         setPopularVideoData(res.data);
+        // console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, []);

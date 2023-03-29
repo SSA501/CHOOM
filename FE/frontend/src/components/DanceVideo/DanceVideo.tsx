@@ -29,6 +29,7 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
+      challengeUrl: string;
       setTitle: (title: string) => void;
       challenge?: Challenge;
     },
