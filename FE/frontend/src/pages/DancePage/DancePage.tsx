@@ -8,6 +8,9 @@ import SideTitle from "../../components/SideTitle/SideTitle";
 import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import SpinModal from "../../components/Modal/SpinModal";
+import { SERVER_URL } from "../../constants/url";
+import { useParams } from "react-router-dom";
+import { getChallengeStatus } from "../../apis/dance";
 
 interface Pose {
   keypoints: poseDetection.Keypoint[];
@@ -21,11 +24,14 @@ function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>([]);
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const [myUrl, setMyUrl] = useState<string>("");
+  const [challengeUrl, setChallengeUrl] = useState<string>("");
+  const [status, setStatus] = useState<number>(0);
   const [scoreList, setScoreList] = useState<Score[]>([]);
   const [score, setScore] = useState<number>(0);
   const [loading, setloading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>("");
   const danceVideoRef = useRef<any>();
+  const { danceId } = useParams();
 
   const contents = [
     "1️⃣ 알아서 잘해보세요",
@@ -36,7 +42,15 @@ function DancePage() {
   // 모델 불러오기
   useEffect(() => {
     createDetector();
-  }, []);
+
+    getChallengeStatus(danceId!)
+      .then((res) => {
+        console.log(res);
+        setChallengeUrl(SERVER_URL + res.data.videoPath);
+        setStatus(res.data.status);
+      })
+      .catch((err) => console.log(err));
+  }, [danceId]);
 
   const createDetector = async () => {
     document.body.style.overflow = "hidden";
@@ -57,7 +71,6 @@ function DancePage() {
 
   return (
     <DancePageContainer>
-      {loading && <SpinModal />}
       {myUrl?.length > 0 ? (
         <SideInfoContainer>
           <SideTitle title={["챌린지", "결과보기🎉"]}></SideTitle>
@@ -81,14 +94,20 @@ function DancePage() {
         justifyContent="space-evenly"
         flexWrap="wrap"
       >
-        <DanceVideo
-          setPoseList={setPoseList}
-          poseList={poseList}
-          ref={danceVideoRef}
-          detector={detector!}
-          myUrl={myUrl}
-          setTitle={setTitle}
-        />
+        {loading ? (
+          <SpinModal />
+        ) : (
+          <DanceVideo
+            setPoseList={setPoseList}
+            poseList={poseList}
+            ref={danceVideoRef}
+            detector={detector!}
+            myUrl={myUrl}
+            challengeUrl={challengeUrl}
+            setTitle={setTitle}
+            status={status}
+          />
+        )}
 
         {myUrl?.length > 0 ? (
           <DanceResult
