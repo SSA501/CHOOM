@@ -18,8 +18,8 @@ import {
 
 function DetailPage() {
   const [challengeData, setChallengeData] = useState({
-    danceId: 123,
-    videoId: "khcSrutAcTo",
+    id: 123,
+    youtubeId: "khcSrutAcTo",
     url: "/assets/newjeans.mp4",
     thumbnailSrc:
       "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
@@ -30,7 +30,8 @@ function DetailPage() {
     status: 0,
     sec: 56,
     viewCount: 1426395,
-    publishedAt: "2023.03.10",
+    publishedAt: "2023-03-27",
+    bookmarked: true,
   });
 
   const [rankData, setRankData] = useState([
@@ -41,8 +42,9 @@ function DetailPage() {
       videoLength: 0,
       title: "내가",
       youtubeUrl: "",
-      tiktokUrl:
-        "https://www.tiktok.com/@n1mbostratus/video/7208437948126153985?q=%EC%B1%8C%EB%A6%B0%EC%A7%80",
+      // tiktokUrl:
+      //   "https://www.tiktok.com/@n1mbostratus/video/7208437948126153985?q=%EC%B1%8C%EB%A6%B0%EC%A7%80",
+      profileImage: "/assets/profile_sample.jpg",
     },
     {
       userId: 1,
@@ -52,7 +54,8 @@ function DetailPage() {
       title: "내가만든쇼츠~",
       youtubeUrl:
         "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-      tiktokUrl: "",
+      // tiktokUrl: "",
+      profileImage: "/assets/profile_sample.jpg",
     },
     {
       userId: 2,
@@ -62,13 +65,14 @@ function DetailPage() {
       title: "내가만든쇼츠~",
       youtubeUrl:
         "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-      tiktokUrl: "",
+      // tiktokUrl: "",
+      profileImage: "/assets/profile_sample.jpg",
     },
   ]);
 
-  const { id } = useParams<{ id?: string }>();
+  const { youtubeId } = useParams<{ youtubeId?: string }>(); // 상세페이지의 주소는 youtubeId 기반 (열었을 때 DB 저장시작)
+  const [isLiked, setIsLiked] = useState<boolean>(true);
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const handleLike = () => {
     // TODO: 좋아요 추가
@@ -78,26 +82,19 @@ function DetailPage() {
   };
 
   useEffect(() => {
-    if (id) {
-      getChallengeDetail(id)
+    if (youtubeId) {
+      getChallengeDetail(youtubeId)
         .then((res) => {
           setChallengeData(res?.data?.dance);
+          setIsLiked(res?.data?.dance?.bookmarked);
           setRankData(res?.data?.myDance);
         })
         .catch((err) => console.log(err));
     }
-  }, [id]);
+  }, [youtubeId]);
 
-  const {
-    url,
-    title,
-    userCount,
-    sec,
-    viewCount,
-    publishedAt,
-    danceId,
-    likeCount,
-  } = challengeData;
+  const { url, title, userCount, sec, viewCount, publishedAt, id, likeCount } =
+    challengeData;
 
   return (
     <DetailPageContainer>
@@ -137,14 +134,22 @@ function DetailPage() {
             <ChallengeDetailTitle>RANK</ChallengeDetailTitle>
             {rankData?.length > 0 ? (
               rankData?.map(
-                ({ userId, nickname, score, youtubeUrl, tiktokUrl }) => (
+                ({
+                  userId,
+                  nickname,
+                  score,
+                  youtubeUrl,
+                  // tiktokUrl,
+                  profileImage,
+                }) => (
                   <ChallengeRank
                     key={userId}
                     userId={userId}
                     nickname={nickname}
                     score={score}
                     youtubeUrl={youtubeUrl}
-                    tiktokUrl={tiktokUrl}
+                    // tiktokUrl={tiktokUrl}
+                    profileImage={profileImage}
                   />
                 )
               )
@@ -157,7 +162,7 @@ function DetailPage() {
           <Btn
             btnText={"챌린지 시작하기"}
             handleClick={() => {
-              navigate(`/dance/${danceId}`);
+              navigate(`/dance/${id}`);
             }}
           />
         </DetailBtnContainer>
