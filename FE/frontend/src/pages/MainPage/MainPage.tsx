@@ -7,14 +7,19 @@ import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { TopContainer } from "./style";
 
 export interface VideoDataProps {
-  id: string | null;
-  youtubeId: string;
-  videoPath: string;
-  thumbnailPath: string;
+  id: number | null;
   title: string;
-  url: string;
+  url?: string;
+  thumbnailPath: string;
+  sec?: number;
+  likeCount?: number;
+  viewCount?: number;
   userCount: number;
+  youtubeId: string;
   status: number;
+  videoPath?: string;
+  publishedAt?: string;
+  bookmarked?: boolean;
 }
 
 function MainPage() {

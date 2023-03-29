@@ -25,22 +25,16 @@ interface VideoCarouselProps {
   videoData: VideoDataProps[];
   title: string | React.ReactNode;
   text?: string;
-  isSearch?: boolean; // 검색에서 표시되어서 DB에 있는 동영상이 아닐 때
 }
 
-function VideoCarousel({
-  videoData,
-  title,
-  text,
-  isSearch,
-}: VideoCarouselProps) {
+function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
   const [swiper, setSwiper] = useState<any>();
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
   const navigate = useNavigate();
-  const handleClickVideo = (videoID: string | null): void => {
-    if (isSearch) {
-      // 서치에서 보여주는 비디오일 경우 (DB에 저장 안되어 있는 경우) 저장 요청
+  const handleClickVideo = (videoID: number | null): void => {
+    if (videoID === null) {
+      // 서치에서 보여주는 비디오 중 DB에 저장 안되어 있는 경우 저장 요청
       addDance(videoID)
         .then((res) => {
           console.log(res.data.danceId);

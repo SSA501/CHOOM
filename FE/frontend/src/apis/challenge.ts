@@ -19,6 +19,20 @@ export const updateChallengeTitle = async () => {
 };
 
 // 검색하기
+export const searchDance = async (
+  query: string,
+  pageToken: string,
+  size: number
+) => {
+  const response = await axiosInstance.get("/dance", {
+    params: {
+      keyword: query,
+      pageToken: pageToken,
+      size: size,
+    },
+  });
+  return response.data;
+};
 
 // 검색 키워드 목록 받아오기
 export const getSearchKeywordList = async () => {
