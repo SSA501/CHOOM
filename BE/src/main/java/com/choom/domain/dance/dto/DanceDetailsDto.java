@@ -14,7 +14,6 @@ public class DanceDetailsDto {
 
     private Long id;
     private String title;
-    private String description;
     private String url;
     private String thumbnailPath;
     private int sec;
@@ -38,8 +37,7 @@ public class DanceDetailsDto {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
-        this.description = videoDetail.getSnippet().getDescription();
-        this.thumbnailPath = thumbnailPath;
+        this.thumbnailPath = videoDetail.getSnippet().getThumbnails().getHigh().getUrl();
         this.sec = sec;
         this.likeCount = likeCount;
         this.viewCount = viewCount;
