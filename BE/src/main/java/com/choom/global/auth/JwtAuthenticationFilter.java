@@ -40,6 +40,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING);
         String uri = request.getRequestURI();
         log.info("uri : " + uri);
+        log.info("header : " + header);
         // If header does not contain BEARER or is null delegate to Spring impl and exit
         if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX) || authService.isBlacklisted(header.substring(7)) || uri.equals("/api/user/login/token")) {
             filterChain.doFilter(request, response);
