@@ -49,7 +49,7 @@ function DancePage() {
       const blob = new Blob([poseListJSON], { type: "application/json" });
       const formData = new FormData();
       formData.append("poseList", blob);
-
+      console.log(formData);
       updateChallenge(danceId!, formData)
         .then((res) => {
           console.log(res);
