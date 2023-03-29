@@ -11,6 +11,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -59,6 +61,12 @@ public class AuthService {
     public TokenDto issueToken(User user) {
         TokenDto token = JwtTokenUtil.getToken(user.getIdentifier());
         redisService.saveToken(user.getId(), token.getRefreshToken());
+        Optional<RefreshToken> token1 = refreshTokenRedisRepository.findByToken(token.getRefreshToken());
+        if (token1.isEmpty()) {
+            log.info("refreshToken 저장 안 됨");
+        } else {
+            log.info("refreshToken 저장 : " + token1.get().getToken());
+        }
         return token;
     }
 
@@ -93,10 +101,12 @@ public class AuthService {
     }
 
     public ResponseCookie setCookie(String refreshToken, Integer expiration) {
+        log.info("create Cookie");
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-//                .httpOnly(true)
-//                .secure(true)
+                .httpOnly(true)
+                .secure(true)
                 .path("/")
+                .sameSite("None")
                 .maxAge(expiration)
                 .build();
         return cookie;

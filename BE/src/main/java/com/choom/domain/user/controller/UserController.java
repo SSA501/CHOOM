@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -51,13 +52,16 @@ public class UserController {
     public ResponseEntity<BaseResponse> kakaoLogin(@RequestParam String code, @Value("${jwt.expiration.rtk}") Integer expiration) {
         TokenDto token = authService.kakaoLogin(code);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", authService.setCookie(token.getRefreshToken(), expiration).toString());
+        ResponseCookie cookie = authService.setCookie(token.getRefreshToken(), expiration);
+        headers.add("Set-Cookie", cookie.toString());
+        log.info("cookie : " + cookie.toString());
         AccessTokenDto accessTokenDto = new AccessTokenDto(token.getAccessToken());
         return new ResponseEntity<>(BaseResponse.success(accessTokenDto), headers, HttpStatus.OK);
     }
 
     @PostMapping("/login/token")
-    public ResponseEntity<BaseResponse> reissueToken(@RequestHeader("Cookie") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
+    public ResponseEntity<BaseResponse> reissueToken(@CookieValue("refreshToken") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
+        log.info("Cookie로 받은 refreshToken : " + refreshToken);
         TokenDto token = authService.reissueToken(refreshToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", authService.setCookie(refreshToken, expiration).toString());
