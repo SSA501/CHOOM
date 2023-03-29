@@ -77,6 +77,11 @@ public class DanceService {
 
     public DanceSearchDto searchDance(String keyword, String pageToken,Long size) {
         log.info("Starting YouTube search... " +keyword+" pageToken : "+pageToken);
+
+        long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
+        long elapsedTime = 0L; // 경과 시간을 초기화합니다.
+        long maxTime = 3000L; // 최대 실행 시간을 3초로 설정합니다.
+
         List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
 
         SearchListResponse searchResponse = null;
@@ -105,6 +110,12 @@ public class DanceService {
 
                         if (danceDetailDto != null)
                             danceDetailDtoList.add(danceDetailDto);
+
+                        elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
+                        if (elapsedTime > maxTime) { // 경과 시간이 최대 시간보다 작으면 반복합니다.
+                            log.info("시간초과로 종료됨!");
+                            break;
+                        }
                     }
                 }
             }
