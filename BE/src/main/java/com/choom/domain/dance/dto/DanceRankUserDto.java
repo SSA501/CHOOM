@@ -13,6 +13,7 @@ import lombok.ToString;
 public class DanceRankUserDto {
     Long userId;
     String nickname;
+    String profileImage;
     int score;
     int videoLength;
     String title;
@@ -22,6 +23,7 @@ public class DanceRankUserDto {
     @Builder
     public DanceRankUserDto(MyDance myDance) {
         this.userId = myDance.getUser().getId();
+        this.profileImage = myDance.getUser().getProfileImage();
         this.nickname = myDance.getTitle();
         this.score = myDance.getScore();
         this.videoLength = myDance.getVideoLength();

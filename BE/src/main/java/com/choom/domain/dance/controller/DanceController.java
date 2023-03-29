@@ -45,11 +45,11 @@ public class DanceController {
         return new ResponseEntity<>(BaseResponse.success(popularDanceDtoList), HttpStatus.OK);
     }
 
-    @GetMapping("/{videoId}")
-    public ResponseEntity<BaseResponse> danceDetails(@PathVariable String videoId) throws IOException {
-        log.info("videoId : "+videoId);
+    @GetMapping("/{youtubeId}")
+    public ResponseEntity<BaseResponse> danceDetails(@PathVariable String youtubeId) throws IOException {
+        log.info("youtubeId : "+youtubeId);
         Long userId = 1L;
-        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(userId, videoId);
+        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(userId, youtubeId);
         return new ResponseEntity<>(BaseResponse.success(danceDetailWithRankDto), HttpStatus.OK);
     }
 

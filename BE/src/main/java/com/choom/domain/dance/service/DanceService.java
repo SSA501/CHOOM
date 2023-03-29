@@ -1,5 +1,6 @@
 package com.choom.domain.dance.service;
 
+import com.choom.domain.bookmark.entity.BookmarkRepository;
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
@@ -49,11 +50,12 @@ public class DanceService {
 
     private final DanceRepository danceRepository;
     private final MyDanceRepository myDanceRepository;
+    private final BookmarkRepository  bookmarkRepository;
     private final FileService fileService;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 30;  // 검색 개수
+    private static final long NUMBER_OF_VIDEOS_RETURNED = 20;  // 검색 개수
     private static YouTube youtube;
 
     private static final String GOOGLE_YOUTUBE_URL =  "https://www.youtube.com/shorts/";
@@ -78,7 +80,6 @@ public class DanceService {
         List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
 
         try {
-
             // 1. 유튜브 검색 결과
             if (youtube != null) {
                 YouTube.Search.List search = youtube.search().list("snippet");
@@ -95,16 +96,14 @@ public class DanceService {
                 if (searchResultList != null) {
                     for (SearchResult video : searchResultList) {
                         // 비동기로 검색 -> 검색 속도 향상
-                        String videoId = video.getId().getVideoId();
-                        DanceDetailsDto danceDetailDto = getVideoDetail(videoId);
+                        String youtubeId = video.getId().getVideoId();
+                        DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
 
                         if (danceDetailDto != null)
                             danceDetailDtoList.add(danceDetailDto);
                     }
                 }
             }
-
-            // 2. 틱톡 검색 결과
 
         } catch (GoogleJsonResponseException e){
             log.info("There was a service error: " + e.getDetails().getCode() + " : "  + e.getDetails().getMessage());
@@ -126,10 +125,10 @@ public class DanceService {
     }
 
     @Async
-    DanceDetailsDto getVideoDetail(String videoId)throws IOException {
+    DanceDetailsDto getVideoDetail(String youtubeId)throws IOException {
         YouTube.Videos.List videoDetails =  youtube.videos().list("contentDetails");
         videoDetails.setKey(YOUTUBE_APIKEY);
-        videoDetails.setId(videoId);
+        videoDetails.setId(youtubeId);
         videoDetails.setPart("statistics,snippet,contentDetails");
         videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
 
@@ -154,7 +153,7 @@ public class DanceService {
             viewCount = videoDetail.getStatistics().getViewCount().longValue();
         }
 
-        String url = GOOGLE_YOUTUBE_URL + videoId;
+        String url = GOOGLE_YOUTUBE_URL + youtubeId;
         Dance dance = danceRepository.findByUrl(url).orElse(null);
 
         Long id = null;
@@ -180,7 +179,7 @@ public class DanceService {
             .likeCount(likeCount)
             .viewCount(viewCount)
             .userCount(userCount)
-            .videoId(videoId)
+            .youtubeId(youtubeId)
             .status(status)
             .publishedAt(publishedAt)
             .build();
@@ -200,11 +199,11 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceDetailsWithRankDto findDance(Long userId, String videoId) throws IOException {
-        String url = GOOGLE_YOUTUBE_URL+videoId;
+    public DanceDetailsWithRankDto findDance(Long userId, String youtubeId) throws IOException {
+        String url = GOOGLE_YOUTUBE_URL+youtubeId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
-        DanceDetailsDto danceDetailDto = getVideoDetail(videoId);
+        DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
         log.info("1차 검색 정보 : " + danceDetailDto);
 
         // 2. 저장하기 (처음 참여한 경우에만)
@@ -217,7 +216,8 @@ public class DanceService {
             Dance insertDance = Dance.builder()
                 .danceDetailDto(danceDetailDto)
                 .build();
-            danceRepository.save(insertDance);
+            Dance savedDance = danceRepository.save(insertDance);
+            danceDetailDto.setId(savedDance.getId());
 
         }else{ //처음이 아닌 경우
             // 3. 상위 순위 유저 3명 (처음인 경우에는 순위가 0임)
@@ -228,6 +228,11 @@ public class DanceService {
                     .build()
             ).collect(
                 Collectors.toList());
+
+            // 찜한 첼린지 인지 체크하기
+            if(bookmarkRepository.findBookmarkByUserIdAndDanceId(userId, dance.getId()).isPresent()){
+                danceDetailDto.setBookmark(true);
+            }
         }
 
         DanceDetailsWithRankDto danceDetailWithRankDto = DanceDetailsWithRankDto.builder()
@@ -287,14 +292,14 @@ public class DanceService {
         String path = "";
         File file = null;
 
-        String videoId = url.split("/")[4];
+        String youtubeId = url.split("/")[4];
 
         if (hostname.substring(0, 7).equals("DESKTOP")) {
             path = "C:/choom/youtube/";
         } else {
             path = "/var/lib/choom/youtube/";
         }
-        file = new File(path + videoId);
+        file = new File(path + youtubeId);
 
         if (!file.getParentFile().exists())
             file.getParentFile().mkdirs();
@@ -310,6 +315,6 @@ public class DanceService {
         // Make request and return response
         YoutubeDLResponse response = YoutubeDL.execute(request);
 
-        return "/choom/youtube/" + videoId + ".mp4";
+        return "/choom/youtube/" + youtubeId + ".mp4";
     }
 }
