@@ -107,7 +107,7 @@ public class AuthService {
                 .secure(true)
                 .path("/")
                 .sameSite("None")
-                .maxAge(expiration)
+                .maxAge(expiration/1000)
                 .build();
         return cookie;
     }
