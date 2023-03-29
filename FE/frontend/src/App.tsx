@@ -23,7 +23,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<MainPage />} />
         <Route path="/challenge" element={<SearchPage />} />
-        <Route path="/detail/:id" element={<DetailPage />} />
+        <Route path="/detail/:youtubeId" element={<DetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dance/:danceId" element={<DancePage />} />
         <Route path="/login/oauth2/kakao/*" element={<KakaoRedirectPage />} />
