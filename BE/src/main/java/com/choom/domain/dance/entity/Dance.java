@@ -34,6 +34,10 @@ public class Dance extends BaseTimeEntity {
     @Column(length = 2083, unique = true)
     private String url;
 
+    @NotNull
+    @Column(length = 30, unique = true)
+    private String youtubeId;
+
     @Column(length = 2083, unique = true)
     private String videoPath;
 
@@ -83,6 +87,7 @@ public class Dance extends BaseTimeEntity {
         this.thumbnailPath = danceDetailDto.getThumbnailPath();
         this.userCount = danceDetailDto.getUserCount();
         this.status = danceDetailDto.getStatus();
+        this.youtubeId = danceDetailDto.getYoutubeId();
         this.bookmarkList = bookmarkList;
         this.myDanceList = myDanceList;
     }

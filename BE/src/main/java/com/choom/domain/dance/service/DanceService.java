@@ -1,5 +1,6 @@
 package com.choom.domain.dance.service;
 
+import com.choom.domain.bookmark.entity.BookmarkRepository;
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
@@ -9,6 +10,7 @@ import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
+import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.service.FileService;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -24,7 +26,10 @@ import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;
 import com.sapher.youtubedl.YoutubeDLResponse;
+import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,15 +51,16 @@ public class DanceService {
 
     private final DanceRepository danceRepository;
     private final MyDanceRepository myDanceRepository;
+    private final BookmarkRepository  bookmarkRepository;
     private final FileService fileService;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 30;  // 검색 개수
+    private static final long NUMBER_OF_VIDEOS_RETURNED = 20;  // 검색 개수
     private static YouTube youtube;
 
     private static final String GOOGLE_YOUTUBE_URL =  "https://www.youtube.com/shorts/";
-    private static final String YOUTUBE_SEARCH_FIELDS1 = "items(id/videoId,snippet/title,snippet/channelTitle)";
+    private static final String YOUTUBE_SEARCH_FIELDS1 = "nextPageToken, prevPageToken, pageInfo, items(id/videoId,snippet/title,snippet/channelTitle)";
     private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/publishedAt, snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
 
     private static String YOUTUBE_APIKEY;
@@ -75,7 +81,6 @@ public class DanceService {
         List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
 
         try {
-
             // 1. 유튜브 검색 결과
             if (youtube != null) {
                 YouTube.Search.List search = youtube.search().list("snippet");
@@ -92,16 +97,17 @@ public class DanceService {
                 if (searchResultList != null) {
                     for (SearchResult video : searchResultList) {
                         // 비동기로 검색 -> 검색 속도 향상
-                        String videoId = video.getId().getVideoId();
-                        DanceDetailsDto danceDetailDto = getVideoDetail(videoId);
+                        String youtubeId = video.getId().getVideoId();
+                        DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
 
                         if (danceDetailDto != null)
                             danceDetailDtoList.add(danceDetailDto);
                     }
                 }
+                System.out.println(searchResponse.getPageInfo());
+                System.out.println(searchResponse.getPrevPageToken());
+                System.out.println(searchResponse.getNextPageToken());
             }
-
-            // 2. 틱톡 검색 결과
 
         } catch (GoogleJsonResponseException e){
             log.info("There was a service error: " + e.getDetails().getCode() + " : "  + e.getDetails().getMessage());
@@ -123,10 +129,10 @@ public class DanceService {
     }
 
     @Async
-    DanceDetailsDto getVideoDetail(String videoId)throws IOException {
+    DanceDetailsDto getVideoDetail(String youtubeId)throws IOException {
         YouTube.Videos.List videoDetails =  youtube.videos().list("contentDetails");
         videoDetails.setKey(YOUTUBE_APIKEY);
-        videoDetails.setId(videoId);
+        videoDetails.setId(youtubeId);
         videoDetails.setPart("statistics,snippet,contentDetails");
         videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
 
@@ -135,7 +141,6 @@ public class DanceService {
         }
         Video videoDetail = videoDetails.execute().getItems().get(0);
 
-        log.info("결과 : videoDetail : "+videoDetail.toString());
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
         if(time.equals("P0D") || time.contains("M")){ // P0D는 라이브 방송
@@ -151,7 +156,7 @@ public class DanceService {
             viewCount = videoDetail.getStatistics().getViewCount().longValue();
         }
 
-        String url = GOOGLE_YOUTUBE_URL + videoId;
+        String url = GOOGLE_YOUTUBE_URL + youtubeId;
         Dance dance = danceRepository.findByUrl(url).orElse(null);
 
         Long id = null;
@@ -177,11 +182,29 @@ public class DanceService {
             .likeCount(likeCount)
             .viewCount(viewCount)
             .userCount(userCount)
-            .videoId(videoId)
+            .youtubeId(youtubeId)
             .status(status)
             .publishedAt(publishedAt)
             .build();
         return danceDetailDto;
+    }
+
+    @Transactional
+    public Long addDance(String youtubeId) throws IOException {
+        String url = GOOGLE_YOUTUBE_URL+youtubeId;
+
+        Dance dance = danceRepository.findByUrl(url).orElse(null);
+
+        if(dance == null) { //처음인경우
+            DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+
+            Dance insertDance = Dance.builder()
+                .danceDetailDto(danceDetailDto)
+                .build();
+
+            dance = danceRepository.save(insertDance);
+        }
+        return dance.getId();
     }
 
     @Transactional
@@ -197,15 +220,19 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceDetailsWithRankDto findDance(String videoId) throws IOException {
-        String url = GOOGLE_YOUTUBE_URL+videoId;
+    public DanceDetailsWithRankDto findDance(Long userId, Long danceId) throws IOException {
+        Dance dance = danceRepository.findById(danceId)
+            .orElseThrow(() -> new IllegalArgumentException("DB에 없는 Dance Id 입니다!!"));
+
+        String youtubeId = dance.getYoutubeId();
+        String url = GOOGLE_YOUTUBE_URL+youtubeId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
-        DanceDetailsDto danceDetailDto = getVideoDetail(videoId);
+        DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
         log.info("1차 검색 정보 : " + danceDetailDto);
 
         // 2. 저장하기 (처음 참여한 경우에만)
-        Dance dance = danceRepository.findByUrl(url).orElse(null);
+        dance = danceRepository.findByUrl(url).orElse(null);
 
         List<DanceRankUserDto> danceRankUserDtoList = new ArrayList<>();
 
@@ -214,7 +241,8 @@ public class DanceService {
             Dance insertDance = Dance.builder()
                 .danceDetailDto(danceDetailDto)
                 .build();
-            danceRepository.save(insertDance);
+            Dance savedDance = danceRepository.save(insertDance);
+            danceDetailDto.setId(savedDance.getId());
 
         }else{ //처음이 아닌 경우
             // 3. 상위 순위 유저 3명 (처음인 경우에는 순위가 0임)
@@ -225,6 +253,11 @@ public class DanceService {
                     .build()
             ).collect(
                 Collectors.toList());
+
+            // 찜한 첼린지 인지 체크하기
+            if(bookmarkRepository.findBookmarkByUserIdAndDanceId(userId, dance.getId()).isPresent()){
+                danceDetailDto.setBookmark(true);
+            }
         }
 
         DanceDetailsWithRankDto danceDetailWithRankDto = DanceDetailsWithRankDto.builder()
@@ -244,7 +277,8 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceStatusDto checkDanceStatus(Long danceId) throws YoutubeDLException {
+    public DanceStatusDto checkDanceStatus(Long danceId)
+        throws YoutubeDLException, UnknownHostException {
         Dance dance = danceRepository.findById(danceId)
             .orElseThrow(()->new IllegalArgumentException("존재하지 않는 Dance id값 입니다."));
         int status  = dance.getStatus();
@@ -252,7 +286,6 @@ public class DanceService {
         if(status == 0){ // 분석 안된 상태
             log.info("아직 분석 안 된 영상!!");
             dance.changeStatus(1);
-
             // 동영상 다운로드
             String url = dance.getUrl();
 
@@ -267,32 +300,48 @@ public class DanceService {
         }else if(status == 1){ // 분석 중인 상태
             log.info("분석 중 인 영상!!"); // 분석 완료 될때까지 기다려야됨???
             danceStatusDto = DanceStatusDto.builder()
-                .status(1)
+                .videoPath(dance.getVideoPath())
+                .status(0) //나중에 1로 변경해야됨!!!!!!!!!!!!!!
                 .build();
         }else{ // 분석 완료인 상태
             log.info("이미 분석 완료 된 영상!!");
             danceStatusDto = DanceStatusDto.builder()
                 .status(2)
+                .videoPath(dance.getVideoPath())
                 .jsonPath(dance.getJsonPath())
                 .build();
         }
         return danceStatusDto;
     }
 
-    public String youtubeDownload(String url) throws YoutubeDLException {
-        // Destination directory
-        String directory = System.getProperty("user.home")+"/youtube";
+    public String youtubeDownload(String url) throws YoutubeDLException, UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        String path = "";
+        File file = null;
+
+        String youtubeId = url.split("/")[4];
+
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            path = "C:/choom/youtube/";
+        } else {
+            path = "/var/lib/choom/youtube/";
+        }
+        file = new File(path + youtubeId);
+
+        if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
 
         // Build request
-        YoutubeDLRequest request = new YoutubeDLRequest(url, directory);
+        YoutubeDLRequest request = new YoutubeDLRequest(url, path);
         request.setOption("ignore-errors");		// --ignore-errors
         request.setOption("output", "%(id)s.mp4");	// --output "%(id)s"
         request.setOption("retries", 10);		// --retries 10
 
-        YoutubeDL.setExecutablePath(directory+"/youtube-dl");
+        YoutubeDL.setExecutablePath(path+"youtube-dl");
 
         // Make request and return response
         YoutubeDLResponse response = YoutubeDL.execute(request);
-        return response.getDirectory();
+
+        return "/choom/youtube/" + youtubeId + ".mp4";
     }
 }

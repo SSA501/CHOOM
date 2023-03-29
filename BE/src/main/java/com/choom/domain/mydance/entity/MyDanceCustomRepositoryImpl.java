@@ -1,6 +1,9 @@
 package com.choom.domain.mydance.entity;
 
 import com.choom.domain.dance.entity.Dance;
+import com.choom.domain.user.dto.UserMyDanceDto;
+import com.choom.domain.user.entity.User;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +23,15 @@ public class MyDanceCustomRepositoryImpl implements MyDanceCustomRepository{
             .orderBy(myDance.score.desc()) // 오름차순으로 정렬
             .limit(3)
             .fetch();
+    }
+
+    @Override
+    public UserMyDanceDto findMyDanceInfoByUser(User user) {
+        UserMyDanceDto userMyDanceDto = queryFactory
+                .select(Projections.constructor(UserMyDanceDto.class, myDance.count(), myDance.videoLength.sum(), myDance.score.avg()))
+                .from(myDance)
+                .where(myDance.user.eq(user))
+                .fetchOne();
+        return userMyDanceDto;
     }
 }

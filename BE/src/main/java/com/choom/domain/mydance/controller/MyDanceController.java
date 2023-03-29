@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 @RestController
 @RequestMapping("/mydance")
@@ -40,7 +41,7 @@ public class MyDanceController {
     }
 
     @DeleteMapping("/{myDanceId}")
-    public ResponseEntity<BaseResponse> removeMyDance(@PathVariable Long myDanceId) {
+    public ResponseEntity<BaseResponse> removeMyDance(@PathVariable Long myDanceId) throws UnknownHostException {
         log.info("myDanceId : " + myDanceId);
         myDanceService.removeMyDance(myDanceId);
         return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
@@ -61,9 +62,11 @@ public class MyDanceController {
     }
 
     @PutMapping("/{myDanceId}/shorts")
-    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId) {
+    public ResponseEntity<BaseResponse> addShorts(@PathVariable Long myDanceId,
+                                                  @RequestParam String code) {
         log.info("myDanceId : " + myDanceId);
-        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId);
+        log.info("code : " + code);
+        AddShortsResponseDto addShortsResponseDto = myDanceService.addShorts(myDanceId, code);
         return new ResponseEntity<>(BaseResponse.success(addShortsResponseDto), HttpStatus.OK);
     }
 

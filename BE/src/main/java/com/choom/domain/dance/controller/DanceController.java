@@ -8,6 +8,8 @@ import com.choom.domain.dance.service.DanceService;
 import com.choom.global.model.BaseResponse;
 import com.sapher.youtubedl.YoutubeDLException;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,16 +47,26 @@ public class DanceController {
         return new ResponseEntity<>(BaseResponse.success(popularDanceDtoList), HttpStatus.OK);
     }
 
-    @GetMapping("/{videoId}")
-    public ResponseEntity<BaseResponse> danceDetails(@PathVariable String videoId) throws IOException {
-        log.info("videoId : "+videoId);
-        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(videoId);
+    @PostMapping("/{youtubeId}")
+    public ResponseEntity<BaseResponse> addDance(@PathVariable String youtubeId) throws IOException {
+        log.info("youtubeId : "+youtubeId);
+        Long danceId = danceService.addDance(youtubeId);
+        HashMap<String, Long> response = new HashMap<>();
+        response.put("danceId",danceId);
+        return new ResponseEntity<>(BaseResponse.success(response), HttpStatus.OK);
+    }
+
+    @GetMapping("/{danceId}")
+    public ResponseEntity<BaseResponse> danceDetails(@PathVariable Long danceId) throws IOException {
+        log.info("danceId : "+danceId);
+        Long userId = 1L;
+        DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(userId, danceId);
         return new ResponseEntity<>(BaseResponse.success(danceDetailWithRankDto), HttpStatus.OK);
     }
 
     @PutMapping("/{danceId}/status")
     public ResponseEntity<BaseResponse> checkDanceStatus(@PathVariable Long danceId)
-        throws YoutubeDLException {
+        throws YoutubeDLException, UnknownHostException {
         log.info("danceId : "+danceId);
         DanceStatusDto danceStatusDto = danceService.checkDanceStatus(danceId);
         return new ResponseEntity<>(BaseResponse.success(danceStatusDto), HttpStatus.OK);

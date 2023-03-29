@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.UUID;
@@ -28,21 +29,27 @@ public class FileService {
         File file = null;
 
         if (hostname.substring(0, 7).equals("DESKTOP")) {
-            path = "C:/choom/uploads/" + type + "/";
-            file = new File(path + name);
+            path = "C:/choom/" + type + "/";
         } else {
             path = "/var/lib/choom/" + type + "/";
-            file = new File(path + name);
         }
+        file = new File(path + name);
 
         if (!file.getParentFile().exists())
             file.getParentFile().mkdirs();
 
         image.transferTo(file);
-        return path + name;
+        return "/choom/" + type + "/" + name;
     }
 
     public Resource fileDownload(String path, HttpHeaders headers) throws IOException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            path = "C:" + path;
+        } else {
+            path = "/var/lib" + path;
+        }
+
         Resource resource = new FileSystemResource(path);
 
         // 원본 파일에서 uuid 자르기
@@ -58,7 +65,14 @@ public class FileService {
         return resource;
     }
 
-    public void fileDelete(String path) {
+    public void fileDelete(String path) throws UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            path = "C:" + path;
+        } else {
+            path = "/var/lib" + path;
+        }
+
         File file = new File(path);
         if (!file.delete())
             throw new FileDeleteException("파일 삭제에 실패했습니다");
