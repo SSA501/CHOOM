@@ -10,6 +10,7 @@ export interface ShadowContainerProps {
   display?: string;
   flexWrap?: string;
   justifyContent?: string;
+  position?: string;
 }
 
 /**
@@ -32,6 +33,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     display,
     flexWrap,
     justifyContent,
+    position,
   }) => css`
     width: ${width || "100%"};
     max-width: 1728px;
@@ -45,5 +47,6 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     display: ${display};
     flex-wrap: ${flexWrap};
     justify-content: ${justifyContent};
+    position: ${position};
   `}
 `;
