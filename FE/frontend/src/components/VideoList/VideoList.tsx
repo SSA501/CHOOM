@@ -41,6 +41,7 @@ function VideoList(props: VideoListProps) {
         }
       >
         <Video
+          id={item.id}
           title={item.title}
           videoPath={item.videoPath}
           thumbnailPath={item.thumbnailPath}
@@ -54,6 +55,7 @@ function VideoList(props: VideoListProps) {
       return (
         <VideoItem bgColor={"black"} isLike={item.isLike}>
           <Video
+            id={item.id}
             title={item.title}
             videoPath={item.youtubeUrl}
             thumbnailPath={item.thumbnailPath}

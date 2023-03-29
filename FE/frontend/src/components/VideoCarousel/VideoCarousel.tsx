@@ -81,9 +81,11 @@ function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
           }}
         >
           <div>
-            {videoData?.map(({ id, videoPath, thumbnailPath, title }) => (
+            {videoData?.map(({ id, url, videoPath, thumbnailPath, title }) => (
               <SwiperSlide key={id}>
                 <Video
+                  id={id}
+                  url={url}
                   title={title}
                   videoPath={`${SERVER_URL}${videoPath}`}
                   thumbnailPath={thumbnailPath}

@@ -200,13 +200,12 @@ function SearchPage() {
   ]);
   const [page, setPage] = useState<number>(0);
   const [pageToken, setPageToken] = useState<string>("");
-  const [size, setSize] = useState<number>(3);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (query) {
       setIsLoading(true);
-      searchDance(query, pageToken, size)
+      searchDance(query, pageToken, 50) // size 50 고정
         .then((res) => {
           console.log(res.data);
           setTopData(res?.data?.dbSearch);
@@ -215,7 +214,7 @@ function SearchPage() {
         })
         .catch((err) => console.log(err));
     }
-  }, [query, pageToken, size]);
+  }, [query, pageToken]);
 
   return (
     <>
