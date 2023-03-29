@@ -66,13 +66,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ErrorResponse> handleTokenExpired(TokenExpiredException e){
-        log.warn("TokenExpiredException", e);
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .statusCode(401)
-                .message("토큰이 만료되었습니다.")
-                .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-    }
+//    @ExceptionHandler(TokenExpiredException.class)
+//    public ResponseEntity<ErrorResponse> handleTokenExpired(TokenExpiredException e){
+//        log.warn("TokenExpiredException", e);
+//        ErrorResponse errorResponse = ErrorResponse.builder()
+//                .statusCode(401)
+//                .message("토큰이 만료되었습니다.")
+//                .build();
+//        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+//    }
 }
