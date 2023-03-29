@@ -37,3 +37,9 @@ export const removeSearchKeyword = async (searchId: number) => {
   const response = await axiosInstance.delete(`/search/${searchId}`);
   return response.data;
 };
+
+// 검색 쇼츠 저장요청하고 id 받아오기
+export const addDance = async (youtubeId: any) => {
+  const response = await axiosInstance.post(`/dance/${youtubeId}`);
+  return response.data;
+};
