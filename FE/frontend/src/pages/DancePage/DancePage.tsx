@@ -8,24 +8,15 @@ import SideTitle from "../../components/SideTitle/SideTitle";
 import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import SpinModal from "../../components/Modal/SpinModal";
-import { SERVER_URL } from "../../constants/url";
 import { useParams } from "react-router-dom";
-import { getChallengeStatus } from "../../apis/dance";
-
-interface Pose {
-  keypoints: poseDetection.Keypoint[];
-}
-interface Score {
-  score: number;
-  time: number;
-}
+import { getChallengeStatus, updateChallenge } from "../../apis/dance";
+import { Pose, Score, Challenge } from "../../constants/types";
 
 function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>([]);
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const [myUrl, setMyUrl] = useState<string>("");
-  const [challengeUrl, setChallengeUrl] = useState<string>("");
-  const [status, setStatus] = useState<number>(0);
+  const [challenge, setChallenge] = useState<Challenge>();
   const [scoreList, setScoreList] = useState<Score[]>([]);
   const [score, setScore] = useState<number>(0);
   const [loading, setloading] = useState<boolean>(true);
@@ -46,11 +37,27 @@ function DancePage() {
     getChallengeStatus(danceId!)
       .then((res) => {
         console.log(res);
-        setChallengeUrl(SERVER_URL + res.data.videoPath);
-        setStatus(res.data.status);
+        setChallenge(res.data);
       })
       .catch((err) => console.log(err));
   }, [danceId]);
+
+  // 분석 결과 저장
+  useEffect(() => {
+    if (poseList.length > 0) {
+      const poseListJSON = JSON.stringify(poseList);
+      const jsonFile = new File([poseListJSON], "data.json", {
+        type: "application/json",
+      });
+      console.log(jsonFile);
+
+      updateChallenge(danceId!, jsonFile)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [danceId, poseList]);
 
   const createDetector = async () => {
     document.body.style.overflow = "hidden";
@@ -103,9 +110,8 @@ function DancePage() {
             ref={danceVideoRef}
             detector={detector!}
             myUrl={myUrl}
-            challengeUrl={challengeUrl}
+            challenge={challenge}
             setTitle={setTitle}
-            status={status}
           />
         )}
 
