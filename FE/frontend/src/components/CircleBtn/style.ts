@@ -1,23 +1,41 @@
 import styled from "styled-components";
+import { IconType } from "react-icons/lib";
 
-const Btn = styled.button`
+const BtnContainer = styled.div<{ size?: string }>`
+  width: ${(props) => (props.size === "big" ? "100px" : "60px")};
+`;
+
+const Btn = styled.button<{ icon?: IconType | string }>`
   position: relative;
   border: none;
-  border-radius: 2rem;
-  width: 60px;
-  height: 60px;
-  border: 2px solid var(--purple-color);
+  border-radius: ${(props) =>
+    typeof props.icon === "string" ? "4rem" : "2rem"};
+  width: ${(props) => (typeof props.icon === "string" ? "100px" : "60px")};
+  height: ${(props) => (typeof props.icon === "string" ? "100px" : "60px")};
+  border: 2px solid
+    ${(props) =>
+      typeof props.icon === "string" ? "white" : "var(--purple-color)"};
   background-color: var(--white-color);
   color: var(--purple-color);
-  font-size: 20px;
+  font-size: ${(props) => (typeof props.icon === "string" ? "50px" : "20px")};
   margin-top: 20px;
   line-height: 10px;
 
   & > svg {
-    font-size: 28px;
+    font-size: ${(props) =>
+      typeof props.icon === "string" ? "44px" : "28px"} !important;
   }
   &:hover {
-    background-color: var(--purple-color);
+    ${(props) =>
+      props.icon === "kakao"
+        ? "border: 2px solid #FFE550"
+        : props.icon === "tiktok"
+        ? "border: 2px solid black"
+        : props.icon === "youtube_shorts"
+        ? "border: 2px solid red"
+        : props.icon === "download"
+        ? "border: 2px solid var(--purple-color)"
+        : "background-color: var(--purple-color)"};
     color: var(--white-color);
   }
   &:disabled {
@@ -31,12 +49,13 @@ const Btn = styled.button`
   }
 `;
 
-const BtnLabel = styled.div<{ disabled?: string }>`
+const BtnLabel = styled.div<{ disabled?: string; icon?: IconType | string }>`
   text-align: center;
   color: ${(props) =>
     props.disabled === "disabled" ? "#666666" : "var(--darkgray-color)"};
   font-size: 16px;
   margin-top: 12px;
+  width: ${(props) => (typeof props.icon === "string" ? "100px" : "60px")};
 `;
 
-export { Btn, BtnLabel };
+export { Btn, BtnLabel, BtnContainer };

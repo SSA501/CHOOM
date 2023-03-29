@@ -69,6 +69,7 @@ function DanceCam(props: {
   myUrl?: string;
   setMyUrl: (myUrl: string) => void;
   setScoreList: (socreList: Score[]) => void;
+  setScore: (score: number) => void;
 }) {
   const cam = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -76,10 +77,11 @@ function DanceCam(props: {
 
   let ctx: CanvasRenderingContext2D = canvas.current?.getContext("2d")!;
   let mediaRecorder: MediaRecorder;
-  let countFrame: number;
+  let countFrame: number = 0;
   let startTime: Date;
-  let timeTemp: Date;
   let scoreTemp: number = 0;
+  let sumScore: number = 0;
+  let countScore: number = 0;
   let scoreTempList: Score[] = [];
 
   useEffect(() => {
@@ -125,7 +127,6 @@ function DanceCam(props: {
     // 녹화시작
     mediaRecorder?.start();
     startTime = new Date();
-    countFrame = 0;
     renderPrediction();
     cam.current!.style.visibility = "hidden";
   };
@@ -138,6 +139,7 @@ function DanceCam(props: {
       requestAnimationFrame(renderPrediction);
     } else {
       // 녹화종료
+      props.setScore(Math.round(sumScore / scoreTempList.length));
       props.setScoreList(scoreTempList);
       mediaRecorder?.stop();
       if (cam.current) cam.current.srcObject = null;
@@ -148,7 +150,7 @@ function DanceCam(props: {
   const renderResult = async () => {
     const estimatePoseList = await props.detector.estimatePoses(cam.current!);
     drawCtx();
-
+    console.log(countFrame);
     const videoPose = props.poseList[countFrame];
     drawGuide(videoPose.keypoints, PALLETE.green);
 
@@ -165,16 +167,24 @@ function DanceCam(props: {
       });
       const score = calculateScore(newKptList, videoPose.keypoints);
       scoreTemp += score;
+      countScore += 1;
 
-      if (countFrame % 40 === 0) timeTemp = new Date();
-
-      if (countFrame % 40 === 39) {
+      const timeTemp = new Date();
+      if (
+        (timeTemp.getTime() - startTime.getTime()) / 1000 >
+        scoreTempList.length + 1
+      ) {
         scoreTempList.push({
-          score: Math.round(scoreTemp / 40),
-          time: (timeTemp.getTime() - startTime.getTime()) / 1000,
+          score: Math.round(scoreTemp / countScore),
+          time: Math.round(
+            (timeTemp.getTime() - startTime.getTime()) / 1000 - 1
+          ),
         });
+        sumScore += Math.round(scoreTemp / countScore);
         scoreTemp = 0;
+        countScore = 0;
       }
+
       drawGuide(newKptList, PALLETE.red);
       if (scoreTempList.length > 0)
         drawScore(scoreTempList[scoreTempList.length - 1].score);

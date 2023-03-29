@@ -1,25 +1,13 @@
+import React from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
-  Legend,
-} from "chart.js";
-import { useRef } from "react";
-import { Line, getElementAtEvent } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+  ResponsiveContainer,
+} from "recharts";
 
 interface Score {
   score: number;
@@ -30,41 +18,40 @@ function DanceChart(props: {
   scoreList: Score[];
   danceVideoRef: React.MutableRefObject<any>;
 }) {
-  const chartRef = useRef();
+  const data = props.scoreList;
 
-  const options = {
-    responsive: true,
-    legend: {
-      position: "top" as const,
-    },
+  const handelChartClick = (e: any) => {
+    console.log(e.activeLabel);
+    props.danceVideoRef.current.changeVideoTime(e.activeLabel);
   };
-
-  const labels = props.scoreList.map((v) => v.time);
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "일치율",
-        data: props.scoreList.map((v) => v.score),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-    ],
-  };
-
-  const handelClickChart = (event: any) => {
-    const { index } = getElementAtEvent(chartRef.current!, event)[0];
-    props.danceVideoRef.current.changeVideoTime(data.labels[index]);
-    props.danceVideoRef.current.playVideo();
-  };
-
   return (
-    <Line
-      options={options}
-      data={data}
-      ref={chartRef}
-      onClick={handelClickChart}
-    />
+    <div style={{ height: "400px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
+          width={800}
+          height={400}
+          data={data}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+          onClick={(e) => handelChartClick(e)}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="time" />
+          <YAxis />
+          <Tooltip />
+          <Area
+            type="monotone"
+            dataKey="score"
+            stroke="var(--purple-color)"
+            fill="var(--purple-color)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 

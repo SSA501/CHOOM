@@ -7,6 +7,7 @@ const CircleBtnContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: fit-content;
 `;
 const SideInfoContainer = styled.div`
   display: flex;
