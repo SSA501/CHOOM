@@ -5,7 +5,9 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
+
 import { CgEditFlipH } from "react-icons/cg";
+
 import {
   MdSlowMotionVideo,
   MdVolumeUp,
@@ -29,13 +31,14 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
+      challengeUrl: string;
       setTitle: (title: string) => void;
+      status: number;
     },
     ref: React.ForwardedRef<any>
   ) => {
     let poseListTemp: Pose[] = [];
 
-    const [videoUrl, setVideoUrl] = useState<string>("");
     const video = useRef<HTMLVideoElement>(null);
     const [playRate, setPlayRate] = useState(1.0);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -46,16 +49,6 @@ const DanceVideo = forwardRef(
       playVideo,
       changeVideoTime,
     }));
-
-    // 비디오 업로드
-    const uploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = (event.target as HTMLInputElement)?.files?.[0];
-
-      props.setTitle(file?.name.split(".")[0]!);
-      if (file !== undefined) {
-        setVideoUrl(URL.createObjectURL(file));
-      }
-    };
 
     // 분석시작
     const startEstimate = async () => {
@@ -165,7 +158,7 @@ const DanceVideo = forwardRef(
         {!props.myUrl ? (
           <MainContainer>
             <ChallengeVideo
-              src={videoUrl}
+              src={props.challengeUrl}
               width={450}
               height={800}
               ref={video}
@@ -212,15 +205,6 @@ const DanceVideo = forwardRef(
         )}
         {!props.myUrl && (
           <div>
-            <input
-              type="file"
-              id="videofile"
-              name="video"
-              accept="video/*"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                uploadVideo(e);
-              }}
-            />
             <button onClick={() => startEstimate()}>시작</button>
           </div>
         )}
