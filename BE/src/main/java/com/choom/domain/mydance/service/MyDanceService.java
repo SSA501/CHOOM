@@ -1,10 +1,7 @@
 package com.choom.domain.mydance.service;
 
 import com.choom.domain.dance.entity.Dance;
-import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
-import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
-import com.choom.domain.mydance.dto.AddShortsResponseDto;
-import com.choom.domain.mydance.dto.FindMyDanceResponseDto;
+import com.choom.domain.mydance.dto.*;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
 import com.choom.domain.dance.entity.DanceRepository;
@@ -210,6 +207,18 @@ public class MyDanceService {
         return myDancePage.map(myDance -> FindMyDanceResponseDto.builder()
                 .myDance(myDance)
                 .build());
+    }
+
+    @Transactional
+    public FindMyDanceResponseDto modifyTitle(Long myDanceId, ModifyMyDanceRequestDto modifyMyDanceRequestDto) {
+        MyDance myDance = myDanceRepository.findById(myDanceId)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+
+        myDance.updateTitle(modifyMyDanceRequestDto.getTitle());
+
+        return FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build();
     }
 
     @Transactional
