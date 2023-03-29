@@ -1,5 +1,6 @@
 package com.choom.domain.bookmark.service;
 
+import com.choom.domain.bookmark.dto.BookmarkDetailsDto;
 import com.choom.domain.bookmark.entity.Bookmark;
 import com.choom.domain.bookmark.entity.BookmarkRepository;
 import com.choom.domain.dance.entity.Dance;
@@ -7,10 +8,10 @@ import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -20,6 +21,13 @@ public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
     private final DanceRepository danceRepository;
+
+    public Page<BookmarkDetailsDto> findBookmarks(User user, Pageable pageable) {
+        Page<Bookmark> bookmarkPage = bookmarkRepository.findPageByUser(user, pageable);
+        return bookmarkPage.map(bookmark -> BookmarkDetailsDto.builder()
+                .bookmark(bookmark)
+                .build());
+    }
 
     @Transactional
     public void addBookmark(User user, Long danceId) {
