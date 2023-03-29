@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 import { createSearchParams, useNavigate } from "react-router-dom";
+import { addSearchKeyword } from "../../apis/challenge";
 import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
 
 interface SearchBarProps {
@@ -19,6 +20,7 @@ function SearchBar({ currentQuery }: SearchBarProps) {
       }
 
       // search 실행
+      addSearchKeyword(trimmedValue); // 검색어 추가
       navigate({
         pathname: "challenge",
         search: createSearchParams({
