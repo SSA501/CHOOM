@@ -27,14 +27,8 @@ const Btn = styled.button<{ icon?: IconType | string }>`
   }
   &:hover {
     ${(props) =>
-      props.icon === "kakao"
-        ? "border: 2px solid #FFE550"
-        : props.icon === "tiktok"
-        ? "border: 2px solid black"
-        : props.icon === "youtube_shorts"
-        ? "border: 2px solid red"
-        : props.icon === "download"
-        ? "border: 2px solid var(--purple-color)"
+      props.icon
+        ? "background-color: var(--lightgray-color);"
         : "background-color: var(--purple-color)"};
     color: var(--white-color);
   }

@@ -1,4 +1,3 @@
-import Reac, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Video from "../Video/Video";
 import { VideoListContainer, VideoItem } from "./style";

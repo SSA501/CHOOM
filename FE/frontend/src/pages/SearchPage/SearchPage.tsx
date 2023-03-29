@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import RecentSearch from "../../components/RecentSearch/RecentSearch";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import SideTitle from "../../components/SideTitle/SideTitle";
-import { SearchTopContainer } from "./style";
+import { SearchTopContainer, SideContainer, SearchContainer } from "./style";
 
 function SearchPage() {
   const [searchParams, setSearchParams]: [URLSearchParams, Function] =
@@ -14,8 +14,12 @@ function SearchPage() {
     <>
       <div>
         <SearchTopContainer>
-          <SideTitle title={["검색", ""]} />
-          <SearchBar currentQuery={query} />
+          <SideContainer>
+            <SideTitle title={["검색", ""]} />
+          </SideContainer>
+          <SearchContainer>
+            <SearchBar currentQuery={query} />
+          </SearchContainer>
         </SearchTopContainer>
         {query ? (
           <>

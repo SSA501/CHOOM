@@ -6,6 +6,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import { addSearchKeyword } from "../../apis/challenge";
 import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
 
 interface SearchBarProps {
@@ -26,6 +27,8 @@ function SearchBar({ currentQuery }: SearchBarProps) {
       }
 
       // search 실행
+      addSearchKeyword(trimmedValue); // 검색어 추가
+
       if (location.pathname === "/challenge") {
         // 챌린지 검색 페이지 내에서 검색할 경우
         setSearchParams({ query: trimmedValue });
