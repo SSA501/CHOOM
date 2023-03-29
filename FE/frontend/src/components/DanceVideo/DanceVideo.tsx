@@ -19,10 +19,8 @@ import CircleBtn from "../CircleBtn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
 import { ChallengeVideo } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-
-interface Pose {
-  keypoints: poseDetection.Keypoint[];
-}
+import { Pose, Challenge } from "../../constants/types";
+import { SERVER_URL } from "../../constants/url";
 
 const DanceVideo = forwardRef(
   (
@@ -31,9 +29,8 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
-      challengeUrl: string;
       setTitle: (title: string) => void;
-      status: number;
+      challenge?: Challenge;
     },
     ref: React.ForwardedRef<any>
   ) => {
@@ -50,8 +47,22 @@ const DanceVideo = forwardRef(
       changeVideoTime,
     }));
 
+    useEffect(() => {
+      props.challenge?.status === 0 && startEstimate();
+      if (props.challenge?.status === 2) {
+        console.log(SERVER_URL + props.challenge.jsonPath);
+      }
+    });
+
     // 분석시작
     const startEstimate = async () => {
+      await new Promise((resolve) => {
+        if (video.current)
+          video.current.onloadeddata = () => {
+            resolve(video);
+          };
+      });
+
       if (video.current) {
         video.current.currentTime = 0;
         video.current.play();
@@ -59,6 +70,19 @@ const DanceVideo = forwardRef(
         await runFrame();
       }
     };
+
+    // // JSON FIle만들기
+    // const createJson = () => {
+    //   const fs = require("fs");
+    //   const poseListJSON = JSON.stringify(poseListTemp);
+    //   fs.writeFile("poseList.json", poseListJSON, "utf8", (err: Error) => {
+    //     if (err) {
+    //       console.log("Error saving pose list: ", err);
+    //     } else {
+    //       console.log("Pose list saved successfully.");
+    //     }
+    //   });
+    // };
 
     // 분석
     const runFrame = async () => {
@@ -158,7 +182,7 @@ const DanceVideo = forwardRef(
         {!props.myUrl ? (
           <MainContainer>
             <ChallengeVideo
-              src={props.challengeUrl}
+              src={props.challenge?.videoPath}
               width={450}
               height={800}
               ref={video}
