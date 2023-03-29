@@ -28,4 +28,8 @@ const BtnDetail = styled(Btn)`
   border: none;
 `;
 
-export { VideoContainer, BtnDetail };
+const ThumbnailImg = styled.img`
+  object-fit: cover;
+`;
+
+export { VideoContainer, BtnDetail, ThumbnailImg };
