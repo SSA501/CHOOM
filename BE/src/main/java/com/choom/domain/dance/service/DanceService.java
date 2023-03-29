@@ -118,15 +118,35 @@ public class DanceService {
         }
 
         Collections.sort(danceDetailDtoList, (o1, o2) -> { //new Comparator<YoutubeResponseDto>() -> lambda
-            // 챌린지 참여자 수 -> 원본 영상 시청자 순 으로 정렬
-            if(o1.getUserCount() == o2.getUserCount()){
-                return (int)(o2.getViewCount()- o1.getViewCount());
+            // DB에 있는 정보 먼저
+            int id1 = 1;
+            int id2 = 1;
+            if(o1.getId() != null)
+                id1 = 0;
+            if(o2.getId() != null)
+                id2 = 0;
+            if(id1 == id2){
+                // 챌린지 참여자 수 -> 원본 영상 시청자 순 으로 정렬
+                if(o1.getUserCount() == o2.getUserCount()){
+                    return (int)(o2.getViewCount()- o1.getViewCount());
+                }else{
+                    return o2.getUserCount() - o1.getUserCount();
+                }
             }else{
-                return o2.getUserCount() - o1.getUserCount();
+             return id1-id2;
             }
         });
+
+        List<DanceDetailsDto> dbDanceDetailDtoList = new ArrayList<>();
+        for (int i=0; i<2; i++){
+            if(danceDetailDtoList.size()<1 || danceDetailDtoList.get(0).getId() == null){
+                break;
+            }
+            dbDanceDetailDtoList.add(danceDetailDtoList.remove(0));
+        }
         DanceSearchDto danceSearchDto = DanceSearchDto.builder()
             .searchListResponse(searchResponse)
+            .dbDanceDetailDtoList(dbDanceDetailDtoList)
             .danceDetailDtoList(danceDetailDtoList)
             .build();
         return danceSearchDto;
@@ -181,7 +201,6 @@ public class DanceService {
             .id(id)
             .url(url)
             .videoDetail(videoDetail)
-            .thumbnailPath(videoDetail.getSnippet().getThumbnails().getHigh().getUrl())
             .sec(s)
             .likeCount(likeCount)
             .viewCount(viewCount)

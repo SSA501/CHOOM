@@ -15,14 +15,16 @@ public class DanceSearchDto {
     String prevPageToken;
     Integer totalResults;
     Integer resultsPerPage;
+    List<DanceDetailsDto> dbSearch;
     List<DanceDetailsDto> search;
 
     @Builder
-    public DanceSearchDto(SearchListResponse searchListResponse, List<DanceDetailsDto> danceDetailDtoList) {
+    public DanceSearchDto(SearchListResponse searchListResponse, List<DanceDetailsDto> dbDanceDetailDtoList, List<DanceDetailsDto> danceDetailDtoList) {
         this.nextPageToken = searchListResponse.getNextPageToken();
         this.prevPageToken = searchListResponse.getPrevPageToken();
         this.totalResults = searchListResponse.getPageInfo().getTotalResults();
         this.resultsPerPage = searchListResponse.getPageInfo().getResultsPerPage();
+        this.dbSearch = dbDanceDetailDtoList;
         this.search = danceDetailDtoList;
     }
 }
