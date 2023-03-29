@@ -55,6 +55,10 @@ public class MyDance extends BaseTimeEntity {
         this.youtubeUrl = youtubeUrl;
     }
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
     @Builder
     public MyDance(int score, String matchRate, String videoPath, int videoLength, String title, User user, Dance dance, String tiktokUrl, String youtubeUrl) {
         this.score = score;
