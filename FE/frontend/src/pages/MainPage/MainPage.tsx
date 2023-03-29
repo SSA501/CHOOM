@@ -7,7 +7,8 @@ import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
 import { TopContainer } from "./style";
 
 export interface VideoDataProps {
-  youtubeId: number;
+  id?: string;
+  youtubeId: string;
   videoPath: string;
   thumbnailPath: string;
   title: string;
@@ -25,6 +26,7 @@ function MainPage() {
     getPopularChallenge()
       .then((res) => {
         setPopularVideoData(res.data);
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
   }, []);

@@ -19,22 +19,38 @@ import "swiper/css/navigation";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../constants/url";
+import { addDance } from "../../apis/challenge";
 
 interface VideoCarouselProps {
   videoData: VideoDataProps[];
   title: string | React.ReactNode;
   text?: string;
+  isSearch?: boolean; // 검색에서 표시되어서 DB에 있는 동영상이 아닐 때
 }
 
-function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
+function VideoCarousel({
+  videoData,
+  title,
+  text,
+  isSearch,
+}: VideoCarouselProps) {
   const [swiper, setSwiper] = useState<any>();
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
-
   const navigate = useNavigate();
-  const handleClickVideo = (youtubeId: number): void => {
-    // TODO: 비디오 저장 요청해서 DB id 받아오기
-    navigate(`/detail/${youtubeId}`);
+  const handleClickVideo = (videoID: number | string | undefined): void => {
+    if (isSearch) {
+      // 서치에서 보여주는 비디오일 경우 (DB에 저장 안되어 있는 경우) 저장 요청
+      addDance(videoID)
+        .then((res) => {
+          console.log(res.data.danceId);
+          const danceId = res.data.danceId;
+          navigate(`/detail/${danceId}`);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      navigate(`/detail/${videoID}`);
+    }
   };
 
   return (
@@ -71,19 +87,29 @@ function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
           }}
         >
           <div>
-            {videoData?.map(
-              ({ youtubeId, videoPath, thumbnailPath, title }) => (
-                <SwiperSlide key={youtubeId}>
-                  <Video
-                    id={youtubeId}
-                    title={title}
-                    videoPath={`${SERVER_URL}${videoPath}`}
-                    thumbnailPath={thumbnailPath}
-                    handleClickVideo={() => handleClickVideo(youtubeId)}
-                  />
-                </SwiperSlide>
-              )
-            )}
+            {isSearch
+              ? videoData?.map(
+                  ({ youtubeId, videoPath, thumbnailPath, title }) => (
+                    <SwiperSlide key={youtubeId}>
+                      <Video
+                        title={title}
+                        videoPath={`${SERVER_URL}${videoPath}`}
+                        thumbnailPath={thumbnailPath}
+                        handleClickVideo={() => handleClickVideo(youtubeId)}
+                      />
+                    </SwiperSlide>
+                  )
+                )
+              : videoData?.map(({ id, videoPath, thumbnailPath, title }) => (
+                  <SwiperSlide key={id}>
+                    <Video
+                      title={title}
+                      videoPath={`${SERVER_URL}${videoPath}`}
+                      thumbnailPath={thumbnailPath}
+                      handleClickVideo={() => handleClickVideo(id)}
+                    />
+                  </SwiperSlide>
+                ))}
           </div>
         </Swiper>
         <ArrowBtnContainer>
