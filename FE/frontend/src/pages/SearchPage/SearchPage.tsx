@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { searchDance } from "../../apis/challenge";
+import ChallengeCard from "../../components/ChallengeCard/ChallengeCard";
 import RecentSearch from "../../components/RecentSearch/RecentSearch";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import SideTitle from "../../components/SideTitle/SideTitle";
 import Spinner from "../../components/Spinner/Spinner";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
-import { SearchTopContainer, SideContainer, SearchContainer } from "./style";
+import {
+  SearchTopContainer,
+  SideContainer,
+  SearchContainer,
+  ChallengeNumber,
+  PopularChallengeContainer,
+  YoutubeChallengeContainer,
+  SpinnerContainer,
+} from "./style";
 
 function SearchPage() {
   const [searchParams, setSearchParams]: [URLSearchParams, Function] =
@@ -21,11 +30,12 @@ function SearchPage() {
       sec: 50,
       likeCount: 559324,
       viewCount: 13607439,
-      userCount: 0,
+      userCount: 13,
       youtubeId: "5-TLkt0sjpQ",
       status: 1,
       publishedAt: "2022-11-08",
       bookmarked: false,
+      bookmarkeCount: 32,
     },
     {
       id: 7,
@@ -35,11 +45,12 @@ function SearchPage() {
       sec: 37,
       likeCount: 103691,
       viewCount: 6710144,
-      userCount: 0,
+      userCount: 5,
       youtubeId: "RBz7rFKn8WM",
       status: 1,
       publishedAt: "2022-12-12",
-      bookmarked: false,
+      bookmarked: true,
+      bookmarkeCount: 16,
     },
   ]);
   const [shortsData, setShortsData] = useState([
@@ -217,11 +228,31 @@ function SearchPage() {
       </SearchTopContainer>
       {query ? (
         <>
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <VideoCarousel videoData={shortsData} title={"SHORTS"} />
-          )}
+          <PopularChallengeContainer>
+            <SideContainer>
+              <SideTitle title={["가장 많이", "참여한 챌린지 🎉"]} />
+            </SideContainer>
+            <div style={{ display: "flex" }}>
+              <div>
+                <ChallengeNumber>#1</ChallengeNumber>
+                <ChallengeCard challengeInfo={topData[0]} bgColor="purple" />
+              </div>
+              <div>
+                <ChallengeNumber>#2</ChallengeNumber>
+                <ChallengeCard challengeInfo={topData[1]} bgColor="green" />
+              </div>
+            </div>
+          </PopularChallengeContainer>
+          <YoutubeChallengeContainer>
+            {isLoading ? (
+              <SpinnerContainer>
+                <Spinner />
+                <p>불러오는 중...</p>
+              </SpinnerContainer>
+            ) : (
+              <VideoCarousel videoData={shortsData} title={"SHORTS"} />
+            )}
+          </YoutubeChallengeContainer>
         </>
       ) : (
         <RecentSearch />
