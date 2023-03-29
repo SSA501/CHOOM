@@ -73,6 +73,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .statusCode(401)
                 .message(e.getMessage())
                 .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }
