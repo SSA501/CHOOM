@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { BtnDetail, VideoContainer } from "./style";
+import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
   id: number;
   videoPath: string;
-  thumbnailSrc: string;
+  thumbnailPath: string;
   title: string;
   handleClickVideo: () => void;
 }
 
-function Video({ id, thumbnailSrc, videoPath, handleClickVideo }: VideoProps) {
+function Video({ id, thumbnailPath, videoPath, handleClickVideo }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
 
   return (
@@ -31,7 +31,12 @@ function Video({ id, thumbnailSrc, videoPath, handleClickVideo }: VideoProps) {
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
       ) : (
-        <img src={thumbnailSrc} alt="썸네일이미지" width="100%" height="100%" />
+        <ThumbnailImg
+          src={thumbnailPath}
+          alt="썸네일이미지"
+          width="270px"
+          height="480px"
+        />
       )}
     </VideoContainer>
   );

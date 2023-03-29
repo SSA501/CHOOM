@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
-import { createSearchParams, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import { addSearchKeyword } from "../../apis/challenge";
 import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
 
 interface SearchBarProps {
@@ -10,6 +16,8 @@ interface SearchBarProps {
 function SearchBar({ currentQuery }: SearchBarProps) {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const trimmedValue = inputValue.trim();
@@ -19,12 +27,20 @@ function SearchBar({ currentQuery }: SearchBarProps) {
       }
 
       // search 실행
-      navigate({
-        pathname: "challenge",
-        search: createSearchParams({
-          query: trimmedValue,
-        }).toString(),
-      });
+      addSearchKeyword(trimmedValue); // 검색어 추가
+
+      if (location.pathname === "/challenge") {
+        // 챌린지 검색 페이지 내에서 검색할 경우
+        setSearchParams({ query: trimmedValue });
+      } else {
+        // 메인 페이지에서 검색할 경우
+        navigate({
+          pathname: "challenge",
+          search: createSearchParams({
+            query: trimmedValue,
+          }).toString(),
+        });
+      }
     }
   };
 

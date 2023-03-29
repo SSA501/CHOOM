@@ -9,7 +9,7 @@ import {
   RightSwiperContainer,
 } from "./style";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, A11y } from "swiper";
 import Video from "../../components/Video/Video";
 import { VideoDataProps } from "../../pages/MainPage/MainPage";
 import SwiperCore from "swiper";
@@ -17,29 +17,24 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import Btn from "../Btn/Btn";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../constants/url";
 
 interface VideoCarouselProps {
   videoData: VideoDataProps[];
   title: string | React.ReactNode;
   text?: string;
-  handleBtnClick: () => void;
 }
 
-function VideoCarousel({
-  videoData,
-  title,
-  text,
-  handleBtnClick,
-}: VideoCarouselProps) {
+function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
   const [swiper, setSwiper] = useState<any>();
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
 
   const navigate = useNavigate();
-  const handleClickVideo = (videoId: number): void => {
-    navigate(`/detail/${videoId}`);
+  const handleClickVideo = (youtubeId: number): void => {
+    // TODO: 비디오 저장 요청해서 DB id 받아오기
+    navigate(`/detail/${youtubeId}`);
   };
 
   return (
@@ -51,7 +46,7 @@ function VideoCarousel({
         <MiddleText>
           <p>{text}</p>
         </MiddleText>
-        <Btn btnText={"더보기"} margin={"0"} handleClick={handleBtnClick} />
+        <img src="/assets/logo.png" alt="로고" width="150px" />
       </LeftTextContainer>
       <RightSwiperContainer>
         <ArrowBtnContainer>
@@ -76,17 +71,19 @@ function VideoCarousel({
           }}
         >
           <div>
-            {videoData?.map(({ id, videoPath, thumbnailSrc, title }) => (
-              <SwiperSlide key={id}>
-                <Video
-                  id={id}
-                  title={title}
-                  videoPath={videoPath}
-                  thumbnailSrc={thumbnailSrc}
-                  handleClickVideo={() => handleClickVideo(id)}
-                />
-              </SwiperSlide>
-            ))}
+            {videoData?.map(
+              ({ youtubeId, videoPath, thumbnailPath, title }) => (
+                <SwiperSlide key={youtubeId}>
+                  <Video
+                    id={youtubeId}
+                    title={title}
+                    videoPath={`${SERVER_URL}${videoPath}`}
+                    thumbnailPath={thumbnailPath}
+                    handleClickVideo={() => handleClickVideo(youtubeId)}
+                  />
+                </SwiperSlide>
+              )
+            )}
           </div>
         </Swiper>
         <ArrowBtnContainer>

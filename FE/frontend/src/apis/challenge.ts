@@ -19,3 +19,21 @@ export const updateChallengeTitle = async () => {
 };
 
 // 검색하기
+
+// 검색 키워드 목록 받아오기
+export const getSearchKeywordList = async () => {
+  const response = await axiosInstance.get("/search");
+  return response.data;
+};
+
+// 검색 키워드 추가하기
+export const addSearchKeyword = async (keyword: string) => {
+  const response = await axiosInstance.post("/search", { keyword });
+  return response.data;
+};
+
+// 검색 키워드 삭제하기
+export const removeSearchKeyword = async (searchId: number) => {
+  const response = await axiosInstance.delete(`/search/${searchId}`);
+  return response.data;
+};

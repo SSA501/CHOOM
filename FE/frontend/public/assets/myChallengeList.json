@@ -15,7 +15,7 @@
                 "title": "내가만든쇼츠~",
                 "youtubeUrl": "https://youtu.be/TIA-NZsr0Hg",
                 "tiktokUrl": "https://www.tiktok.com/tictokUrl",
-                "thumbnailSrc": "/assets/myChallengeThumb.png",
+                "thumbnailPath": "/assets/myChallengeThumb.png",
                 "createdAt":"2023.03.13"
             },
             {
@@ -30,7 +30,7 @@
                 "title": "내가만든쇼츠~ver2",
                 "youtubeUrl": "https://youtu.be/youtubeUrl2",
                 "tiktokUrl": "https://www.tiktok.com/tictokUrl2",
-                "thumbnailSrc": "/assets/myChallengeThumb.png",
+                "thumbnailPath": "/assets/myChallengeThumb.png",
                 "createdAt":"2023.03.13"
             },
             {
@@ -45,7 +45,7 @@
                 "title": "내가만든쇼츠~ver2",
                 "youtubeUrl": "https://youtu.be/youtubeUrl2",
                 "tiktokUrl": "https://www.tiktok.com/tictokUrl2",
-                "thumbnailSrc": "/assets/myChallengeThumb.png",
+                "thumbnailPath": "/assets/myChallengeThumb.png",
                 "createdAt":"2023.03.13"
             },
             {
@@ -60,7 +60,7 @@
                 "title": "내가만든쇼츠~ver2",
                 "youtubeUrl": "https://youtu.be/youtubeUrl2",
                 "tiktokUrl": "https://www.tiktok.com/tictokUrl2",
-                "thumbnailSrc": "/assets/myChallengeThumb.png",
+                "thumbnailPath": "/assets/myChallengeThumb.png",
                 "createdAt":"2023.03.13"
             },
             {
@@ -75,7 +75,7 @@
                 "title": "내가만든쇼츠~ver2",
                 "youtubeUrl": "https://youtu.be/youtubeUrl2",
                 "tiktokUrl": "https://www.tiktok.com/tictokUrl2",
-                "thumbnailSrc": "/assets/myChallengeThumb.png",
+                "thumbnailPath": "/assets/myChallengeThumb.png",
                 "createdAt":"2023.03.13"
             },
             {
@@ -90,7 +90,7 @@
                 "title": "내가만든쇼츠~ver2",
                 "youtubeUrl": "https://youtu.be/youtubeUrl2",
                 "tiktokUrl": "https://www.tiktok.com/tictokUrl2",
-                "thumbnailSrc": "/assets/myChallengeThumb.png",
+                "thumbnailPath": "/assets/myChallengeThumb.png",
                 "createdAt":"2023.03.13"
             }
         ],
