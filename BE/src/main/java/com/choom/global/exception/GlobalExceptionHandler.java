@@ -71,7 +71,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("TokenExpiredException", e);
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .statusCode(401)
-                .message(e.getMessage())
+                .message("토큰이 만료되었습니다.")
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
