@@ -10,6 +10,7 @@ import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
+import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.service.FileService;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -59,7 +60,7 @@ public class DanceService {
     private static YouTube youtube;
 
     private static final String GOOGLE_YOUTUBE_URL =  "https://www.youtube.com/shorts/";
-    private static final String YOUTUBE_SEARCH_FIELDS1 = "items(id/videoId,snippet/title,snippet/channelTitle)";
+    private static final String YOUTUBE_SEARCH_FIELDS1 = "nextPageToken, prevPageToken, pageInfo, items(id/videoId,snippet/title,snippet/channelTitle)";
     private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/publishedAt, snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
 
     private static String YOUTUBE_APIKEY;
@@ -103,6 +104,9 @@ public class DanceService {
                             danceDetailDtoList.add(danceDetailDto);
                     }
                 }
+                System.out.println(searchResponse.getPageInfo());
+                System.out.println(searchResponse.getPrevPageToken());
+                System.out.println(searchResponse.getNextPageToken());
             }
 
         } catch (GoogleJsonResponseException e){
@@ -137,7 +141,6 @@ public class DanceService {
         }
         Video videoDetail = videoDetails.execute().getItems().get(0);
 
-        log.info("결과 : videoDetail : "+videoDetail.toString());
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
         if(time.equals("P0D") || time.contains("M")){ // P0D는 라이브 방송
@@ -187,6 +190,24 @@ public class DanceService {
     }
 
     @Transactional
+    public Long addDance(String youtubeId) throws IOException {
+        String url = GOOGLE_YOUTUBE_URL+youtubeId;
+
+        Dance dance = danceRepository.findByUrl(url).orElse(null);
+
+        if(dance == null) { //처음인경우
+            DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+
+            Dance insertDance = Dance.builder()
+                .danceDetailDto(danceDetailDto)
+                .build();
+
+            dance = danceRepository.save(insertDance);
+        }
+        return dance.getId();
+    }
+
+    @Transactional
     public void saveResult(Long danceId, MultipartFile jsonFile) throws IOException {
         // JSON파일 서버에 저장
         String jsonPath = fileService.fileUpload("coordinate", jsonFile);
@@ -199,7 +220,11 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceDetailsWithRankDto findDance(Long userId, String youtubeId) throws IOException {
+    public DanceDetailsWithRankDto findDance(Long userId, Long danceId) throws IOException {
+        Dance dance = danceRepository.findById(danceId)
+            .orElseThrow(() -> new IllegalArgumentException("DB에 없는 Dance Id 입니다!!"));
+
+        String youtubeId = dance.getYoutubeId();
         String url = GOOGLE_YOUTUBE_URL+youtubeId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
@@ -207,7 +232,7 @@ public class DanceService {
         log.info("1차 검색 정보 : " + danceDetailDto);
 
         // 2. 저장하기 (처음 참여한 경우에만)
-        Dance dance = danceRepository.findByUrl(url).orElse(null);
+        dance = danceRepository.findByUrl(url).orElse(null);
 
         List<DanceRankUserDto> danceRankUserDtoList = new ArrayList<>();
 

@@ -9,5 +9,5 @@ public interface DanceRepository extends JpaRepository<Dance, Long>, DanceCustom
 
    Optional<Dance> findByUrl(String url);
 
-
+   Optional<Dance> findById(Long id);
 }
