@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.io.IOException;
+
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -51,6 +53,17 @@ public class UserController {
     @GetMapping("/login/kakao")
     public ResponseEntity<BaseResponse> kakaoLogin(@RequestParam String code, @Value("${jwt.expiration.rtk}") Integer expiration) {
         TokenDto token = authService.kakaoLogin(code);
+        HttpHeaders headers = new HttpHeaders();
+        ResponseCookie cookie = authService.setCookie(token.getRefreshToken(), expiration);
+        headers.add("Set-Cookie", cookie.toString());
+        log.info("cookie : " + cookie.toString());
+        AccessTokenDto accessTokenDto = new AccessTokenDto(token.getAccessToken());
+        return new ResponseEntity<>(BaseResponse.success(accessTokenDto), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/login/google")
+    public ResponseEntity<BaseResponse> googleLogin(@RequestParam String code, @Value("${jwt.expiration.rtk}") Integer expiration) throws IOException {
+        TokenDto token = authService.socialLogin("GOOGLE", code);
         HttpHeaders headers = new HttpHeaders();
         ResponseCookie cookie = authService.setCookie(token.getRefreshToken(), expiration);
         headers.add("Set-Cookie", cookie.toString());
