@@ -44,12 +44,12 @@ function DancePage() {
 
   // 분석 결과 저장
   useEffect(() => {
-    if (poseList.length > 0) {
+    if (poseList.length > 0 && challenge?.status === 0) {
+      console.log("분석결과저장");
       const poseListJSON = JSON.stringify(poseList);
       const jsonFile = new File([poseListJSON], "data.json", {
         type: "application/json",
       });
-      console.log(jsonFile);
 
       updateChallenge(danceId!, jsonFile)
         .then((res) => {
@@ -57,7 +57,7 @@ function DancePage() {
         })
         .catch((err) => console.log(err));
     }
-  }, [danceId, poseList]);
+  }, [challenge?.status, danceId, poseList]);
 
   const createDetector = async () => {
     document.body.style.overflow = "hidden";
