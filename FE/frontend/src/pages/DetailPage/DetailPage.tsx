@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import ReactPlayer from "react-player";
 import { useNavigate, useParams } from "react-router-dom";
+import { boolean } from "yargs";
 import { getChallengeDetail } from "../../apis/challenge";
 import Btn from "../../components/Btn/Btn";
 import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
@@ -14,63 +16,51 @@ import {
   DetailBtnContainer,
   DetailContainer,
   LikeBtnContainer,
+  TextBox,
 } from "./style";
 
+interface RankDataTypes {
+  userId: number;
+  nickname: string;
+  profileImage: string;
+  score: number;
+  videoLength: number;
+  title: string;
+  youtubeUrl: null | string;
+}
+
 function DetailPage() {
-  const [challengeData, setChallengeData] = useState({
-    id: 123,
-    youtubeId: "khcSrutAcTo",
-    url: "/assets/newjeans.mp4",
-    thumbnailSrc:
-      "https://i.ytimg.com/vi/SmyFP2MgL4s/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLDXcvDW_CadJyq7wPyRFksAyP0VPQ",
-    title:
-      "#뉴진스 #하입보이 #hypeboy #newjeans #지금무슨노래 #하입보이챌린지 #쇼츠 #shorts",
-    userCount: 2,
-    likeCount: 3,
+  const [challengeData, setChallengeData] = useState<{
+    id: number;
+    title: string;
+    url: string;
+    thumbnailPath: string;
+    sec: number;
+    likeCount: number;
+    viewCount: number;
+    userCount: number;
+    youtubeId: string;
+    status: number;
+    publishedAt: string;
+    bookmarked: boolean;
+  }>({
+    id: 0,
+    title: "",
+    url: "",
+    thumbnailPath: "",
+    sec: 0,
+    likeCount: 0,
+    viewCount: 0,
+    userCount: 0,
+    youtubeId: "",
     status: 0,
-    sec: 56,
-    viewCount: 1426395,
-    publishedAt: "2023-03-27",
-    bookmarked: true,
+    publishedAt: "",
+    bookmarked: false,
   });
 
-  const [rankData, setRankData] = useState([
-    {
-      userId: 0,
-      nickname: "닉네임최대닉네임최대",
-      score: 99,
-      videoLength: 0,
-      title: "내가",
-      youtubeUrl: "",
-      // tiktokUrl:
-      //   "https://www.tiktok.com/@n1mbostratus/video/7208437948126153985?q=%EC%B1%8C%EB%A6%B0%EC%A7%80",
-      profileImage: "/assets/profile_sample.jpg",
-    },
-    {
-      userId: 1,
-      nickname: "sdfsdf",
-      score: 70,
-      videoLength: 0,
-      title: "내가만든쇼츠~",
-      youtubeUrl:
-        "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-      // tiktokUrl: "",
-      profileImage: "/assets/profile_sample.jpg",
-    },
-    {
-      userId: 2,
-      nickname: "sdfsdf",
-      score: 70,
-      videoLength: 0,
-      title: "내가만든쇼츠~",
-      youtubeUrl:
-        "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-      // tiktokUrl: "",
-      profileImage: "/assets/profile_sample.jpg",
-    },
-  ]);
+  const [rankData, setRankData] = useState<RankDataTypes[]>([]);
 
-  const { youtubeId } = useParams<{ youtubeId?: string }>(); // 상세페이지의 주소는 youtubeId 기반 (열었을 때 DB 저장시작)
+  const { danceId } = useParams<{ danceId?: string }>();
   const [isLiked, setIsLiked] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -82,8 +72,8 @@ function DetailPage() {
   };
 
   useEffect(() => {
-    if (youtubeId) {
-      getChallengeDetail(youtubeId)
+    if (danceId) {
+      getChallengeDetail(danceId)
         .then((res) => {
           setChallengeData(res?.data?.dance);
           setIsLiked(res?.data?.dance?.bookmarked);
@@ -91,7 +81,7 @@ function DetailPage() {
         })
         .catch((err) => console.log(err));
     }
-  }, [youtubeId]);
+  }, [danceId]);
 
   const { url, title, userCount, sec, viewCount, publishedAt, id, likeCount } =
     challengeData;
@@ -99,11 +89,12 @@ function DetailPage() {
   return (
     <DetailPageContainer>
       <VideoContainer>
-        <video
-          src={url}
-          autoPlay
+        <ReactPlayer
+          url={url}
           controls
-          controlsList="nodownload"
+          loop
+          muted
+          playing
           width="360px"
           height="640px"
         />
@@ -154,7 +145,9 @@ function DetailPage() {
                 )
               )
             ) : (
-              <div>아직 이 챌린지를 연습한 사람이 없어요! 연습해볼까요?</div>
+              <TextBox>
+                아직 이 챌린지를 연습한 사람이 없어요! 연습해볼까요?
+              </TextBox>
             )}
           </InnerShadowContainer>
         </DetailTopContainer>
