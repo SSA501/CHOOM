@@ -126,6 +126,7 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
         ></Btn>
       </SideContainer>
       <Video
+        id={challegeInfo.id}
         title={challegeInfo.title}
         videoPath={challegeInfo.url}
         thumbnailPath={challegeInfo.thumbnailPath}
