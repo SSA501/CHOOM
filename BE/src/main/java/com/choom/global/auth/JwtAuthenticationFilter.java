@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
         try {
             // If header is present, try grab user principal from database and perform authorization
-            Authentication authentication = getAuthentication(request);
+            Authentication authentication = getAuthentication(request, response);
             // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     }
 
     @Transactional(readOnly = true)
-    public Authentication getAuthentication(HttpServletRequest request) throws Exception {
+    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String token = request.getHeader(JwtTokenUtil.HEADER_STRING);
         // 요청 헤더에 Authorization 키값에 jwt 토큰이 포함된 경우에만, 토큰 검증 및 인증 처리 로직 실행.
         try {
@@ -95,6 +95,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             return null;
         } catch (TokenExpiredException e) {
             log.info("토큰이 만료되었습니다.", e);
+            ResponseBodyWriteUtil.sendError(request, response, e, HttpStatus.UNAUTHORIZED);
             return null;
         }
     }
