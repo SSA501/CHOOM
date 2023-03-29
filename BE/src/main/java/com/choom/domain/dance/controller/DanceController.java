@@ -1,7 +1,7 @@
 package com.choom.domain.dance.controller;
 
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
-import com.choom.domain.dance.dto.DanceDetailsDto;
+import com.choom.domain.dance.dto.DanceSearchDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
 import com.choom.domain.dance.dto.DanceStatusDto;
 import com.choom.domain.dance.service.DanceService;
@@ -34,10 +34,10 @@ public class DanceController {
     private final DanceService danceService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> searchDance(@RequestParam(name = "q") String keyword){
-        log.info("keyword : "+keyword);
-        List<DanceDetailsDto> danceDetailDtoList = danceService.searchDance(keyword);
-        return new ResponseEntity<>(BaseResponse.success(danceDetailDtoList), HttpStatus.OK);
+    public ResponseEntity<BaseResponse> searchDance(@RequestParam String keyword, @RequestParam(required = false) String pageToken, @RequestParam Long size){
+        log.info("keyword : "+keyword+" pageToken : "+pageToken+" size : "+size);
+        DanceSearchDto danceSearchDto = danceService.searchDance(keyword,pageToken,size);
+        return new ResponseEntity<>(BaseResponse.success(danceSearchDto), HttpStatus.OK);
     }
 
     @GetMapping("/popular")
