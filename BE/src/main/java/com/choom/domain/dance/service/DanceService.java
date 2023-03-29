@@ -3,6 +3,7 @@ package com.choom.domain.dance.service;
 import com.choom.domain.bookmark.entity.BookmarkRepository;
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
+import com.choom.domain.dance.dto.DanceSearchDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
 import com.choom.domain.dance.dto.DanceRankUserDto;
 import com.choom.domain.dance.dto.DanceStatusDto;
@@ -10,7 +11,6 @@ import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
-import com.choom.domain.user.entity.UserRepository;
 import com.choom.global.service.FileService;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -56,7 +56,6 @@ public class DanceService {
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 20;  // 검색 개수
     private static YouTube youtube;
 
     private static final String GOOGLE_YOUTUBE_URL =  "https://www.youtube.com/shorts/";
@@ -76,9 +75,11 @@ public class DanceService {
         }).setApplicationName("youtube-cmdline-search-sample").build();
     }
 
-    public List<DanceDetailsDto> searchDance(String keyword) {
-        log.info("Starting YouTube search... " +keyword);
+    public DanceSearchDto searchDance(String keyword, String pageToken,Long size) {
+        log.info("Starting YouTube search... " +keyword+" pageToken : "+pageToken);
         List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
+
+        SearchListResponse searchResponse = null;
 
         try {
             // 1. 유튜브 검색 결과
@@ -88,10 +89,12 @@ public class DanceService {
                 search.setQ(keyword);
                 search.setType("video");
                 search.setVideoDuration("short");
-                search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
+                search.setMaxResults(size);
                 search.setFields(YOUTUBE_SEARCH_FIELDS1);
+                search.setPageToken(pageToken);
 
-                SearchListResponse searchResponse = search.execute();
+                searchResponse = search.execute();
+
                 List<SearchResult> searchResultList = searchResponse.getItems();
 
                 if (searchResultList != null) {
@@ -104,9 +107,6 @@ public class DanceService {
                             danceDetailDtoList.add(danceDetailDto);
                     }
                 }
-                System.out.println(searchResponse.getPageInfo());
-                System.out.println(searchResponse.getPrevPageToken());
-                System.out.println(searchResponse.getNextPageToken());
             }
 
         } catch (GoogleJsonResponseException e){
@@ -125,7 +125,11 @@ public class DanceService {
                 return o2.getUserCount() - o1.getUserCount();
             }
         });
-        return danceDetailDtoList;
+        DanceSearchDto danceSearchDto = DanceSearchDto.builder()
+            .searchListResponse(searchResponse)
+            .danceDetailDtoList(danceDetailDtoList)
+            .build();
+        return danceSearchDto;
     }
 
     @Async
