@@ -81,6 +81,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     return jwtAuthentication;
                 }
             }
+            log.info("뭔가 실패함");
             return null;
         }
         return null;
