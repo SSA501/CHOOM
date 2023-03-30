@@ -11,7 +11,7 @@ interface ChallengeRankProps {
   userId: number;
   nickname: string;
   score: number;
-  youtubeUrl: string;
+  youtubeUrl: string | null;
   // tiktokUrl: string;
   profileImage: string;
 }
@@ -35,7 +35,7 @@ function ChallengeRank({
           <RankInnerDiv>
             <p>{nickname}</p>
             <div>
-              {youtubeUrl !== "" ? (
+              {youtubeUrl !== null ? (
                 <a href={youtubeUrl}>
                   <img
                     width={"32px"}

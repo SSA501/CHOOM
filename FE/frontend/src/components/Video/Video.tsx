@@ -1,33 +1,54 @@
 import React, { useState } from "react";
+import ReactPlayer from "react-player";
 import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
-  id: number;
+  id: number | null;
+  url?: string;
   videoPath: string;
   thumbnailPath: string;
   title: string;
   handleClickVideo: () => void;
 }
 
-function Video({ id, thumbnailPath, videoPath, handleClickVideo }: VideoProps) {
-  const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
+function Video({
+  id,
+  url,
+  thumbnailPath,
+  videoPath,
+  handleClickVideo,
+}: VideoProps) {
+  const [playingVideoId, setPlayingVideoId] = useState<string>("");
 
   return (
     <VideoContainer
-      key={id}
-      onMouseEnter={(): void => setPlayingVideoId(id)}
-      onMouseLeave={(): void => setPlayingVideoId(null)}
+      key={videoPath}
+      onMouseEnter={(): void => setPlayingVideoId(videoPath)}
+      onMouseLeave={(): void => setPlayingVideoId("")}
     >
-      {playingVideoId === id ? (
+      {playingVideoId === videoPath ? (
         <>
-          <video
-            src={videoPath}
-            autoPlay
-            controls
-            width="270px"
-            height="480px"
-            controlsList="nodownload"
-          />
+          {id ? (
+            <video
+              src={videoPath}
+              autoPlay
+              controls
+              width="270px"
+              height="480px"
+              controlsList="nodownload"
+            />
+          ) : (
+            <ReactPlayer
+              url={url}
+              width="270px"
+              height="480px"
+              controls
+              loop
+              muted
+              playing
+            />
+          )}
+
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
       ) : (

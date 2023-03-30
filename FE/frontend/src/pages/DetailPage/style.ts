@@ -62,6 +62,11 @@ const DetailBtnContainer = styled.div`
   text-align: center;
 `;
 
+const TextBox = styled.div`
+  padding-top: 50%;
+  text-align: center;
+`;
+
 export {
   DetailPageContainer,
   VideoContainer,
@@ -71,4 +76,5 @@ export {
   ChallengeDetailTitle,
   DetailTopContainer,
   DetailBtnContainer,
+  TextBox,
 };

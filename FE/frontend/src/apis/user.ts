@@ -25,4 +25,8 @@ export const withdraw = async () => {
   await axiosInstance.delete<any>(`/user`);
 };
 
-// TODO: accessToken 토큰 갱신
+// accessToken 토큰 갱신
+export const reissueToken = async () => {
+  const res = await axiosInstance.post<any>(`/user/login/token`);
+  return res.data;
+};
