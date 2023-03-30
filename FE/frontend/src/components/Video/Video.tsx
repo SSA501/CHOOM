@@ -12,8 +12,8 @@ interface VideoProps {
 }
 
 function Video({
-  id,
   url,
+  // youtubeId,
   thumbnailPath,
   videoPath,
   handleClickVideo,
@@ -28,7 +28,7 @@ function Video({
     >
       {playingVideoId === videoPath ? (
         <>
-          {id ? (
+          {/* {id ? (
             <video
               src={videoPath}
               autoPlay
@@ -40,23 +40,29 @@ function Video({
           ) : (
             <ReactPlayer
               url={url}
-              width="270px"
-              height="480px"
               controls
               loop
               muted
               playing
             />
-          )}
-
+          )} */}
+          <ReactPlayer
+            url={url}
+            controls
+            loop
+            muted
+            playing
+            width="360px"
+            height="640px"
+          />
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
       ) : (
         <ThumbnailImg
           src={thumbnailPath}
           alt="썸네일이미지"
-          width="270px"
-          height="480px"
+          width="360px"
+          height="640px"
         />
       )}
     </VideoContainer>

@@ -14,7 +14,7 @@ interface SearchBarProps {
 }
 
 function SearchBar({ currentQuery }: SearchBarProps) {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,7 +46,10 @@ function SearchBar({ currentQuery }: SearchBarProps) {
 
   useEffect(() => {
     if (currentQuery) setInputValue(currentQuery);
-  }, [currentQuery]);
+    if (!searchParams.get("query")) {
+      setInputValue("");
+    }
+  }, [currentQuery, searchParams]);
 
   return (
     <SearchBarContainer>
