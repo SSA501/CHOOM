@@ -75,6 +75,10 @@ public class Dance extends BaseTimeEntity {
         this.videoPath = videoPath;
     }
 
+    public int getBookmarkSize(){
+        return bookmarkList.size();
+    }
+
     @Builder
     public Dance(Long id, String videoPath, String jsonPath,
         List<Bookmark> bookmarkList,

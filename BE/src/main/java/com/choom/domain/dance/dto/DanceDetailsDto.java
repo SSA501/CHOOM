@@ -17,7 +17,7 @@ public class DanceDetailsDto {
     private String url;
     private String thumbnailPath;
     private int sec;
-    private Long likeCount;
+    private int likeCount;
     private Long viewCount;
     private int userCount;
     private String youtubeId;
@@ -33,7 +33,7 @@ public class DanceDetailsDto {
     }
 
     @Builder
-    public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt, boolean isBookmarked) {
+    public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,  String thumbnailPath, int likeCount, Long viewCount, int userCount, int status, String publishedAt, boolean isBookmarked) {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
