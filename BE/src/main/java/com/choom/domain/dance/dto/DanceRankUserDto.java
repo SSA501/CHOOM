@@ -15,6 +15,7 @@ public class DanceRankUserDto {
     String nickname;
     String profileImage;
     int score;
+    int videoLength;
     String title;
     String youtubeUrl;
     String tiktokUrl;
@@ -25,6 +26,7 @@ public class DanceRankUserDto {
         this.profileImage = myDance.getUser().getProfileImage();
         this.nickname = myDance.getTitle();
         this.score = myDance.getScore();
+        this.videoLength = myDance.getVideoLength();
         this.title = myDance.getTitle();
         this.youtubeUrl = myDance.getYoutubeUrl();
         this.tiktokUrl = myDance.getTiktokUrl();
