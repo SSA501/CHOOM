@@ -51,7 +51,6 @@ public class MyDanceService {
         MyDance myDance = MyDance.builder()
                 .score(myDanceAddRequestDto.getScore())
                 .matchRate(myDanceAddRequestDto.getMatchRate())
-                .videoLength(myDanceAddRequestDto.getVideoLength())
                 .title(myDanceAddRequestDto.getTitle())
                 .videoPath(videoPath)
                 .user(user)
