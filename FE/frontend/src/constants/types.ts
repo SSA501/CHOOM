@@ -19,3 +19,18 @@ export interface Challenge {
   videoPath: string;
   jsonPath: string;
 }
+
+export interface Dance {
+  bookmarked: boolean;
+  id: string;
+  likeCount: number;
+  publishedAt: string;
+  sec: number;
+  status: number;
+  thumbnailPath: string;
+  title: string;
+  url: string;
+  userCount: number;
+  viewCount: number;
+  youtubeId: string;
+}

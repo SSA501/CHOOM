@@ -13,3 +13,9 @@ export const updateChallenge = async (danceId: string, jsonFile: File) => {
   });
   return response.data;
 };
+
+// 내가 춘 춤 결과 저장
+export const createChallengeResult = async (formData: FormData) => {
+  const response = await axiosFileInstance.post("/mydance", formData);
+  return response.data;
+};

@@ -1,12 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
+import { CgCheckO, CgCloseO } from "react-icons/cg";
+import { MdOutlineMode } from "react-icons/md";
 import { Pie, PieChart, Cell } from "recharts";
-import { Header, Title } from "./style";
-function DanceScore(props: { score: number; title: string }) {
+import { Header, EditIcon, ChallengeTitleContainer } from "./style";
+function DanceScore(props: {
+  score: number;
+  challengeTitle: string;
+  setChallengeTitle: (challenge: string) => void;
+}) {
   const [currentScore, setCurrentScore] = React.useState(0); // 현재 점수를 상태로 관리
   const data = [
     { name: "Group A", value: currentScore },
     { name: "Group B", value: 100 - currentScore },
   ];
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const cancelUpdateChallengeTitle = () => {
+    setIsEditing(false);
+  };
+  const updateChallengeTitle = () => {
+    setIsEditing(false);
+    props.setChallengeTitle(inputValue);
+    // TODO: 제목 변경 요청하기
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -21,7 +38,37 @@ function DanceScore(props: { score: number; title: string }) {
 
   return (
     <Header>
-      <Title>{props.title}</Title>
+      <ChallengeTitleContainer>
+        {isEditing ? (
+          <textarea
+            rows={3}
+            value={inputValue}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+              setInputValue(e.target.value);
+            }}
+          />
+        ) : (
+          <h3>{props.challengeTitle}</h3>
+        )}
+
+        <EditIcon isEditing={isEditing}>
+          {isEditing ? (
+            <>
+              <CgCloseO
+                onClick={cancelUpdateChallengeTitle}
+                style={{ marginRight: ".3em" }}
+              />
+              <CgCheckO
+                onClick={updateChallengeTitle}
+                style={{ color: "var(--green-color)" }}
+              />
+            </>
+          ) : (
+            <MdOutlineMode onClick={() => setIsEditing((prev: any) => !prev)} />
+          )}
+          <span>{!isEditing && "제목 편집"}</span>
+        </EditIcon>
+      </ChallengeTitleContainer>
       <PieChart width={200} height={200}>
         <text
           x="50%"
