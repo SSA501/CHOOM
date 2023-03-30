@@ -1,9 +1,10 @@
 package com.choom.domain.user.service;
 
 import com.choom.domain.user.dto.KakaoOAuth2Dto;
-import com.choom.domain.user.dto.KakaoUserInfoDto;
+import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
+import com.choom.global.service.GoogleService;
 import com.choom.global.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +19,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
+    private final GoogleService googleService;
     private final RedisService redisService;
     private final UserRepository userRepository;
     private final KakaoOAuth2Dto kakaoOAuth2Dto;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
 
-
     @Transactional
     public TokenDto kakaoLogin(String code) {
-        KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
+        SocialUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
         String nickname = userInfo.getNickname();
         String profileImage = userInfo.getProfileImage();
@@ -36,6 +37,33 @@ public class AuthService {
 
         if (user == null) {
             User newUser = addUser(identifier, nickname, profileImage, SocialType.KAKAO);
+            return issueToken(newUser);
+        }
+
+        return issueToken(user);
+    }
+
+    @Transactional
+    public TokenDto socialLogin(String type, String code) {
+        SocialUserInfoDto userInfo = null;
+        SocialType socialType = null;
+
+        if ("GOOGLE".equals(type)) {
+            userInfo = googleService.getUserInfo(code);
+            socialType = SocialType.GOOGLE;
+        } else if ("KAKAO".equals(type)) {
+            userInfo = kakaoOAuth2Dto.getUserInfo(code);
+            socialType = SocialType.KAKAO;
+        }
+
+        String identifier = userInfo.getIdentifier();
+        String nickname = userInfo.getNickname();
+        String profileImage = userInfo.getProfileImage();
+
+        User user = userRepository.findByIdentifierAndSocialType(identifier, socialType).orElse(null);
+
+        if (user == null) {
+            User newUser = addUser(identifier, nickname, profileImage, socialType);
             return issueToken(newUser);
         }
 

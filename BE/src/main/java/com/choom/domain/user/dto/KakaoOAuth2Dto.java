@@ -29,7 +29,7 @@ public class KakaoOAuth2Dto {
         KAKAO_REDIRECT_URI = value;
     }
 
-    public KakaoUserInfoDto getUserInfo(String code) {
+    public SocialUserInfoDto getUserInfo(String code) {
         String accessToken = getAccessToken(code);
         log.info("카카오 accessToken : " + accessToken);
         return getUserInfoByToken(accessToken);
@@ -89,7 +89,7 @@ public class KakaoOAuth2Dto {
         return access_Token;
     }
 
-    public KakaoUserInfoDto getUserInfoByToken(String accessToken){
+    public SocialUserInfoDto getUserInfoByToken(String accessToken){
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -129,7 +129,7 @@ public class KakaoOAuth2Dto {
 
             br.close();
 
-            return new KakaoUserInfoDto(identifier, nickname, profileImage);
+            return new SocialUserInfoDto(identifier, nickname, profileImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
