@@ -3,6 +3,7 @@ package com.choom.domain.user.service;
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
+import com.choom.global.service.FileService;
 import com.choom.global.service.GoogleService;
 import com.choom.global.service.KakaoService;
 import com.choom.global.util.JwtTokenUtil;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -25,6 +27,7 @@ public class AuthService {
     private final KakaoService kakaoService;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
+    private final FileService fileService;
 
     @Transactional
     public TokenDto kakaoLogin(String code) {
@@ -72,10 +75,12 @@ public class AuthService {
 
     @Transactional
     public User addUser(String identifier, String nickname, String profileImage, SocialType socialType) {
+        String uniqueNickname = nickname + UUID.randomUUID().toString();
+        String profileImagePath = fileService.saveProfileImage("user", uniqueNickname, profileImage);
         User user = User.builder()
                 .identifier(identifier)
-                .nickname(nickname)
-                .profileImage(profileImage)
+                .nickname(uniqueNickname)
+                .profileImage(profileImagePath)
                 .socialType(socialType)
                 .build();
         return userRepository.save(user);

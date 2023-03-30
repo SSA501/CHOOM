@@ -48,8 +48,12 @@ public class UserService {
     public void modifyUserProfileImage(Long userId, MultipartFile profileImage) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-        String profileImagePath = fileService.fileUpload("user", profileImage);
-        user.updateProfileImage(profileImagePath);
+        String profileImagePath = user.getProfileImage();
+        if (profileImagePath.startsWith("https://j8a501.p.ssafy.io")) {
+            fileService.fileDelete(profileImagePath.substring(25));
+        }
+        String newProfileImagePath = "https://j8a501.p.ssafy.io"+ fileService.fileUpload("user", profileImage);
+        user.updateProfileImage(newProfileImagePath);
         return;
     }
 
