@@ -9,7 +9,7 @@ import DetailPage from "./pages/DetailPage/DetailPage";
 import KakaoRedirectPage from "./pages/KakaoRedirectPage/KakaoRedirectPage";
 import { useAppDispatch, useAppSelector } from "./constants/types";
 import { axiosInstance } from "./apis/instance";
-import { logout, reissueToken } from "./apis/user";
+import { logout } from "./apis/user";
 import { updateAccessToken } from "./store/mainReducer";
 
 function App() {
@@ -34,28 +34,22 @@ function App() {
       } = error;
       const originalRequest = config;
       if (status === 401 && data.error === "TokenExpiredException") {
-        console.log("갱신하러옴");
-        console.log("옛날거", accessToken);
-        reissueToken()
-          .then((res) => {
-            console.log("갱신 성공!!!");
-            const newAccessToken = res.data.accessToken;
-            dispatch(updateAccessToken(newAccessToken));
-            // 실패했던 요청 새로운 accessToken으로 헤더 변경하고 재요청
-            console.log("헤더 바꿈");
-            console.log("새거", newAccessToken);
-            axiosInstance.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${newAccessToken}`;
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            console.log(originalRequest);
-            return axiosInstance(originalRequest);
-          })
-          .catch((err) => {
-            // 갱신 실패시 로그아웃
-            console.log("갱신실패", err);
-            return logout();
-          });
+        try {
+          // 갱신 요청
+          const res = await axiosInstance.post<any>(`/user/login/token`);
+          const newAccessToken = res.data.data.accessToken;
+          dispatch(updateAccessToken(newAccessToken));
+          // 실패했던 요청 새로운 accessToken으로 헤더 변경하고 재요청
+          axiosInstance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${newAccessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axiosInstance(originalRequest);
+        } catch (err) {
+          // 갱신 실패시 로그아웃
+          console.log("갱신실패", err);
+          return logout();
+        }
       }
       return Promise.reject(error);
     }
