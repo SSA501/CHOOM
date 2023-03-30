@@ -3,7 +3,6 @@ package com.choom.domain.user.controller;
 import com.choom.domain.user.dto.AccessTokenDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.dto.UserDetailsDto;
-import com.choom.domain.user.entity.User;
 import com.choom.domain.user.service.AuthService;
 import com.choom.domain.user.service.UserService;
 import com.choom.global.auth.CustomUserDetails;
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
@@ -30,21 +30,21 @@ public class UserController {
     private final AuthService authService;
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<BaseResponse> userDetails(@ApiIgnore Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        User user = customUserDetails.getUser();
-        UserDetailsDto userDetailsDto = userService.findUserDetails(user);
+        Long userId = customUserDetails.getUserId();
+        UserDetailsDto userDetailsDto = userService.findUserDetails(userId);
         return new ResponseEntity<>(BaseResponse.success(userDetailsDto), HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping()
     public ResponseEntity<BaseResponse> deleteUser(@ApiIgnore Authentication authentication, @ApiIgnore @RequestHeader("Authorization") String token) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        User user = customUserDetails.getUser();
+        Long userId = customUserDetails.getUserId();
         String accessToken = token.substring(7);
-        String refreshToken = authService.logout(user.getId(), accessToken);
-        authService.deleteUser(user);
+        String refreshToken = authService.logout(userId, accessToken);
+        authService.deleteUser(userId);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", authService.setCookie(refreshToken, 0).toString());
         return new ResponseEntity<>(BaseResponse.success(null), headers, HttpStatus.OK);
@@ -95,6 +95,20 @@ public class UserController {
         headers.add("Set-Cookie", cookie.toString());
         log.info("delete cookie : " + cookie.toString());
         return new ResponseEntity<>(BaseResponse.success(null), headers, HttpStatus.OK);
+    }
+
+    @PutMapping()
+    public ResponseEntity<BaseResponse> modifyUser(@ApiIgnore Authentication authentication, @RequestPart(required = false) String nickname,
+                                                   @RequestPart(required = false) MultipartFile profileImage) throws IOException {
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
+        Long userId = customUserDetails.getUserId();
+        if (nickname != null) {
+            userService.modifyUserNickname(userId, nickname);
+        }
+        if (profileImage != null) {
+            userService.modifyUserProfileImage(userId, profileImage);
+        }
+        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 
     @GetMapping("/nickname/{nickname}")
