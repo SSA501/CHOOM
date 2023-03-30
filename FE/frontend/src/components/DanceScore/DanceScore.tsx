@@ -14,7 +14,7 @@ function DanceScore(props: {
     { name: "Group B", value: 100 - currentScore },
   ];
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(props.challengeTitle);
 
   const cancelUpdateChallengeTitle = () => {
     setIsEditing(false);
@@ -79,14 +79,14 @@ function DanceScore(props: {
           fontSize={40}
           fontWeight={900}
         >
-          {currentScore}
+          {currentScore}점
         </text>
         <Pie
           data={data}
           cx="50%"
           cy="50%"
           labelLine={false}
-          innerRadius={70}
+          innerRadius={65}
           outerRadius={90}
           dataKey="value"
         >

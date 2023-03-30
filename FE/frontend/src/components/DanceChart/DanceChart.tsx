@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Label,
 } from "recharts";
 
 interface Score {
@@ -24,8 +25,12 @@ function DanceChart(props: {
     console.log(e.activeLabel);
     props.danceVideoRef.current.changeVideoTime(e.activeLabel);
   };
+
   return (
     <div style={{ height: "400px" }}>
+      <div style={{ marginLeft: "50px", textAlign: "center" }}>
+        클릭을 하면 해당 시간으로 재생됩니다
+      </div>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           width={800}
@@ -40,8 +45,11 @@ function DanceChart(props: {
           onClick={(e) => handelChartClick(e)}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" />
+          <XAxis dataKey="time">
+            <Label value="초" offset={10} position="right" />
+          </XAxis>
           <YAxis />
+
           <Tooltip />
           <Area
             type="monotone"
