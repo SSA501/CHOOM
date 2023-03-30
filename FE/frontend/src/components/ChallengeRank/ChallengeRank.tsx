@@ -29,7 +29,12 @@ function ChallengeRank({
     <RankOuterContainer key={userId}>
       <RankContainer>
         <ProfilePicContainer>
-          <img src={profileImage} alt={`${nickname}님의 프로필 사진`} />
+          <img
+            src={profileImage}
+            width="60px"
+            height="60px"
+            alt={`${nickname}님의 프로필 사진`}
+          />
         </ProfilePicContainer>
         <ProfileDetailContainer>
           <h3>{score}점</h3>

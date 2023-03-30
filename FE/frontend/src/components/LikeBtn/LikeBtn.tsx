@@ -5,7 +5,7 @@ import { LikeBtnContentContainer, LikeBtnOuterContainer } from "./style";
 
 interface LikeBtnProps {
   likeCount: number;
-  isLiked: boolean;
+  isLiked: boolean | null;
   setIsLiked: (flag: any) => void;
   handleLike: () => void;
   handleLikeDelete: () => void;

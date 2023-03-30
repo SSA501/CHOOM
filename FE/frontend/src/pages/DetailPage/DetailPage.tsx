@@ -64,7 +64,7 @@ function DetailPage() {
   const [rankData, setRankData] = useState<RankDataTypes[]>([]);
 
   const { danceId } = useParams<{ danceId?: string }>();
-  const [isLiked, setIsLiked] = useState<boolean>(true);
+  const [isLiked, setIsLiked] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
   const handleLike = () => {
