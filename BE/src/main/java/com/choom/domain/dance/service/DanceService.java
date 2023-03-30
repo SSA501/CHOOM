@@ -183,10 +183,7 @@ public class DanceService {
             return null;
         }
 
-        Long likeCount = 0L;
-        if(videoDetail.getStatistics().getLikeCount()!=null){
-            likeCount = videoDetail.getStatistics().getLikeCount().longValue();
-        }
+
         Long viewCount = 0L;
         if(videoDetail.getStatistics().getViewCount()!=null){
             viewCount = videoDetail.getStatistics().getViewCount().longValue();
@@ -202,9 +199,11 @@ public class DanceService {
 
         int userCount = 0;
         int status = 0;
+        int likeCount = 0;
         if(dance != null){
             userCount = dance.getUserCount();
             status = dance.getStatus();
+            likeCount = dance.getBookmarkSize();
         }
         String publishedAt = String.valueOf(videoDetail.getSnippet().getPublishedAt()).split("T")[0];
         //1분 이내인 경우
