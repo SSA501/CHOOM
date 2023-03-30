@@ -219,7 +219,7 @@ function DanceCam(props: {
         countScore = 0;
       }
 
-      isGuide && drawGuide(newKptList, PALLETE.red);
+      isGuide && reverseGuide(newKptList, PALLETE.red);
       if (scoreTempList.length > 0)
         drawScore(scoreTempList[scoreTempList.length - 1].score);
     }
@@ -237,6 +237,18 @@ function DanceCam(props: {
 
     // 다시 scale을 사용하여 원래대로 돌려놓기
     ctx.scale(-1, 1);
+  };
+  const reverseGuide = (keypoints: poseDetection.Keypoint[], color: string) => {
+    ctx.save(); // 현재 캔버스 상태를 저장합니다.
+
+    // 캔버스의 원점을 중심으로 30도 회전시킵니다.
+    ctx.translate(225, 100);
+    ctx.scale(-1, 1);
+    ctx.translate(-225, -100);
+
+    drawGuide(keypoints, color);
+
+    ctx.restore();
   };
 
   // Guide그리기
