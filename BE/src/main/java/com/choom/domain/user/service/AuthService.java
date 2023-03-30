@@ -1,10 +1,10 @@
 package com.choom.domain.user.service;
 
-import com.choom.domain.user.dto.KakaoOAuth2Dto;
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
 import com.choom.global.service.GoogleService;
+import com.choom.global.service.KakaoService;
 import com.choom.global.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +22,13 @@ public class AuthService {
     private final GoogleService googleService;
     private final RedisService redisService;
     private final UserRepository userRepository;
-    private final KakaoOAuth2Dto kakaoOAuth2Dto;
+    private final KakaoService kakaoService;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
 
     @Transactional
     public TokenDto kakaoLogin(String code) {
-        SocialUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
+        SocialUserInfoDto userInfo = kakaoService.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
         String nickname = userInfo.getNickname();
         String profileImage = userInfo.getProfileImage();
@@ -52,7 +52,7 @@ public class AuthService {
             userInfo = googleService.getUserInfo(code);
             socialType = SocialType.GOOGLE;
         } else if ("KAKAO".equals(type)) {
-            userInfo = kakaoOAuth2Dto.getUserInfo(code);
+            userInfo = kakaoService.getUserInfo(code);
             socialType = SocialType.KAKAO;
         }
 
