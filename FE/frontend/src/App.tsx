@@ -6,11 +6,11 @@ import DancePage from "./pages/DancePage/DancePage";
 import SearchPage from "./pages/SearchPage/SearchPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import DetailPage from "./pages/DetailPage/DetailPage";
-import KakaoRedirectPage from "./pages/KakaoRedirectPage/KakaoRedirectPage";
+import LoginRedirectPage from "./pages/LoginRedirectPage/LoginRedirectPage";
 import { useAppDispatch, useAppSelector } from "./constants/types";
 import { axiosFileInstance, axiosInstance } from "./apis/instance";
 import { logout } from "./apis/user";
-import { updateAccessToken } from "./store/mainReducer";
+import { updateAccessToken, updateLoginStatus } from "./store/mainReducer";
 
 function App() {
   const accessToken = useAppSelector((state) => state.main.accessToken);
@@ -51,6 +51,8 @@ function App() {
         } catch (err) {
           // 갱신 실패시 로그아웃
           console.log("갱신실패", err);
+          dispatch(updateLoginStatus(false));
+          dispatch(updateAccessToken(""));
           return logout();
         }
       }
@@ -66,7 +68,11 @@ function App() {
         <Route path="/detail/:danceId" element={<DetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dance/:danceId" element={<DancePage />} />
-        <Route path="/login/oauth2/kakao/*" element={<KakaoRedirectPage />} />
+        <Route path="/login/oauth2/kakao/*" element={<LoginRedirectPage />} />
+        <Route
+          path="/login/oauth2/google/*"
+          element={<LoginRedirectPage isGoogle />}
+        />
       </Route>
     </Routes>
   );
