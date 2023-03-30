@@ -30,7 +30,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserDetailsDto findUserDetails(User user) {
+    public UserDetailsDto findUserDetails(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         UserMyDanceDto userMyDanceDto = myDanceRepository.findMyDanceInfoByUser(user);
         return UserDetailsDto.builder()
                 .user(user)
@@ -43,18 +45,19 @@ public class UserService {
     }
 
     @Transactional
-    public void modifyUserProfileImage(User user, MultipartFile profileImage) throws IOException {
+    public void modifyUserProfileImage(Long userId, MultipartFile profileImage) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         String profileImagePath = fileService.fileUpload("user", profileImage);
         user.updateProfileImage(profileImagePath);
-        userRepository.save(user);
-        user.getProfileImage();
         return;
     }
 
     @Transactional
-    public void modifyUserNickname(User user, String nickname) {
+    public void modifyUserNickname(Long userId, String nickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         user.updateNickname(nickname);
-        userRepository.save(user);
         return;
     }
 }

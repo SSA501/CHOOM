@@ -6,6 +6,7 @@ import com.choom.domain.bookmark.entity.BookmarkRepository;
 import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.user.entity.User;
+import com.choom.domain.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,8 +22,11 @@ public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
     private final DanceRepository danceRepository;
+    private final UserRepository userRepository;
 
-    public Page<BookmarkDetailsDto> findBookmarks(User user, Pageable pageable) {
+    public Page<BookmarkDetailsDto> findBookmarks(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         Page<Bookmark> bookmarkPage = bookmarkRepository.findPageByUser(user, pageable);
         return bookmarkPage.map(bookmark -> BookmarkDetailsDto.builder()
                 .bookmark(bookmark)
@@ -30,7 +34,9 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void addBookmark(User user, Long danceId) {
+    public void addBookmark(Long userId, Long danceId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         Bookmark bookmark = bookmarkRepository.findBookmarkByUserIdAndDanceId(user.getId(), danceId).orElse(null);
         log.info("bookmark : " + bookmark);
         if (bookmark == null) {
@@ -46,7 +52,9 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void removeBookmark(User user, Long danceId) {
+    public void removeBookmark(Long userId, Long danceId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         Bookmark bookmark = bookmarkRepository.findBookmarkByUserIdAndDanceId(user.getId(), danceId).orElse(null);
         log.info("bookmark : " + bookmark);
         if (bookmark != null) {

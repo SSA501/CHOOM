@@ -2,7 +2,6 @@ package com.choom.domain.bookmark.controller;
 
 import com.choom.domain.bookmark.dto.BookmarkDetailsDto;
 import com.choom.domain.bookmark.service.BookmarkService;
-import com.choom.domain.user.entity.User;
 import com.choom.global.auth.CustomUserDetails;
 import com.choom.global.model.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,24 +28,24 @@ public class BookmarkController {
     public ResponseEntity<BaseResponse> bookmarkList(Pageable pageable, @ApiIgnore Authentication authentication) {
         log.info("pageable : " + pageable);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        User user = customUserDetails.getUser();
-        Page<BookmarkDetailsDto> bookmarkDetailsDtoList = bookmarkService.findBookmarks(user, pageable);
+        Long userId = customUserDetails.getUserId();
+        Page<BookmarkDetailsDto> bookmarkDetailsDtoList = bookmarkService.findBookmarks(userId, pageable);
         return new ResponseEntity<>(BaseResponse.success(bookmarkDetailsDtoList), HttpStatus.OK);
     }
 
     @PostMapping("/{danceId}")
     public ResponseEntity<BaseResponse> addBookmark(@PathVariable Long danceId, @ApiIgnore Authentication authentication) throws IOException {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        User user = customUserDetails.getUser();
-        bookmarkService.addBookmark(user, danceId);
+        Long userId = customUserDetails.getUserId();
+        bookmarkService.addBookmark(userId, danceId);
         return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 
     @DeleteMapping("/{danceId}")
     public ResponseEntity<BaseResponse> removeBookmark(@PathVariable Long danceId, @ApiIgnore Authentication authentication) throws IOException {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        User user = customUserDetails.getUser();
-        bookmarkService.removeBookmark(user, danceId);
+        Long userId = customUserDetails.getUserId();
+        bookmarkService.removeBookmark(userId, danceId);
         return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 }
