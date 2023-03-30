@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DanceChart from "../../components/DanceChart/DanceChart";
 import Btn from "../Btn/Btn";
 import DanceScore from "../DanceScore/DanceScore";
@@ -14,25 +14,27 @@ function DanceResult(props: {
   dance: Dance;
   myBlob: Blob;
 }) {
+  const [challengeTitle, setChallengeTitle] = useState(props.dance.title);
   useEffect(() => {
+    let matchRate = "[";
+    matchRate += props.scoreList.map((score) => {
+      return score.score + ",";
+    });
+    matchRate = matchRate.substring(0, matchRate.length - 1) + "]";
+
     const uploaderString = JSON.stringify({
       danceId: props.dance.id,
-      matchRate: props.scoreList,
+      matchRate: matchRate,
       score: props.score,
       title: props.dance.title,
-      videoLength: 0,
+      videoLength: props.scoreList.length,
     });
     const jsonData = new Blob([uploaderString], { type: "application/json" });
     const videofile = new File([props.myBlob!], "videoFile", {
       type: "video/webm",
     });
     const formData = new FormData();
-
-    formData.append(
-      "addMyDanceRequestDto",
-      uploaderString,
-      "addMyDanceRequestDto"
-    );
+    formData.append("addMyDanceRequestDto", jsonData);
     formData.append("videoFile", videofile);
     createChallengeResult(formData)
       .then((res) => {
@@ -41,13 +43,8 @@ function DanceResult(props: {
       .catch((error) => {
         console.error(error);
       });
-  }, [
-    props.dance.id,
-    props.scoreList,
-    props.score,
-    props.dance.title,
-    props.myBlob,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleBackBtnClick = () => {
     props.setMyUrl("");
@@ -55,7 +52,11 @@ function DanceResult(props: {
 
   return (
     <StyleContainer>
-      <DanceScore score={props.score} title={props.dance.title} />
+      <DanceScore
+        score={props.score}
+        setChallengeTitle={setChallengeTitle}
+        challengeTitle={challengeTitle}
+      />
       <DanceChart
         scoreList={props.scoreList}
         danceVideoRef={props.danceVideoRef}

@@ -87,6 +87,7 @@ function DanceCam(props: {
   let sumScore: number = 0;
   let countScore: number = 0;
   let scoreTempList: Score[] = [];
+  let stream: MediaStream;
 
   useEffect(() => {
     setupCam();
@@ -95,9 +96,8 @@ function DanceCam(props: {
 
   // 웹캠연결
   const setupCam = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia(VIDEO_CONFIG);
+    stream = await navigator.mediaDevices.getUserMedia(VIDEO_CONFIG);
     cam.current!.srcObject = stream;
-
     const options = { mimeType: "video/webm" };
     mediaRecorder = new MediaRecorder(stream, options);
     mediaRecorder.ondataavailable = (event: BlobEvent) =>
@@ -171,7 +171,11 @@ function DanceCam(props: {
       props.setScoreList(scoreTempList);
 
       mediaRecorder?.stop();
-      if (cam.current) cam.current.srcObject = null;
+      if (cam.current) {
+        cam.current.srcObject = null;
+      }
+      const tracks = stream.getTracks();
+      tracks.forEach((track) => track.stop());
       return;
     }
   };
