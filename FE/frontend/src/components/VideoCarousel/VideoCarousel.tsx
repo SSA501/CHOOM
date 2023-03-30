@@ -54,7 +54,7 @@ function VideoCarousel({
   };
 
   return (
-    <CarouselContainer width="90%" padding="5em" bgColor="lightgray">
+    <CarouselContainer width="90%" bgColor="lightgray">
       <LeftTextContainer>
         <CarouselTitle>
           <h2>{title}</h2>
@@ -76,7 +76,7 @@ function VideoCarousel({
         <Swiper
           modules={[Navigation, A11y]}
           // loop={true}
-          width={900}
+          width={1220}
           // spaceBetween={10}
           slidesPerView={3}
           // navigation
