@@ -14,11 +14,12 @@ function ProfilePage() {
   const dispatch = useAppDispatch();
 
   const showNormalModal = () => {
-    setNormalModalOpen(true);
     document.body.style.overflow = "hidden";
+    setNormalModalOpen(true);
   };
 
   const withdrawMember = () => {
+    document.body.style.overflow = "auto";
     withdraw()
       .then(() => {
         dispatch(updateLoginStatus(false));
@@ -27,8 +28,6 @@ function ProfilePage() {
         navigate("/");
       })
       .catch((err) => console.log(err));
-
-    document.body.style.overflow = "auto";
   };
 
   return (
