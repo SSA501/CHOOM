@@ -14,6 +14,7 @@ public class FindMyDanceResponseDto {
     private int score;
     private String matchRate;
     private String videoPath;
+    private int videoLength;
     private String title;
     private String youtubeUrl;
     private String tiktokUrl;
@@ -26,6 +27,7 @@ public class FindMyDanceResponseDto {
         this.score = myDance.getScore();
         this.matchRate = myDance.getMatchRate();
         this.videoPath = myDance.getVideoPath();
+        this.videoLength = myDance.getVideoLength();
         this.title = myDance.getTitle();
         this.youtubeUrl = myDance.getYoutubeUrl();
         this.tiktokUrl = myDance.getTiktokUrl();
