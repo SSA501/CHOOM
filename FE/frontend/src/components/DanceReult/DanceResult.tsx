@@ -58,6 +58,7 @@ function DanceResult(props: {
         score={props.score}
         setChallengeTitle={setChallengeTitle}
         challengeTitle={challengeTitle}
+        danceId={props.dance.id}
       />
       <DanceChart
         scoreList={props.scoreList}

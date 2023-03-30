@@ -3,10 +3,12 @@ import { CgCheckO, CgCloseO } from "react-icons/cg";
 import { MdOutlineMode } from "react-icons/md";
 import { Pie, PieChart, Cell } from "recharts";
 import { Header, EditIcon, ChallengeTitleContainer } from "./style";
+import { updateChallengeTitle } from "../../apis/challenge";
 function DanceScore(props: {
   score: number;
   challengeTitle: string;
   setChallengeTitle: (challenge: string) => void;
+  danceId: string;
 }) {
   const [currentScore, setCurrentScore] = React.useState(0); // 현재 점수를 상태로 관리
   const data = [
@@ -19,10 +21,10 @@ function DanceScore(props: {
   const cancelUpdateChallengeTitle = () => {
     setIsEditing(false);
   };
-  const updateChallengeTitle = () => {
+  const updateChallengeTitleClick = () => {
     setIsEditing(false);
     props.setChallengeTitle(inputValue);
-    // TODO: 제목 변경 요청하기
+    updateChallengeTitle(props.danceId, inputValue);
   };
 
   useEffect(() => {
@@ -59,7 +61,7 @@ function DanceScore(props: {
                 style={{ marginRight: ".3em" }}
               />
               <CgCheckO
-                onClick={updateChallengeTitle}
+                onClick={updateChallengeTitleClick}
                 style={{ color: "var(--green-color)" }}
               />
             </>

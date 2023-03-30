@@ -48,7 +48,7 @@ function DanceChart(props: {
           <XAxis dataKey="time">
             <Label value="초" offset={10} position="right" />
           </XAxis>
-          <YAxis />
+          <YAxis type="number" domain={[0, 100]} />
 
           <Tooltip />
           <Area
