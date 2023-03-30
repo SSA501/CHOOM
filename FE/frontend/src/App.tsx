@@ -8,7 +8,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import DetailPage from "./pages/DetailPage/DetailPage";
 import KakaoRedirectPage from "./pages/KakaoRedirectPage/KakaoRedirectPage";
 import { useAppDispatch, useAppSelector } from "./constants/types";
-import { axiosInstance } from "./apis/instance";
+import { axiosFileInstance, axiosInstance } from "./apis/instance";
 import { logout } from "./apis/user";
 import { updateAccessToken } from "./store/mainReducer";
 
@@ -17,6 +17,9 @@ function App() {
   // 헤더 디폴트 추가
   if (accessToken) {
     axiosInstance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${accessToken}`;
+    axiosFileInstance.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${accessToken}`;
   }
