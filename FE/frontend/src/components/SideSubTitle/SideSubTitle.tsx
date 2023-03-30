@@ -15,6 +15,8 @@ function SideSubTitle(props: {
   dance: Dance;
 }) {
   const handleKakaoClick = () => {
+    const shareUrl = "https://j8a501.p.ssafy.io/dance/" + props.dance.id;
+    console.log(shareUrl);
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
@@ -27,8 +29,8 @@ function SideSubTitle(props: {
           "점을 기록했습니다.",
         imageUrl: props.dance.thumbnailPath,
         link: {
-          mobileWebUrl: "https://j8a501.p.ssafy.io/dance/" + props.dance.id,
-          webUrl: "https://j8a501.p.ssafy.io/dance/" + props.dance.id,
+          mobileWebUrl: shareUrl,
+          webUrl: shareUrl,
         },
       },
       social: {
@@ -40,8 +42,8 @@ function SideSubTitle(props: {
         {
           title: "나도 도전하기",
           link: {
-            mobileWebUrl: "https://j8a501.p.ssafy.io/dance",
-            webUrl: "https://j8a501.p.ssafy.io/dance",
+            mobileWebUrl: shareUrl,
+            webUrl: shareUrl,
           },
         },
       ],
@@ -53,10 +55,21 @@ function SideSubTitle(props: {
     document.body.appendChild(a);
     a.setAttribute("style", "display: none");
     a.href = props.myUrl!;
-    a.download = props.dance.title + "_" + props.score + "점.webm";
+    const fileName = convertFileName(props.dance.title);
+    a.download = fileName + "_" + props.score + "점.webm";
     a.click();
     window.URL.revokeObjectURL(props.myUrl!);
   };
+
+  const convertFileName = (fileName: string) => {
+    var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+
+    if (special_pattern.test(fileName) == true) {
+      fileName = fileName.replace(/[`~!@#$%^&*|\\\'\";:\/?]/gi, "");
+    }
+    return fileName;
+  };
+
   return (
     <TitleContainer>
       <TitleText>{props.title}</TitleText>
