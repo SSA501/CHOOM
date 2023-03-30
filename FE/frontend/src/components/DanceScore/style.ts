@@ -37,10 +37,11 @@ const ChallengeTitleContainer = styled.div`
   textarea {
     padding-right: 2em;
     line-height: 1.2em;
-    font-size: 1.3em;
+    font-size: 2em;
     font-weight: 600;
     flex: 1;
   }
+  h3,
   textarea {
     resize: none;
     border: none;

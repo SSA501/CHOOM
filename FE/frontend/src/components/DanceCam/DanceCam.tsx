@@ -98,6 +98,7 @@ function DanceCam(props: {
   const setupCam = async () => {
     stream = await navigator.mediaDevices.getUserMedia(VIDEO_CONFIG);
     cam.current!.srcObject = stream;
+
     const options = { mimeType: "video/webm" };
     mediaRecorder = new MediaRecorder(stream, options);
     mediaRecorder.ondataavailable = (event: BlobEvent) =>
@@ -227,6 +228,15 @@ function DanceCam(props: {
   // 캠 그리기
   const drawCtx = (): void => {
     ctx.drawImage(cam.current!, 0, 0, 450, 800);
+
+    // x 축을 반전하기 위해 scale 메서드를 사용
+    ctx.scale(-1, 1);
+
+    // 이미지의 너비를 음수로 지정하여 x 축을 반전
+    ctx.drawImage(cam.current!, -450, 0, 450, 800);
+
+    // 다시 scale을 사용하여 원래대로 돌려놓기
+    ctx.scale(-1, 1);
   };
 
   // Guide그리기
