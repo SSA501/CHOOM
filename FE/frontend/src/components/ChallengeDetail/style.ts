@@ -3,22 +3,22 @@ import styled from "styled-components";
 const ChallengeDetailContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
+  height: 100%;
+  padding: 1em 0 2em;
 `;
 
 const ChallengeTitleContainer = styled.div`
-  padding: 1em 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: 480px;
   h3 {
-    padding-right: 2em;
     line-height: 1.2em;
     font-size: 1.3em;
     font-weight: 600;
   }
-  div {
+  /* div {
     position: relative;
     span {
       visibility: hidden;
@@ -34,12 +34,10 @@ const ChallengeTitleContainer = styled.div`
     }
     :hover span {
       visibility: visible;
-    }
-  }
+    } */
 `;
 
 const TableContainer = styled.div`
-  margin-top: 3em;
   background-color: var(--purple-color);
   border-radius: 25px;
   text-align: center;

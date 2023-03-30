@@ -25,10 +25,10 @@ function ChallengeDetail({
     <ChallengeDetailContainer>
       <ChallengeTitleContainer>
         <h3>{title}</h3>
-        <div>
+        {/* <div>
           <MdOutlineMode />
           <span>제목 편집</span>
-        </div>
+        </div> */}
       </ChallengeTitleContainer>
       <TableContainer>
         <div>
