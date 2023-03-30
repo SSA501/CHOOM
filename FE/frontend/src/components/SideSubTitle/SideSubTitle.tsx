@@ -17,23 +17,25 @@ function SideSubTitle(props: {
 }) {
   const [userData, setUserData] = useState<any>();
   useEffect(() => {
-    getUserDetail().then((res) => {
-      setUserData(res);
-    });
+    getUserDetail()
+      .then((res) => {
+        console.log(res);
+        setUserData(res.nickname);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
   const handleKakaoClick = () => {
+    console.log(props.dance);
+    console.log(userData);
     const shareUrl = "https://j8a501.p.ssafy.io/dance/" + props.dance.id;
     const videoUrl = props.dance.url;
-    console.log(shareUrl);
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
         title: props.dance.title,
-        description: `${userData?.nickname}님이
-          ${props.dance.title}
-          챌린지에서 
-          ${props.score}
-          점을 기록했습니다.`,
+        description: `${userData?.nickname}님이${props.dance.title}챌린지에서${props.score}점을 기록했습니다.`,
         imageUrl: props.dance.thumbnailPath,
         link: {
           mobileWebUrl: videoUrl,
