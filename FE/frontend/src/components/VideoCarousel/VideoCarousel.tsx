@@ -25,15 +25,21 @@ interface VideoCarouselProps {
   videoData: VideoDataProps[];
   title: string | React.ReactNode;
   text?: string;
+  isSearch?: boolean;
 }
 
-function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
+function VideoCarousel({
+  videoData,
+  title,
+  text,
+  isSearch,
+}: VideoCarouselProps) {
   const [swiper, setSwiper] = useState<any>();
   const [reachingEnd, setReachingEnd] = useState<boolean>(false);
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
   const navigate = useNavigate();
-  const handleClickVideo = (videoID: number | null): void => {
-    if (videoID === null) {
+  const handleClickVideo = (videoID: number | string | null): void => {
+    if (typeof videoID === "string") {
       // 서치에서 보여주는 비디오 중 DB에 저장 안되어 있는 경우 저장 요청
       addDance(videoID)
         .then((res) => {
@@ -81,18 +87,24 @@ function VideoCarousel({ videoData, title, text }: VideoCarouselProps) {
           }}
         >
           <div>
-            {videoData?.map(({ id, url, videoPath, thumbnailPath, title }) => (
-              <SwiperSlide key={id}>
-                <Video
-                  id={id}
-                  url={url}
-                  title={title}
-                  videoPath={`${SERVER_URL}${videoPath}`}
-                  thumbnailPath={thumbnailPath}
-                  handleClickVideo={() => handleClickVideo(id)}
-                />
-              </SwiperSlide>
-            ))}
+            {videoData?.map(
+              ({ id, youtubeId, url, videoPath, thumbnailPath, title }) => (
+                <SwiperSlide key={id}>
+                  <Video
+                    id={id}
+                    url={url}
+                    title={title}
+                    videoPath={`${SERVER_URL}${videoPath}`}
+                    thumbnailPath={thumbnailPath}
+                    handleClickVideo={() => {
+                      isSearch
+                        ? handleClickVideo(youtubeId)
+                        : handleClickVideo(id);
+                    }}
+                  />
+                </SwiperSlide>
+              )
+            )}
           </div>
         </Swiper>
         <ArrowBtnContainer>

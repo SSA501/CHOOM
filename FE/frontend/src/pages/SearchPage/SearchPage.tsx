@@ -250,7 +250,7 @@ function SearchPage() {
                 <p>불러오는 중...</p>
               </SpinnerContainer>
             ) : (
-              <VideoCarousel videoData={shortsData} title={"SHORTS"} />
+              <VideoCarousel videoData={shortsData} title={"SHORTS"} isSearch />
             )}
           </YoutubeChallengeContainer>
         </>

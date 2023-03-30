@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import MainPage from "./pages/MainPage/MainPage";
 import DancePage from "./pages/DancePage/DancePage";
@@ -25,6 +25,7 @@ function App() {
   }
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   // 토큰 갱신
   axiosInstance.interceptors.response.use(
     (response) => {
@@ -53,6 +54,7 @@ function App() {
           console.log("갱신실패", err);
           dispatch(updateLoginStatus(false));
           dispatch(updateAccessToken(""));
+          navigate("/");
           return logout();
         }
       }
