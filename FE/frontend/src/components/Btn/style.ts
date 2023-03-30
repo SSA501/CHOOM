@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-
+import { IconType } from "react-icons/lib";
 interface NormalBtnProps {
   width?: string;
   padding?: string;
@@ -46,4 +46,58 @@ const NomalBtn = styled.button<NormalBtnProps>`
   }
 `;
 
-export { LoginBtn, Icon, NomalBtn };
+const CircleBtnContainer = styled.div`
+  width: "60px";
+`;
+
+const CircleIconBtn = styled.button<{ time?: number }>`
+  position: relative;
+  border: none;
+  border-radius: 2rem;
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--purple-color);
+  background-color: var(--white-color);
+  color: var(--purple-color);
+  font-size: 20px;
+  margin-top: 20px;
+  line-height: 10px;
+  cursor: pointer;
+  & > svg {
+    font-size: 28px !important;
+  }
+  &:hover {
+    background-color: var(--purple-color);
+    color: var(--white-color);
+  }
+  &:disabled {
+    cursor: not-allowed;
+    border: 2px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    svg {
+      cursor: not-allowed !important;
+    }
+  }
+`;
+
+const CircleBtnLabel = styled.div<{
+  disabled?: string;
+  icon?: IconType;
+}>`
+  text-align: center;
+  color: ${(props) =>
+    props.disabled === "disabled" ? "#666666" : "var(--darkgray-color)"};
+  font-size: 16px;
+  margin-top: 12px;
+  width: 60px;
+`;
+
+export {
+  LoginBtn,
+  Icon,
+  NomalBtn,
+  CircleBtnContainer,
+  CircleIconBtn,
+  CircleBtnLabel,
+};

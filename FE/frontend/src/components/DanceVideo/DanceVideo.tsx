@@ -15,7 +15,7 @@ import {
   MdVolumeOff,
   MdStop,
 } from "react-icons/md";
-import CircleBtn from "../CircleBtn/CircleBtn";
+import CircleBtn from "../Btn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
 import { ChallengeVideo } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
@@ -29,7 +29,6 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
-      setTitle: (title: string) => void;
       challenge?: Challenge;
     },
     ref: React.ForwardedRef<any>
@@ -49,20 +48,17 @@ const DanceVideo = forwardRef(
 
     useEffect(() => {
       props.challenge?.status === 0 && startEstimate();
-      if (props.challenge?.status === 2) {
-        console.log(SERVER_URL + props.challenge.jsonPath);
-      }
-    });
+      props.challenge?.status === 2 &&
+        fetch(SERVER_URL + props.challenge.jsonPath)
+          .then((response) => response.json())
+          .then((data) => {
+            props.setPoseList(data);
+          });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // 분석시작
     const startEstimate = async () => {
-      await new Promise((resolve) => {
-        if (video.current)
-          video.current.onloadeddata = () => {
-            resolve(video);
-          };
-      });
-
       if (video.current) {
         video.current.currentTime = 0;
         video.current.play();
@@ -70,19 +66,6 @@ const DanceVideo = forwardRef(
         await runFrame();
       }
     };
-
-    // // JSON FIle만들기
-    // const createJson = () => {
-    //   const fs = require("fs");
-    //   const poseListJSON = JSON.stringify(poseListTemp);
-    //   fs.writeFile("poseList.json", poseListJSON, "utf8", (err: Error) => {
-    //     if (err) {
-    //       console.log("Error saving pose list: ", err);
-    //     } else {
-    //       console.log("Pose list saved successfully.");
-    //     }
-    //   });
-    // };
 
     // 분석
     const runFrame = async () => {
@@ -182,10 +165,11 @@ const DanceVideo = forwardRef(
         {!props.myUrl ? (
           <MainContainer>
             <ChallengeVideo
-              src={props.challenge?.videoPath}
+              src={SERVER_URL + props.challenge?.videoPath}
               width={450}
               height={800}
               ref={video}
+              controls
             />
 
             <BtnContainer>
@@ -226,11 +210,6 @@ const DanceVideo = forwardRef(
               controls
             />
           </MainContainer>
-        )}
-        {!props.myUrl && (
-          <div>
-            <button onClick={() => startEstimate()}>시작</button>
-          </div>
         )}
       </div>
     );

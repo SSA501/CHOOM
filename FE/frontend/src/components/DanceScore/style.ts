@@ -1,14 +1,51 @@
-import styled from "styled-components";
-
+import styled, { css } from "styled-components";
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-const Title = styled.div`
-  font-size: 48px;
-  line-height: 100px;
-  margin-left: 48px;
-  height: 100px;
-  /* border-bottom: 2px solid black; */
+const EditIcon = styled.div<{ isEditing: boolean }>`
+  position: relative;
+  ${({ isEditing }) =>
+    !isEditing &&
+    css`
+      span {
+        visibility: hidden;
+        position: absolute;
+        width: 4.4em;
+        background-color: var(--lightgray-color);
+        color: var(--darkgray-color);
+        text-align: center;
+        padding: 5px;
+        border-radius: 6px;
+        bottom: 1.75em;
+        margin-left: -2.5em;
+      }
+      :hover span {
+        visibility: visible;
+      }
+    `}
 `;
-export { Header, Title };
+
+const ChallengeTitleContainer = styled.div`
+  margin-left: 48px;
+  padding: 1em 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 600px;
+  h3,
+  textarea {
+    padding-right: 2em;
+    line-height: 1.2em;
+    font-size: 1.3em;
+    font-weight: 600;
+    flex: 1;
+  }
+  textarea {
+    resize: none;
+    border: none;
+    border-bottom: 3px solid black;
+  }
+`;
+
+export { Header, EditIcon, ChallengeTitleContainer };
