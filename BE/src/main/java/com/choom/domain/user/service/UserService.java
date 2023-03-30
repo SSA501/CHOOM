@@ -1,8 +1,8 @@
 package com.choom.domain.user.service;
 
 import com.choom.domain.mydance.entity.MyDanceRepository;
-import com.choom.domain.user.dto.UserMyDanceDto;
 import com.choom.domain.user.dto.UserDetailsDto;
+import com.choom.domain.user.dto.UserMyDanceDto;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
 package com.choom.domain.user.service;
 
-import com.choom.domain.user.entity.Blacklist;
 import com.choom.domain.user.entity.BlacklistRedisRepository;
 import com.choom.domain.user.entity.RefreshToken;
 import com.choom.domain.user.entity.RefreshTokenRedisRepository;
@@ -8,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
