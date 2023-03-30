@@ -50,8 +50,8 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         String profileImagePath = user.getProfileImage();
         log.info(profileImagePath);
-        fileService.fileDelete(profileImagePath.substring(25));
-        String newProfileImagePath = "https://j8a501.p.ssafy.io"+ fileService.fileUpload("user", profileImage);
+        fileService.fileDelete(profileImagePath);
+        String newProfileImagePath = fileService.fileUpload("user", profileImage);
         user.updateProfileImage(newProfileImagePath);
         return;
     }
