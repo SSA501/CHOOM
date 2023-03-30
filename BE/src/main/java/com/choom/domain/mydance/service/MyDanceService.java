@@ -38,13 +38,12 @@ public class MyDanceService {
     private final DanceRepository danceRepository;
 
     @Transactional
-    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile) throws IOException {
+    public AddMyDanceResponseDto addMyDance(Long userId, AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
 
         // MY_DANCE insert
-        // user 더미데이터
-        User user = userRepository.findById(1L)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         Dance dance = danceRepository.findById(myDanceAddRequestDto.getDanceId())
                 .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
@@ -65,9 +64,16 @@ public class MyDanceService {
 
     }
 
-    public Resource downloadMyDance(Long myDanceId, HttpHeaders headers) throws IOException {
+    public Resource downloadMyDance(Long userId, Long myDanceId, HttpHeaders headers) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        // 내 챌린지 영상
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+
         // 내 챌린지 영상 경로 찾기
-        String videoPath = myDanceRepository.findById(myDanceId).get().getVideoPath();
+        String videoPath = myDance.getVideoPath();
         log.info(videoPath);
 
         // file -> Resource
@@ -77,8 +83,11 @@ public class MyDanceService {
     }
 
     @Transactional
-    public void removeMyDance(Long myDanceId) throws UnknownHostException {
-        MyDance myDance = myDanceRepository.findById(myDanceId)
+    public void removeMyDance(Long userId, Long myDanceId) throws UnknownHostException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
                 .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
         // 내 챌린지 영상 삭제
@@ -96,9 +105,8 @@ public class MyDanceService {
                 .build();
     }
 
-    public Page<FindMyDanceResponseDto> findAllMyDance(Pageable pageable) {
-        // user 더미데이터
-        User user = userRepository.findById(1L)
+    public Page<FindMyDanceResponseDto> findAllMyDance(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
         Page<MyDance> myDancePage = myDanceRepository.findPageByUser(user, pageable);
@@ -110,8 +118,11 @@ public class MyDanceService {
     }
 
     @Transactional
-    public FindMyDanceResponseDto modifyTitle(Long myDanceId, ModifyMyDanceRequestDto modifyMyDanceRequestDto) {
-        MyDance myDance = myDanceRepository.findById(myDanceId)
+    public FindMyDanceResponseDto modifyTitle(Long userId, Long myDanceId, ModifyMyDanceRequestDto modifyMyDanceRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
                 .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
         myDance.updateTitle(modifyMyDanceRequestDto.getTitle());
@@ -122,8 +133,11 @@ public class MyDanceService {
     }
 
     @Transactional
-    public AddShortsResponseDto addShorts(Long myDanceId, String code) {
-        MyDance myDance = myDanceRepository.findById(myDanceId)
+    public AddShortsResponseDto addShorts(Long userId, Long myDanceId, String code) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
                 .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
         String youtubeId = uploadVideo(myDance.getVideoPath(), myDance.getTitle(), code);

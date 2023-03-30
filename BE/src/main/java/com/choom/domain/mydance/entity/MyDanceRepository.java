@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MyDanceRepository extends JpaRepository<MyDance, Long>, MyDanceCustomRepository{
     Page<MyDance> findPageByUser(User user, Pageable pageable);
 
     UserMyDanceDto findMyDanceInfoByUser(User user);
+
+    Optional<MyDance> findByIdAndUser(Long myDanceId, User user);
 }
