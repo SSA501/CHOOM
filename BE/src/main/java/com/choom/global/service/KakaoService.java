@@ -1,4 +1,4 @@
-package com.choom.domain.user.service;
+package com.choom.global.service;
 
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.google.gson.JsonElement;
