@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SmallMenu from "../SmallMenu/SmallMenu";
 import {
@@ -18,7 +18,12 @@ import { TbSettings } from "react-icons/tb";
 import { ShadowContainer } from "../ShadowContainer/style";
 import { useAppDispatch } from "../../constants/types";
 import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
-import { logout } from "../../apis/user";
+import {
+  checkNickname,
+  getUserDetail,
+  logout,
+  updateUserDetail,
+} from "../../apis/user";
 
 type ProfileInfo = {
   nickname: string;
@@ -34,12 +39,13 @@ type ProfileProps = {
 
 function ProfileCard(props: ProfileProps) {
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
-    nickname: "왕십리 춤신춤킹",
-    profileImg: "/assets/profile_sample.jpg",
-    challenge: 27,
-    score: 9,
-    time: 123,
+    nickname: "닉네임",
+    profileImg: "",
+    challenge: 0,
+    score: 0,
+    time: 0,
   });
+  const [profileImgFile, setProfileImgFile] = useState<File | undefined>();
   const [tmpProfileImg, setTmpProfileImg] = useState<string>(
     profileInfo.profileImg
   );
@@ -51,9 +57,33 @@ function ProfileCard(props: ProfileProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const showSmallMenu = () => {
-    setSmallMenuOpen(!smallMenuOpen);
-  };
+  useEffect(() => {
+    getUserDetail()
+      .then((res) => {
+        if (res.statusCode === 200) {
+          setProfileInfo({
+            nickname: res.data.nickname,
+            profileImg: res.data.profileImage,
+            challenge: res.data.challengeCount,
+            score: res.data.averageScore,
+            time: res.data.challengeTime,
+          });
+          getFileFomrUrlImage(res.data.profileImage)
+            .then((file) => setProfileImgFile(file))
+            .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  async function getFileFomrUrlImage(url: string) {
+    const res = await fetch(url);
+    const data = await res.blob();
+    const fileName = url.split("/").pop();
+    const fileExt = url.split(".").pop();
+    const metaData = { type: `image/${fileExt}` };
+    return new File([data], fileName ? fileName : "profile image", metaData);
+  }
 
   const menuItemList = [
     {
@@ -70,6 +100,10 @@ function ProfileCard(props: ProfileProps) {
       handleClick: () => props.showNormalModal(),
     },
   ];
+
+  const showSmallMenu = () => {
+    setSmallMenuOpen(!smallMenuOpen);
+  };
 
   const handleLogout = () => {
     logout()
@@ -88,6 +122,7 @@ function ProfileCard(props: ProfileProps) {
       reader.onload = (e) => {
         if (e.target) {
           setTmpProfileImg(e.target.result as string);
+          setProfileImgFile(files[0]);
         }
       };
       reader.readAsDataURL(files[0]);
@@ -95,31 +130,57 @@ function ProfileCard(props: ProfileProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    checkNicknameOverlap(e.target.value);
     setTmpNickname(e.target.value);
-    if (profileInfo.nickname === e.target.value) {
-      setNicknameOverlap(true);
-    } else {
-      setNicknameOverlap(false);
-    }
+  };
+
+  const checkNicknameOverlap = (nickname: string) => {
+    checkNickname(nickname)
+      .then((res) => {
+        if (res.statusCode === 200) {
+          setNicknameOverlap(false);
+        } else {
+          setNicknameOverlap(true);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const cancelEditProfile = () => {
-    setTmpProfileImg(profileInfo.profileImg ?? "");
+    setTmpProfileImg(profileInfo.profileImg);
     setTmpNickname(profileInfo.nickname);
     setEditProfileMode(false);
   };
 
   const editProfile = () => {
-    // TODO: 프로필 수정 요청 구현
-    const newProfileInfo = {
-      nickname: tmpNickname,
-      profileImg: tmpProfileImg,
-      challenge: profileInfo.challenge,
-      score: profileInfo.score,
-      time: profileInfo.time,
-    };
-    setProfileInfo(newProfileInfo);
-    setEditProfileMode(false);
+    checkNicknameOverlap(tmpNickname);
+
+    if (!nicknameOverlap) {
+      if (!profileImgFile) {
+        alert("프로필 사진을 등록해주세요!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("nickname", tmpNickname);
+      formData.append("profileImage", profileImgFile);
+
+      updateUserDetail(formData)
+        .then((res) => {
+          if (res.statusCode === 200) {
+            const newProfileInfo = {
+              nickname: tmpNickname,
+              profileImg: tmpProfileImg,
+              challenge: profileInfo.challenge,
+              score: profileInfo.score,
+              time: profileInfo.time,
+            };
+            setProfileInfo(newProfileInfo);
+            setEditProfileMode(false);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (

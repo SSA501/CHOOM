@@ -1,12 +1,17 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const ProfileImg = styled.div<{ BgImg: string }>`
   position: relative;
   width: 150px;
   height: 150px;
   border-radius: 75px;
-  background-image: url(${(props) => props.BgImg});
-  background-size: cover;
+  ${(props) =>
+    props.BgImg &&
+    css`
+      background-image: url(${props.BgImg});
+      background-size: cover;
+    `}
+  background-color: var(--lightgray-color);
 `;
 
 const AddProfileImgBtn = styled.label`
