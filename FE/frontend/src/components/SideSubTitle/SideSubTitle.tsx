@@ -20,15 +20,13 @@ function SideSubTitle(props: {
     getUserDetail()
       .then((res) => {
         console.log(res);
-        setUserData(res.data.nickname);
+        setUserData(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
   const handleKakaoClick = () => {
-    console.log(props.dance);
-    console.log(userData);
     const shareUrl = "https://j8a501.p.ssafy.io/dance/" + props.dance.id;
     const videoUrl = props.dance.url;
     window.Kakao.Share.sendDefault({
