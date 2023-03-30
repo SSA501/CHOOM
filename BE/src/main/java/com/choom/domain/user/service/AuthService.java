@@ -1,7 +1,7 @@
 package com.choom.domain.user.service;
 
 import com.choom.domain.user.dto.KakaoOAuth2Dto;
-import com.choom.domain.user.dto.KakaoUserInfoDto;
+import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
 import com.choom.global.service.GoogleService;
@@ -28,7 +28,7 @@ public class AuthService {
 
     @Transactional
     public TokenDto kakaoLogin(String code) {
-        KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
+        SocialUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
         String nickname = userInfo.getNickname();
         String profileImage = userInfo.getProfileImage();
@@ -45,7 +45,7 @@ public class AuthService {
 
     @Transactional
     public TokenDto socialLogin(String type, String code) {
-        KakaoUserInfoDto userInfo = null;
+        SocialUserInfoDto userInfo = null;
         SocialType socialType = null;
 
         if ("GOOGLE".equals(type)) {

@@ -1,6 +1,6 @@
 package com.choom.global.service;
 
-import com.choom.domain.user.dto.KakaoUserInfoDto;
+import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
@@ -50,7 +50,7 @@ public class GoogleService {
 
     private static String VIDEO_FILE_FORMAT = "video/*";
 
-    public KakaoUserInfoDto getUserInfo(String code) {
+    public SocialUserInfoDto getUserInfo(String code) {
         String accessToken = getAccessToken(code);
         log.info("구글 accessToken : " + accessToken);
         return getUserInfoByToken(accessToken);
@@ -106,7 +106,7 @@ public class GoogleService {
         return access_Token;
     }
 
-    private KakaoUserInfoDto getUserInfoByToken(String accessToken) {
+    private SocialUserInfoDto getUserInfoByToken(String accessToken) {
 
         String reqURL = "https://www.googleapis.com/oauth2/v2/userinfo";
 
@@ -143,7 +143,7 @@ public class GoogleService {
 
             br.close();
 
-            return new KakaoUserInfoDto(identifier, nickname, profileImage);
+            return new SocialUserInfoDto(identifier, nickname, profileImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
