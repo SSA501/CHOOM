@@ -89,7 +89,7 @@ function VideoCarousel({
           <div>
             {videoData?.map(
               ({ id, youtubeId, url, videoPath, thumbnailPath, title }) => (
-                <SwiperSlide key={id}>
+                <SwiperSlide key={title}>
                   <Video
                     id={id}
                     url={url}
