@@ -68,8 +68,8 @@ function ProfileCard(props: ProfileProps) {
             score: res.data.averageScore ?? 0,
             time: res.data.challengeTime ?? 0,
           });
-          setTmpNickname(profileInfo.nickname);
-          setTmpProfileImg(profileInfo.profileImg);
+          setTmpNickname(res.data.nickname);
+          setTmpProfileImg(res.data.profileImage);
           getFileFomrUrlImage(res.data.profileImage)
             .then((file) => setProfileImgFile(file))
             .catch((err) => console.log(err));

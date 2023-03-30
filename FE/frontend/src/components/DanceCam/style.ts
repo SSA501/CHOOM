@@ -9,6 +9,7 @@ const CamContainer = styled.div`
 const MyCam = styled.video`
   position: absolute;
   border-radius: 1rem;
+  transform: scale(-1, 1);
 `;
 const MyCanvas = styled.canvas`
   position: absolute;

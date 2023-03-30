@@ -13,8 +13,10 @@ export const getChallengeDetail = async (danceId: string) => {
 };
 
 // 챌린지 제목 수정하기
-export const updateChallengeTitle = async () => {
-  const response = await axiosInstance.post("");
+export const updateChallengeTitle = async (danceId: string, title: string) => {
+  const response = await axiosInstance.put(`mydance/${danceId}/title`, {
+    title: title,
+  });
   return response.data;
 };
 

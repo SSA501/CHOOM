@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   TitleContainer,
   TitleBar,
@@ -6,6 +6,7 @@ import {
   ContentsContainer,
 } from "./style";
 import { Dance } from "../../constants/types";
+import { getUserDetail } from "../../apis/user";
 
 function SideSubTitle(props: {
   title: string;
@@ -14,23 +15,29 @@ function SideSubTitle(props: {
   myUrl?: string;
   dance: Dance;
 }) {
+  const [userData, setUserData] = useState<any>();
+  useEffect(() => {
+    getUserDetail()
+      .then((res) => {
+        console.log(res);
+        setUserData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   const handleKakaoClick = () => {
     const shareUrl = "https://j8a501.p.ssafy.io/dance/" + props.dance.id;
-    console.log(shareUrl);
+    const videoUrl = props.dance.url;
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
         title: props.dance.title,
-        description:
-          "주대선님이 " +
-          props.dance.title +
-          " 챌린지에서 " +
-          props.score +
-          "점을 기록했습니다.",
+        description: `${userData?.nickname}님이${props.dance.title}챌린지에서${props.score}점을 기록했습니다.`,
         imageUrl: props.dance.thumbnailPath,
         link: {
-          mobileWebUrl: shareUrl,
-          webUrl: shareUrl,
+          mobileWebUrl: videoUrl,
+          webUrl: videoUrl,
         },
       },
       social: {
