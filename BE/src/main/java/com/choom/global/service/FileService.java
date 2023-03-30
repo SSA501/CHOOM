@@ -88,7 +88,8 @@ public class FileService {
 
             //서버에 파일 저장
             String hostname = InetAddress.getLocalHost().getHostName();
-            String name = nickname + ".";
+            UUID uuid = UUID.randomUUID();
+            String name = nickname + uuid.toString() + ".";
             String path = "";
             File file = null;
             String extension = "png";

@@ -75,11 +75,10 @@ public class AuthService {
 
     @Transactional
     public User addUser(String identifier, String nickname, String profileImage, SocialType socialType) {
-        String uniqueNickname = nickname + UUID.randomUUID().toString();
-        String profileImagePath = fileService.saveProfileImage("user", uniqueNickname, profileImage);
+        String profileImagePath = fileService.saveProfileImage("user", nickname, profileImage);
         User user = User.builder()
                 .identifier(identifier)
-                .nickname(uniqueNickname)
+                .nickname(nickname)
                 .profileImage(profileImagePath)
                 .socialType(socialType)
                 .build();
