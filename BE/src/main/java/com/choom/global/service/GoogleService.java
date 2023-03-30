@@ -31,15 +31,21 @@ public class GoogleService {
 
     private static String GOOGLE_CLIENT_ID;
     private static String GOOGLE_CLIENT_SECRET;
+    private static String GOOGLE_REDIRECT_URI;
 
     @Value("${google.client-id}")
-    public void setGoogleClientId(String value){
+    public void setGoogleClientId(String value) {
         GOOGLE_CLIENT_ID = value;
     }
 
     @Value("${google.client-secret}")
-    public void setGoogleClientSecret(String value){
+    public void setGoogleClientSecret(String value) {
         GOOGLE_CLIENT_SECRET = value;
+    }
+
+    @Value("${redirect-uri.google}")
+    public void setGoogleRedirectUri(String value) {
+        GOOGLE_REDIRECT_URI = value;
     }
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -74,7 +80,7 @@ public class GoogleService {
             sb.append("&code=" + code);
             sb.append("&client_id=" + GOOGLE_CLIENT_ID);
             sb.append("&client_secret=" + GOOGLE_CLIENT_SECRET);
-            sb.append("&redirect_uri=" + "https://j8a501.p.ssafy.io/login/oauth2/google");
+            sb.append("&redirect_uri=" + GOOGLE_REDIRECT_URI);
             sb.append("&grant_type=" + "authorization_code");
             bw.write(sb.toString());
             bw.flush();
