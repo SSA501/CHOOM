@@ -83,11 +83,12 @@ const DanceVideo = forwardRef(
         alert("완료");
         console.log(poseListTemp);
         props.setPoseList(poseListTemp);
+        clearInterval(intervalId);
         return;
       }
 
       await renderResult();
-      requestAnimationFrame(runFrame);
+      // requestAnimationFrame(runFrame);
     };
 
     // 결과저장
@@ -110,6 +111,9 @@ const DanceVideo = forwardRef(
         poseListTemp.push({ keypoints: newKpts });
       }
     };
+
+    // 100ms마다 renderResult() 함수 호출
+    let intervalId = setInterval(renderResult, 1000 / 10);
 
     const playVideo = () => {
       if (video.current) video.current.currentTime = 0;
