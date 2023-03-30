@@ -41,6 +41,7 @@ const TableContainer = styled.div`
   background-color: var(--purple-color);
   border-radius: 25px;
   text-align: center;
+  font-size: 1.1rem;
 
   div {
     display: flex;

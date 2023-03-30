@@ -71,7 +71,7 @@ function SearchPage() {
         })
         .catch((err) => console.log(err));
     }
-  }, [query, pageToken]);
+  }, [query, pageToken, size]);
 
   return (
     <>
@@ -106,7 +106,14 @@ function SearchPage() {
                 <Spinner text={"검색결과 불러오는 중..."} />
               </>
             ) : (
-              <VideoCarousel videoData={shortsData} title={"SHORTS"} isSearch />
+              <VideoCarousel
+                videoData={shortsData}
+                title={"SHORTS"}
+                isSearch
+                text={
+                  "유튜브 쇼츠 중 인기 영상을 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요"
+                }
+              />
             )}
           </YoutubeChallengeContainer>
         </>
