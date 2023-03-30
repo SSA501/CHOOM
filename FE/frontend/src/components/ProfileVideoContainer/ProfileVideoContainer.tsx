@@ -10,10 +10,14 @@ function ProfilePage() {
   const [videoList, setVideoList] = useState<"History" | "Likes">("History");
   const [videoItemList, setVideoItemList] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState<
+    | { name: "높은 등급순"; sort: "score,desc" }
+    | { name: "낮은 등급순"; sort: "score,asc" }
+    | { name: "최신순"; sort: "createdAt,desc" }
+    | { name: "오래된순"; sort: "createdAt,asc" }
+  >({ name: "높은 등급순", sort: "score,desc" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectHistory, setSelectHistory] = useState<boolean>(true);
-  const [selectedDropMenu, setSelectedDropMenu] =
-    useState<string>("높은 등급순");
   const [dropMenuOpen, setDropMenuOpen] = useState<boolean>(false);
   const target = useRef<HTMLDivElement>(null);
 
@@ -68,64 +72,76 @@ function ProfilePage() {
     setVideoItemList([]);
     if (mode === "History") {
       setSelectHistory(true);
-      setSelectedDropMenu(historyDropMenuItemList[0].name);
+      historyDropMenuItemList[0].handleClick();
     } else {
       setSelectHistory(false);
-      setSelectedDropMenu(likesDropMenuItemList[0].name);
+      likesDropMenuItemList[0].handleClick();
     }
   };
 
-  const historyDropMenuItemList = [
+  useEffect(() => {
+    // TODO: 정렬 요청
+    console.log(sort);
+    setDropMenuOpen(!dropMenuOpen);
+  }, [sort]);
+
+  const historyDropMenuItemList: {
+    name: "높은 등급순" | "낮은 등급순" | "최신순" | "오래된순";
+    handleClick: () => void;
+  }[] = [
     {
       name: "높은 등급순",
-      handleClick: () => {
-        // TODO: 정렬 기능 추가
-        setSelectedDropMenu("높은 등급순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
+      handleClick: () =>
+        setSort({
+          name: "높은 등급순",
+          sort: "score,desc",
+        }),
     },
     {
       name: "낮은 등급순",
-      handleClick: () => {
-        // TODO: 정렬 기능 추가
-        setSelectedDropMenu("낮은 등급순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
+      handleClick: () =>
+        setSort({
+          name: "낮은 등급순",
+          sort: "score,asc",
+        }),
     },
     {
       name: "최신순",
-      handleClick: () => {
-        // TODO: 정렬 기능 추가
-        setSelectedDropMenu("최신순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
+      handleClick: () =>
+        setSort({
+          name: "최신순",
+          sort: "createdAt,desc",
+        }),
     },
     {
       name: "오래된순",
-      handleClick: () => {
-        // TODO: 정렬 기능 추가
-        setSelectedDropMenu("오래된순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
+      handleClick: () =>
+        setSort({
+          name: "오래된순",
+          sort: "createdAt,asc",
+        }),
     },
   ];
 
-  const likesDropMenuItemList = [
+  const likesDropMenuItemList: {
+    name: "최신순" | "오래된순";
+    handleClick: () => void;
+  }[] = [
     {
       name: "최신순",
-      handleClick: () => {
-        // TODO: 정렬 기능 추가
-        setSelectedDropMenu("최신순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
+      handleClick: () =>
+        setSort({
+          name: "최신순",
+          sort: "createdAt,desc",
+        }),
     },
     {
       name: "오래된순",
-      handleClick: () => {
-        // TODO: 정렬 기능 추가
-        setSelectedDropMenu("오래된순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
+      handleClick: () =>
+        setSort({
+          name: "오래된순",
+          sort: "createdAt,asc",
+        }),
     },
   ];
 
@@ -149,7 +165,7 @@ function ProfilePage() {
         <DropBtn onClick={showDropMenu}>
           {dropMenuOpen && <CgZeit />}
           {!dropMenuOpen && <CgZeit style={{ transform: "scaleY(-1)" }} />}
-          {selectedDropMenu}
+          {sort.name}
         </DropBtn>
         {dropMenuOpen && (
           <SmallMenu

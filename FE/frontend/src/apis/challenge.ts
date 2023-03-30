@@ -71,3 +71,15 @@ export const removeBookmark = async (danceId: number) => {
   const response = await axiosInstance.delete(`/bookmark/${danceId}`);
   return response.data;
 };
+
+// 즐겨찾기 목록 받기
+export const getBookmarkList = async (
+  page: number,
+  size: number,
+  sort: "createdAt,desc" | "createdAt,asc"
+) => {
+  const response = await axiosInstance.get(
+    `/bookmark?page=${page}&size=${size}&sort=${sort}`
+  );
+  return response.data;
+};
