@@ -62,6 +62,8 @@ public class DanceService {
     private static final String YOUTUBE_SEARCH_FIELDS1 = "nextPageToken, prevPageToken, pageInfo, items(id/videoId,snippet/title,snippet/channelTitle)";
     private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/publishedAt, snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
 
+    private static final String SEARCH_SUFFIX  = "#챌린지 #댄스 #쇼츠 #shorts";
+
     private static String YOUTUBE_APIKEY;
     @Value("${apikey.youtube}")
     public void setKey(String value){
@@ -77,7 +79,6 @@ public class DanceService {
 
     public DanceSearchDto searchDance(String keyword, String pageToken,Long size) {
         log.info("Starting YouTube search... " +keyword+" pageToken : "+pageToken);
-
         long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
         long elapsedTime = 0L; // 경과 시간을 초기화합니다.
         long maxTime = 3000L; // 최대 실행 시간을 3초로 설정합니다.
@@ -91,7 +92,7 @@ public class DanceService {
             if (youtube != null) {
                 YouTube.Search.List search = youtube.search().list("snippet");
                 search.setKey(YOUTUBE_APIKEY);
-                search.setQ(keyword);
+                search.setQ(keyword+" "+SEARCH_SUFFIX);
                 search.setType("video");
                 search.setVideoDuration("short");
                 search.setMaxResults(size);
