@@ -18,7 +18,8 @@ const RankContainer = styled.div`
 `;
 
 const ProfilePicContainer = styled.div`
-  max-width: 60px;
+  width: 60px;
+  height: 60px;
   img {
     width: 100%;
     border-radius: 50%;

@@ -53,159 +53,16 @@ function SearchPage() {
       bookmarkeCount: 16,
     },
   ]);
-  const [shortsData, setShortsData] = useState([
-    {
-      id: null,
-      title: "자동차 트렁크 챌린지ㅋㅋㅋㅋㅋㅋㅋㅋ",
-      url: "https://www.youtube.com/shorts/esF2cL0iM-4",
-      thumbnailPath: "https://i.ytimg.com/vi/esF2cL0iM-4/hqdefault.jpg",
-      sec: 27,
-      likeCount: 55845,
-      viewCount: 3616286,
-      userCount: 0,
-      youtubeId: "esF2cL0iM-4",
-      status: 0,
-      publishedAt: "2023-03-08",
-      bookmarked: false,
-    },
-    {
-      id: 8,
-      title: "⚠️레슬링아님⚠️ 파트너 챌린지‼️ Partner Challenge",
-      url: "https://www.youtube.com/shorts/vyViJL6USI0",
-      thumbnailPath: "https://i.ytimg.com/vi/vyViJL6USI0/hqdefault.jpg",
-      sec: 24,
-      likeCount: 89457,
-      viewCount: 2207482,
-      userCount: 0,
-      youtubeId: "vyViJL6USI0",
-      status: 0,
-      publishedAt: "2023-03-17",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title:
-        "지각한 초딩들의 달리기폼 ㅋㅋㅋ 런런챌린지 #모니카 #달리기춤 #shorts",
-      url: "https://www.youtube.com/shorts/HK_cXxNF8Os",
-      thumbnailPath: "https://i.ytimg.com/vi/HK_cXxNF8Os/hqdefault.jpg",
-      sec: 29,
-      likeCount: 25261,
-      viewCount: 1093269,
-      userCount: 0,
-      youtubeId: "HK_cXxNF8Os",
-      status: 0,
-      publishedAt: "2023-03-08",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title: "가벼우면 유리한 챌린지⁉️🤔 Partner Challenge",
-      url: "https://www.youtube.com/shorts/N3teZTwBDOo",
-      thumbnailPath: "https://i.ytimg.com/vi/N3teZTwBDOo/hqdefault.jpg",
-      sec: 35,
-      likeCount: 0,
-      viewCount: 821516,
-      userCount: 0,
-      youtubeId: "N3teZTwBDOo",
-      status: 0,
-      publishedAt: "2023-03-27",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title:
-        "우리만의 자유로운 Nineteen’s 'Kitsch' 😈 #Kitsch #Kitschchallenge #키치챌린지 #IVE #아이브 #IveIVE #아이해브아이브 #Shorts",
-      url: "https://www.youtube.com/shorts/NoSZuXumTQ8",
-      thumbnailPath: "https://i.ytimg.com/vi/NoSZuXumTQ8/hqdefault.jpg",
-      sec: 25,
-      likeCount: 67897,
-      viewCount: 779945,
-      userCount: 0,
-      youtubeId: "NoSZuXumTQ8",
-      status: 0,
-      publishedAt: "2023-03-27",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title:
-        "K-I-T-S-C-H 😎 #Kitsch #KitschChallenge #키치챌린지 #IVE #아이브 #IveIVE #아이해브아이브 #Shorts",
-      url: "https://www.youtube.com/shorts/m2GzxR6iRXo",
-      thumbnailPath: "https://i.ytimg.com/vi/m2GzxR6iRXo/hqdefault.jpg",
-      sec: 13,
-      likeCount: 53433,
-      viewCount: 523196,
-      userCount: 0,
-      youtubeId: "m2GzxR6iRXo",
-      status: 0,
-      publishedAt: "2023-03-28",
-      bookmarked: false,
-    },
-    {
-      id: 9,
-      title: "웃음참기 챌린지 #shorts",
-      url: "https://www.youtube.com/shorts/CKmpxarrysM",
-      thumbnailPath: "https://i.ytimg.com/vi/CKmpxarrysM/hqdefault.jpg",
-      sec: 38,
-      likeCount: 11613,
-      viewCount: 456916,
-      userCount: 0,
-      youtubeId: "CKmpxarrysM",
-      status: 0,
-      publishedAt: "2023-03-24",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title: "아돈띵댓 챌린지🐻👧🏻 #Shorts",
-      url: "https://www.youtube.com/shorts/lGUJTlgYJ1E",
-      thumbnailPath: "https://i.ytimg.com/vi/lGUJTlgYJ1E/hqdefault.jpg",
-      sec: 15,
-      likeCount: 3239,
-      viewCount: 187550,
-      userCount: 0,
-      youtubeId: "lGUJTlgYJ1E",
-      status: 0,
-      publishedAt: "2023-02-26",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title: "수아챌린지란 무엇인가? (feat.서울동구고)",
-      url: "https://www.youtube.com/shorts/LPnAbnOe5lk",
-      thumbnailPath: "https://i.ytimg.com/vi/LPnAbnOe5lk/hqdefault.jpg",
-      sec: 13,
-      likeCount: 561,
-      viewCount: 30438,
-      userCount: 0,
-      youtubeId: "LPnAbnOe5lk",
-      status: 0,
-      publishedAt: "2023-03-22",
-      bookmarked: false,
-    },
-    {
-      id: null,
-      title: "Coach Han challenge - VS. PD Shin",
-      url: "https://www.youtube.com/shorts/jWHM0fIyI98",
-      thumbnailPath: "https://i.ytimg.com/vi/jWHM0fIyI98/hqdefault.jpg",
-      sec: 59,
-      likeCount: 9,
-      viewCount: 332,
-      userCount: 0,
-      youtubeId: "jWHM0fIyI98",
-      status: 0,
-      publishedAt: "2023-03-29",
-      bookmarked: false,
-    },
-  ]);
-  const [page, setPage] = useState<number>(0);
+  const [shortsData, setShortsData] = useState([]);
+  const [size, setSize] = useState<number>(50); // size 50 고정
   const [pageToken, setPageToken] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (query) {
+      console.log(query);
       setIsLoading(true);
-      searchDance(query, pageToken, 50) // size 50 고정
+      searchDance(query, pageToken, size)
         .then((res) => {
           console.log(res.data);
           setTopData(res?.data?.dbSearch);
@@ -214,7 +71,7 @@ function SearchPage() {
         })
         .catch((err) => console.log(err));
     }
-  }, [query, pageToken]);
+  }, [query, pageToken, size]);
 
   return (
     <>
@@ -245,12 +102,18 @@ function SearchPage() {
           </PopularChallengeContainer>
           <YoutubeChallengeContainer>
             {isLoading ? (
-              <SpinnerContainer>
-                <Spinner />
-                <p>불러오는 중...</p>
-              </SpinnerContainer>
+              <>
+                <Spinner text={"검색결과 불러오는 중..."} />
+              </>
             ) : (
-              <VideoCarousel videoData={shortsData} title={"SHORTS"} isSearch />
+              <VideoCarousel
+                videoData={shortsData}
+                title={"SHORTS"}
+                isSearch
+                text={
+                  "유튜브 쇼츠 중 인기 영상을 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요"
+                }
+              />
             )}
           </YoutubeChallengeContainer>
         </>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Btn from "../Btn/Btn";
 
 const VideoContainer = styled.div`
-  width: 270px;
+  width: 360px;
   /* height: 480px; */
   position: relative;
 
