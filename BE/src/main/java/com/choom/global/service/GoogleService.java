@@ -257,8 +257,7 @@ public class GoogleService {
         uploader.setProgressListener(progressListener);
 
         // Execute upload.
-//        Video returnedVideo = videoInsert.execute();
-        Video returnedVideo = null;
+        Video returnedVideo = videoInsert.execute();
 
         // Print out returned results.
         log.info("================== Returned Video ==================");
