@@ -15,7 +15,7 @@ import {
   MdVolumeOff,
   MdStop,
 } from "react-icons/md";
-import CircleBtn from "../CircleBtn/CircleBtn";
+import CircleBtn from "../Btn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
 import { ChallengeVideo } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
@@ -29,7 +29,6 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
-      setTitle: (title: string) => void;
       challenge?: Challenge;
     },
     ref: React.ForwardedRef<any>
@@ -55,6 +54,7 @@ const DanceVideo = forwardRef(
           .then((data) => {
             props.setPoseList(data);
           });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // 분석시작
@@ -169,6 +169,7 @@ const DanceVideo = forwardRef(
               width={450}
               height={800}
               ref={video}
+              controls
             />
 
             <BtnContainer>

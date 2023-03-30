@@ -10,17 +10,19 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 import SpinModal from "../../components/Modal/SpinModal";
 import { useParams } from "react-router-dom";
 import { getChallengeStatus, updateChallenge } from "../../apis/dance";
-import { Pose, Score, Challenge } from "../../constants/types";
+import { getChallengeDetail } from "../../apis/challenge";
+import { Pose, Score, Challenge, Dance } from "../../constants/types";
 
 function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>([]);
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const [myUrl, setMyUrl] = useState<string>("");
+  const [myBlob, setMyBlob] = useState<Blob>();
   const [challenge, setChallenge] = useState<Challenge>();
+  const [dance, setDance] = useState<Dance>();
   const [scoreList, setScoreList] = useState<Score[]>([]);
   const [score, setScore] = useState<number>(0);
   const [loading, setloading] = useState<boolean>(true);
-  const [title, setTitle] = useState<string>("");
   const danceVideoRef = useRef<any>();
   const { danceId } = useParams();
 
@@ -38,6 +40,13 @@ function DancePage() {
       .then((res) => {
         console.log(res);
         setChallenge(res.data);
+      })
+      .catch((err) => console.log(err));
+
+    getChallengeDetail(danceId!)
+      .then((res) => {
+        console.log(res);
+        setDance(res.data.dance);
       })
       .catch((err) => console.log(err));
   }, [danceId]);
@@ -84,14 +93,18 @@ function DancePage() {
           <SideSubTitle
             title="소셜 공유 & 다운로드"
             score={score}
-            videoTitle={title}
             myUrl={myUrl}
+            dance={dance!}
           />
         </SideInfoContainer>
       ) : (
         <SideInfoContainer>
           <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
-          <SideSubTitle title="챌린지 연습 방법 ❓" contents={contents} />
+          <SideSubTitle
+            title="챌린지 연습 방법 ❓"
+            contents={contents}
+            dance={dance!}
+          />
         </SideInfoContainer>
       )}
       <ShadowContainer
@@ -111,7 +124,6 @@ function DancePage() {
             detector={detector!}
             myUrl={myUrl}
             challenge={challenge}
-            setTitle={setTitle}
           />
         )}
 
@@ -121,7 +133,8 @@ function DancePage() {
             danceVideoRef={danceVideoRef}
             setMyUrl={setMyUrl}
             score={score}
-            title={title}
+            dance={dance!}
+            myBlob={myBlob!}
           />
         ) : (
           <DanceCam
@@ -132,6 +145,7 @@ function DancePage() {
             setMyUrl={setMyUrl}
             setScoreList={setScoreList}
             setScore={setScore}
+            setMyBlob={setMyBlob}
           />
         )}
       </ShadowContainer>

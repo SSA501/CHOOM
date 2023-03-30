@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from "react";
-import CircleBtn from "../CircleBtn/CircleBtn";
+import React, { useRef, useEffect, useState } from "react";
+import CircleBtn from "../Btn/CircleBtn";
+import TimerBtn from "../Btn/TimerBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
 import { CamContainer, MyCam, MyCanvas } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import { MdPlayCircleOutline, MdTimer3 } from "react-icons/md";
-import { AiOutlineEye } from "react-icons/ai";
+import { MdPlayCircleOutline } from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface Pose {
   keypoints: poseDetection.Keypoint[];
@@ -70,10 +71,13 @@ function DanceCam(props: {
   setMyUrl: (myUrl: string) => void;
   setScoreList: (socreList: Score[]) => void;
   setScore: (score: number) => void;
+  setMyBlob: (blob: Blob) => void;
 }) {
   const cam = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const similarity = require("cosine-similarity");
+  const [timer, setTimer] = useState(2);
+  const [isGuide, setIsGuide] = useState(true);
 
   let ctx: CanvasRenderingContext2D = canvas.current?.getContext("2d")!;
   let mediaRecorder: MediaRecorder;
@@ -117,18 +121,42 @@ function DanceCam(props: {
       const blob = new Blob(recordedChunks, { type: "video/webm" });
       const url = URL.createObjectURL(blob);
       props.setMyUrl(url);
+      props.setMyBlob(blob);
     }
   };
 
+  const delay = (ms: number) => {
+    let now = 0;
+    let degree = 2;
+    let time = ms / 1000;
+    return new Promise<void>((resolve) => {
+      const interver = setInterval(() => {
+        if (now < ms) {
+          drawCtx();
+          now += 10; // 1씩 증가
+          degree -= 20 / ms;
+          if (now % 1000 === 0) time -= 1;
+          if (time > 0) drawTimer(degree, time);
+        } else {
+          clearInterval(interver);
+          resolve(); // 점수가 도달하면 타이머를 중지
+        }
+      }, 10); // 10밀리초마다 실행
+    });
+  };
   // 시작버튼 누르면
   const handleStartBtnClick = async () => {
+    cam.current!.style.visibility = "hidden";
+
+    await delay(timer * 1000);
+
     // 배우고 싶은 영상 재생
     await props.danceVideoRef.current.playVideo();
     // 녹화시작
     mediaRecorder?.start();
+
     startTime = new Date();
     renderPrediction();
-    cam.current!.style.visibility = "hidden";
   };
 
   // frame당 포즈예측
@@ -151,9 +179,9 @@ function DanceCam(props: {
   const renderResult = async () => {
     const estimatePoseList = await props.detector.estimatePoses(cam.current!);
     drawCtx();
-    console.log(countFrame);
+
     const videoPose = props.poseList[countFrame];
-    drawGuide(videoPose.keypoints, PALLETE.green);
+    isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
 
     if (estimatePoseList && estimatePoseList.length > 0) {
       const newKptList: poseDetection.Keypoint[] = [];
@@ -186,7 +214,7 @@ function DanceCam(props: {
         countScore = 0;
       }
 
-      drawGuide(newKptList, PALLETE.red);
+      isGuide && drawGuide(newKptList, PALLETE.red);
       if (scoreTempList.length > 0)
         drawScore(scoreTempList[scoreTempList.length - 1].score);
     }
@@ -287,6 +315,7 @@ function DanceCam(props: {
     return { x: kpt.x / norm, y: kpt.y / norm, z: kpt.z / norm };
   };
 
+  // 점수 그리기
   const drawScore = (score: number): void => {
     score > 80
       ? (ctx.fillStyle = "Green")
@@ -307,6 +336,43 @@ function DanceCam(props: {
     ctx.fillText(score.toString(), 210, 50);
   };
 
+  // 타이머
+  const handelTimerClick = () => {
+    console.log(timer);
+    timer === 2 && setTimer(5);
+    timer === 5 && setTimer(2);
+  };
+
+  const drawTimer = (degree: number, time: number) => {
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "white";
+    const circle = new Path2D();
+    circle.arc(250, 100, 50, 0, degree * Math.PI);
+
+    ctx.save(); // 현재 캔버스 상태를 저장합니다.
+
+    // 캔버스의 원점을 중심으로 30도 회전시킵니다.
+    ctx.translate(225, 100);
+    ctx.scale(-1, 1);
+    ctx.rotate((-90 * Math.PI) / 180);
+    ctx.translate(-225, -100);
+
+    ctx.stroke(circle);
+
+    ctx.restore(); // 이전 캔버스 상태로 되돌립니다.
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "black";
+    ctx.fillStyle = "White";
+    ctx.font = "italic bold 48px Arial, sans-serif";
+    ctx.fillText(time.toString(), 210, 92);
+    ctx.strokeText(time.toString(), 210, 92);
+  };
+
+  const handleGuideClick = () => {
+    setIsGuide(!isGuide);
+  };
+
   return (
     <MainContainer>
       <CamContainer>
@@ -321,13 +387,14 @@ function DanceCam(props: {
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
         <CircleBtn
-          icon={AiOutlineEye}
+          icon={isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
+          onClick={handleGuideClick}
           label={"가이드"}
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
-        <CircleBtn
-          icon={MdTimer3}
-          label={"타이머"}
+        <TimerBtn
+          time={timer}
+          onClick={handelTimerClick}
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
       </BtnContainer>
