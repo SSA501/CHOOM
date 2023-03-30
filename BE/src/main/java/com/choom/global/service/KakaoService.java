@@ -1,11 +1,12 @@
-package com.choom.domain.user.dto;
+package com.choom.global.service;
 
+import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,8 +15,8 @@ import java.net.URL;
 
 
 @Slf4j
-@Component
-public class KakaoOAuth2Dto {
+@Service
+public class KakaoService {
     private static String KAKAO_APIKEY;
     private static String KAKAO_REDIRECT_URI;
 
@@ -29,7 +30,7 @@ public class KakaoOAuth2Dto {
         KAKAO_REDIRECT_URI = value;
     }
 
-    public KakaoUserInfoDto getUserInfo(String code) {
+    public SocialUserInfoDto getUserInfo(String code) {
         String accessToken = getAccessToken(code);
         log.info("카카오 accessToken : " + accessToken);
         return getUserInfoByToken(accessToken);
@@ -89,7 +90,7 @@ public class KakaoOAuth2Dto {
         return access_Token;
     }
 
-    public KakaoUserInfoDto getUserInfoByToken(String accessToken){
+    public SocialUserInfoDto getUserInfoByToken(String accessToken){
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -129,7 +130,7 @@ public class KakaoOAuth2Dto {
 
             br.close();
 
-            return new KakaoUserInfoDto(identifier, nickname, profileImage);
+            return new SocialUserInfoDto(identifier, nickname, profileImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
