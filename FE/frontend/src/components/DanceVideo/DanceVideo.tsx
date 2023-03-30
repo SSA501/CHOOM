@@ -60,7 +60,6 @@ const DanceVideo = forwardRef(
     // 분석시작
     const startEstimate = async () => {
       // Wait for video to be loaded.
-
       if (video.current) video.current.load();
       if (video.current)
         await new Promise((resolve) => {
