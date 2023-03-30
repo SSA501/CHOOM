@@ -1,5 +1,5 @@
 import { SERVER_URL } from "../constants/url";
-import { axiosInstance } from "./instance";
+import { axiosFileInstance, axiosInstance } from "./instance";
 
 // 카카오 로그인 리다이렉트
 export const redirectKakao = () => {
@@ -45,5 +45,23 @@ export const withdraw = async () => {
 // accessToken 토큰 갱신
 export const reissueToken = async () => {
   const res = await axiosInstance.post<any>(`/user/login/token`);
+  return res.data;
+};
+
+// 회원 정보 받기
+export const getUserDetail = async () => {
+  const res = await axiosInstance.get("/user");
+  return res.data;
+};
+
+// 닉네임 중복 검사
+export const checkNickname = async (nickname: string) => {
+  const res = await axiosInstance.get(`/user/nickname/${nickname}`);
+  return res.data;
+};
+
+// 회원 정보 수정
+export const updateUserDetail = async (formData: FormData) => {
+  const res = await axiosFileInstance.put("/user", formData);
   return res.data;
 };
