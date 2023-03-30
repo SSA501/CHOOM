@@ -20,7 +20,7 @@ function SideSubTitle(props: {
     getUserDetail()
       .then((res) => {
         console.log(res);
-        setUserData(res.nickname);
+        setUserData(res.data.nickname);
       })
       .catch((error) => {
         console.log(error);
