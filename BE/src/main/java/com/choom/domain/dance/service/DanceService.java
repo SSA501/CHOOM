@@ -22,6 +22,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;
@@ -64,6 +65,9 @@ public class DanceService {
 
     private static final String SEARCH_SUFFIX  = "#챌린지 #댄스 #쇼츠 #shorts";
 
+    public static SearchListResponse searchResponse = null;
+    public static VideoListResponse videoListResponse = null;
+
     private static String YOUTUBE_APIKEY;
     @Value("${apikey.youtube}")
     public void setKey(String value){
@@ -77,6 +81,7 @@ public class DanceService {
         }).setApplicationName("youtube-cmdline-search-sample").build();
     }
 
+    @Transactional
     public DanceSearchDto searchDance(String keyword, String pageToken,Long size) {
         log.info("Starting YouTube search... " +keyword+" pageToken : "+pageToken);
         long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
@@ -85,49 +90,84 @@ public class DanceService {
 
         List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
 
-        SearchListResponse searchResponse = null;
+        boolean isUrl = false;
+        String[] checkList = {
+            "https://", "http://", "youtube.com", "youtu.be"
+        };
+        for (String check : checkList) {
+            if (keyword.contains(check)) {
+                isUrl = true;
+                break;
+            }
+        }
 
-        try {
             // 1. 유튜브 검색 결과
             if (youtube != null) {
-                YouTube.Search.List search = youtube.search().list("snippet");
-                search.setKey(YOUTUBE_APIKEY);
-                search.setQ(keyword+" "+SEARCH_SUFFIX);
-                search.setType("video");
-                search.setVideoDuration("short");
-                search.setMaxResults(size);
-                search.setFields(YOUTUBE_SEARCH_FIELDS1);
-                search.setPageToken(pageToken);
+                if(isUrl){
+                    Dance dance = danceRepository.findByUrl(keyword).orElse(null);
 
-                searchResponse = search.execute();
+                    String[] urlList = keyword.split("/");
+                    keyword = urlList[urlList.length-1];
+                    if(keyword.contains("?")){
+                        keyword = keyword.split("\\?")[0];
+                    }
 
-                List<SearchResult> searchResultList = searchResponse.getItems();
+                    log.info("url검색 - keyword : "+keyword);
+                    DanceDetailsDto danceDetailDto = getVideoDetail(keyword);
 
-                if (searchResultList != null) {
-                    for (SearchResult video : searchResultList) {
-                        // 비동기로 검색 -> 검색 속도 향상
-                        String youtubeId = video.getId().getVideoId();
-                        DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+                    if(dance == null){ //처음인경우
+                        Dance insertDance = Dance.builder()
+                            .danceDetailDto(danceDetailDto)
+                            .build();
+                        Dance savedDance = danceRepository.save(insertDance);
+                        danceDetailDto.setId(savedDance.getId());
+                    }
+                    danceDetailDtoList.add(danceDetailDto);
+                }else{
+                    YouTube.Search.List search = null;
+                    try {
+                        search = youtube.search().list("snippet");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    search.setKey(YOUTUBE_APIKEY);
+                    search.setQ(keyword+" "+SEARCH_SUFFIX);
+                    search.setType("video");
+                    search.setVideoDuration("short");
+                    search.setMaxResults(size);
+                    search.setFields(YOUTUBE_SEARCH_FIELDS1);
+                    search.setPageToken(pageToken);
 
-                        if (danceDetailDto != null)
-                            danceDetailDtoList.add(danceDetailDto);
+                    try {
+                        searchResponse = search.execute();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                        elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
-                        if (elapsedTime > maxTime) { // 경과 시간이 최대 시간보다 작으면 반복합니다.
-                            log.info("시간초과로 종료됨!");
-                            break;
+                    List<SearchResult> searchResultList = searchResponse.getItems();
+
+                    if (searchResultList != null) {
+                        for (SearchResult video : searchResultList) {
+                            // 비동기로 검색 -> 검색 속도 향상
+                            String youtubeId = video.getId().getVideoId();
+                            DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+
+                            log.info(video.toString());
+                            if (danceDetailDto != null)
+                                danceDetailDtoList.add(danceDetailDto);
+
+                            elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
+                            if (elapsedTime > maxTime) { // 경과 시간이 최대 시간보다 작으면 반복합니다.
+                                log.info("시간초과로 종료됨!");
+                                break;
+                            }
                         }
                     }
                 }
+
             }
 
-        } catch (GoogleJsonResponseException e){
-            log.info("There was a service error: " + e.getDetails().getCode() + " : "  + e.getDetails().getMessage());
-        } catch(IOException e){
-            log.info("There was an IO error: " + e.getCause() + " : " + e.getMessage());
-        } catch(Throwable t){
-            t.printStackTrace();
-        }
+
 
         Collections.sort(danceDetailDtoList, (o1, o2) -> { //new Comparator<YoutubeResponseDto>() -> lambda
             // DB에 있는 정보 먼저
@@ -156,27 +196,37 @@ public class DanceService {
             }
             dbDanceDetailDtoList.add(danceDetailDtoList.remove(0));
         }
-        DanceSearchDto danceSearchDto = DanceSearchDto.builder()
-            .searchListResponse(searchResponse)
-            .dbDanceDetailDtoList(dbDanceDetailDtoList)
-            .danceDetailDtoList(danceDetailDtoList)
-            .build();
+        DanceSearchDto danceSearchDto = null;
+        if(searchResponse == null){
+            danceSearchDto = new DanceSearchDto(dbDanceDetailDtoList,danceDetailDtoList);
+        }else{
+            danceSearchDto = new DanceSearchDto(searchResponse,dbDanceDetailDtoList,danceDetailDtoList);
+        }
         return danceSearchDto;
     }
 
     @Async
-    DanceDetailsDto getVideoDetail(String youtubeId)throws IOException {
-        YouTube.Videos.List videoDetails =  youtube.videos().list("contentDetails");
+    DanceDetailsDto getVideoDetail(String youtubeId) {
+        YouTube.Videos.List videoDetails = null;
+        try {
+            videoDetails = youtube.videos().list("contentDetails");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         videoDetails.setKey(YOUTUBE_APIKEY);
         videoDetails.setId(youtubeId);
         videoDetails.setPart("statistics,snippet,contentDetails");
         videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
 
-        if(videoDetails.execute().getItems().size() == 0){
-            throw new IllegalArgumentException("유튜브 동영상 id가 올바르지 않습니다...");
+        try {
+            videoListResponse = videoDetails.execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        Video videoDetail = videoDetails.execute().getItems().get(0);
-
+        if(videoListResponse.getItems().size() == 0){
+            throw new IllegalArgumentException("잘못된 검색입니다...");
+        }
+        Video videoDetail = videoListResponse.getItems().get(0);
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
         if(time.equals("P0D") || time.contains("M")){ // P0D는 라이브 방송
