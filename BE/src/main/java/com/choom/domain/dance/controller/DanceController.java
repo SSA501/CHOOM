@@ -5,6 +5,7 @@ import com.choom.domain.dance.dto.DanceSearchDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
 import com.choom.domain.dance.dto.DanceStatusDto;
 import com.choom.domain.dance.service.DanceService;
+import com.choom.global.auth.CustomUserDetails;
 import com.choom.global.model.BaseResponse;
 import com.sapher.youtubedl.YoutubeDLException;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/dance")
@@ -34,7 +37,7 @@ public class DanceController {
     private final DanceService danceService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> searchDance(@RequestParam String keyword, @RequestParam(required = false) String pageToken, @RequestParam Long size){
+    public ResponseEntity<BaseResponse> searchDance(@ApiIgnore Authentication authentication, @RequestParam String keyword, @RequestParam(required = false) String pageToken, @RequestParam Long size){
         log.info("keyword : "+keyword+" pageToken : "+pageToken+" size : "+size);
         DanceSearchDto danceSearchDto = danceService.searchDance(keyword,pageToken,size);
         return new ResponseEntity<>(BaseResponse.success(danceSearchDto), HttpStatus.OK);
@@ -48,7 +51,7 @@ public class DanceController {
     }
 
     @PostMapping("/{youtubeId}")
-    public ResponseEntity<BaseResponse> addDance(@PathVariable String youtubeId) throws IOException {
+    public ResponseEntity<BaseResponse> addDance(@ApiIgnore Authentication authentication, @PathVariable String youtubeId) throws IOException {
         log.info("youtubeId : "+youtubeId);
         Long danceId = danceService.addDance(youtubeId);
         HashMap<String, Long> response = new HashMap<>();
@@ -57,15 +60,16 @@ public class DanceController {
     }
 
     @GetMapping("/{danceId}")
-    public ResponseEntity<BaseResponse> danceDetails(@PathVariable Long danceId) throws IOException {
+    public ResponseEntity<BaseResponse> danceDetails(@ApiIgnore Authentication authentication, @PathVariable Long danceId) throws IOException {
         log.info("danceId : "+danceId);
-        Long userId = 1L;
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
+        Long userId = customUserDetails.getUserId();
         DanceDetailsWithRankDto danceDetailWithRankDto = danceService.findDance(userId, danceId);
         return new ResponseEntity<>(BaseResponse.success(danceDetailWithRankDto), HttpStatus.OK);
     }
 
     @PutMapping("/{danceId}/status")
-    public ResponseEntity<BaseResponse> checkDanceStatus(@PathVariable Long danceId)
+    public ResponseEntity<BaseResponse> checkDanceStatus(@ApiIgnore Authentication authentication, @PathVariable Long danceId)
         throws YoutubeDLException, UnknownHostException {
         log.info("danceId : "+danceId);
         DanceStatusDto danceStatusDto = danceService.checkDanceStatus(danceId);
@@ -73,7 +77,7 @@ public class DanceController {
     }
 
     @PutMapping("/{danceId}")
-    public ResponseEntity<BaseResponse> saveResult(@PathVariable Long danceId, @RequestPart MultipartFile jsonFile) throws IOException {
+    public ResponseEntity<BaseResponse> saveResult(@ApiIgnore Authentication authentication, @PathVariable Long danceId, @RequestPart MultipartFile jsonFile) throws IOException {
         log.info("danceId : "+danceId);
         log.info("jsonFile : "+jsonFile);
         danceService.saveResult(danceId,jsonFile);
