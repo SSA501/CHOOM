@@ -44,7 +44,6 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   const handleLike = () => {
     addBookmark(challegeInfo.id)
       .then((res) => {
-        console.log(res.data);
         if (res.statusCode === 200) {
           setIsLiked(true);
         }
@@ -55,7 +54,6 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   const handleLikeDelete = () => {
     removeBookmark(challegeInfo.id)
       .then((res) => {
-        console.log(res.data);
         if (res.statusCode === 200) {
           setIsLiked(false);
         }

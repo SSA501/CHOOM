@@ -15,8 +15,6 @@ function VideoList(props: VideoListProps) {
     const newVideoList = props.videoList.map((video) =>
       video.id === videoId ? { ...video, isLike: !isLike } : video
     );
-    // TODO: 즐겨찾기 영상 좋아요 해제|추가 기능 구현하기
-    console.log(`${videoId}번 영상 좋아요 ${isLike ? "해제" : "추가"}`);
     props.setVideoItemList(newVideoList);
   };
 
@@ -45,6 +43,7 @@ function VideoList(props: VideoListProps) {
         <Video
           width={"270px"}
           height={"480px"}
+          key={item.id}
           id={item.id}
           title={item.title}
           videoPath={`${SERVER_URL}${item.videoPath}`}
@@ -61,6 +60,7 @@ function VideoList(props: VideoListProps) {
           <Video
             width={"270px"}
             height={"480px"}
+            key={item.id}
             id={item.id}
             title={item.title}
             videoPath={`${SERVER_URL}${item.url}`}
