@@ -44,13 +44,13 @@ public class AuthService {
         }
 
         String identifier = userInfo.getIdentifier();
-        String nickname = randomNicknameService.getRandomNickname("text",1,10,"_");
         String profileImage = userInfo.getProfileImage();
 
         User user = userRepository.findByIdentifierAndSocialType(identifier, socialType).orElse(null);
 
         if (user == null) {
-            User newUser = addUser(identifier, nickname, profileImage, socialType);
+            log.info("newuser");
+            User newUser = addUser(identifier, profileImage, socialType);
             return issueToken(newUser);
         }
 
@@ -58,7 +58,8 @@ public class AuthService {
     }
 
     @Transactional
-    public User addUser(String identifier, String nickname, String profileImage, SocialType socialType) {
+    public User addUser(String identifier, String profileImage, SocialType socialType) {
+        String nickname = randomNicknameService.getRandomNickname("text", 1, 10, "_");
         String profileImagePath = fileService.saveProfileImage("user", nickname, profileImage);
         User user = User.builder()
                 .identifier(identifier)
