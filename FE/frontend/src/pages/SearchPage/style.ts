@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const SearchTopContainer = styled.div`
-  margin-block: 30px 80px;
+  margin: 1em 0 3em;
 `;
 
 const SideContainer = styled.div`
