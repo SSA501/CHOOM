@@ -1,13 +1,15 @@
 import styled from "styled-components";
 
 const SearchBarContainer = styled.div`
-  border-bottom: 5px solid black;
   color: black;
   margin: 0 auto;
-  padding: 1em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  form {
+    padding: 1em 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 5px solid black;
+  }
 `;
 
 const SearchIcon = styled.div`
@@ -15,10 +17,19 @@ const SearchIcon = styled.div`
   margin: 0.3em 1em 0 0;
 `;
 
-const SearchInput = styled.input<{ value: string }>`
+const SearchInput = styled.input`
   font-size: 1.2rem;
-  width: ${(props) => (props.value.length > 0 ? "calc(100% - 3em)" : null)};
   transition: 1s linear 0.1;
+  flex: 1;
 `;
 
-export { SearchBarContainer, SearchIcon, SearchInput };
+const SearchBtn = styled.button`
+  width: fit-content;
+  background-color: black;
+  color: white;
+  border-radius: 50px;
+  padding: 1em 2em;
+  margin-left: 1em;
+`;
+
+export { SearchBarContainer, SearchIcon, SearchInput, SearchBtn };
