@@ -62,31 +62,38 @@ function DetailPage() {
   });
 
   const [rankData, setRankData] = useState<RankDataTypes[]>([]);
+  const [localLikeCount, setLocalLikeCount] = useState<number>(0);
 
-  const { danceId } = useParams<{ danceId?: string }>();
+  const { danceId } = useParams<{ danceId: string }>();
   const [isLiked, setIsLiked] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
   const handleLike = () => {
-    addBookmark(id)
-      .then((res) => {
-        console.log(res.data);
-        if (res.statusCode === 200) {
+    if (danceId) {
+      console.log("좋아요");
+      addBookmark(+danceId)
+        .then(() => {
           setIsLiked(true);
-        }
-      })
-      .catch((err) => console.log(err));
+          setLocalLikeCount((prev: number) => prev + 1);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const handleLikeDelete = () => {
-    removeBookmark(id)
-      .then((res) => {
-        console.log(res.data);
-        if (res.statusCode === 200) {
+    if (danceId) {
+      console.log("좋아요취ㅣ소");
+      removeBookmark(+danceId)
+        .then(() => {
           setIsLiked(false);
-        }
-      })
-      .catch((err) => console.log(err));
+          if (localLikeCount >= 0) {
+            setLocalLikeCount((prev: number) => prev - 1);
+          } else {
+            setLocalLikeCount(0);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   useEffect(() => {
@@ -95,13 +102,14 @@ function DetailPage() {
         .then((res) => {
           setChallengeData(res?.data?.dance);
           setIsLiked(res?.data?.dance?.bookmarked);
+          setLocalLikeCount(res?.data?.dance?.likeCount);
           setRankData(res?.data?.myDance);
         })
         .catch((err) => console.log(err));
     }
   }, [danceId]);
 
-  const { url, title, userCount, sec, viewCount, publishedAt, id, likeCount } =
+  const { url, title, userCount, sec, viewCount, publishedAt, id } =
     challengeData;
 
   return (
@@ -131,7 +139,7 @@ function DetailPage() {
             />
             <LikeBtnContainer>
               <LikeBtn
-                likeCount={likeCount}
+                localLikeCount={localLikeCount}
                 isLiked={isLiked}
                 setIsLiked={setIsLiked}
                 handleLike={handleLike}

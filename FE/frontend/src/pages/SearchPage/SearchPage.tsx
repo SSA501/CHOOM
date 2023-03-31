@@ -14,45 +14,13 @@ import {
   ChallengeNumber,
   PopularChallengeContainer,
   YoutubeChallengeContainer,
-  SpinnerContainer,
 } from "./style";
 
 function SearchPage() {
   const [searchParams, setSearchParams]: [URLSearchParams, Function] =
     useSearchParams();
   const query = searchParams?.get("query");
-  const [topData, setTopData] = useState([
-    {
-      id: 12,
-      title: "스노우맨 한호흡 챌린지 최강자끼리 붙음 ; ;",
-      url: "https://www.youtube.com/shorts/5-TLkt0sjpQ",
-      thumbnailPath: "https://i.ytimg.com/vi/5-TLkt0sjpQ/hqdefault.jpg",
-      sec: 50,
-      likeCount: 559324,
-      viewCount: 13607439,
-      userCount: 13,
-      youtubeId: "5-TLkt0sjpQ",
-      status: 1,
-      publishedAt: "2022-11-08",
-      bookmarked: false,
-      bookmarkeCount: 32,
-    },
-    {
-      id: 7,
-      title: "현남친 앞에서 전남친챌린지ㅋㅋㅋ전남친vs현남친 #shorts",
-      url: "https://www.youtube.com/shorts/RBz7rFKn8WM",
-      thumbnailPath: "https://i.ytimg.com/vi/RBz7rFKn8WM/hqdefault.jpg",
-      sec: 37,
-      likeCount: 103691,
-      viewCount: 6710144,
-      userCount: 5,
-      youtubeId: "RBz7rFKn8WM",
-      status: 1,
-      publishedAt: "2022-12-12",
-      bookmarked: true,
-      bookmarkeCount: 16,
-    },
-  ]);
+  const [topData, setTopData] = useState([]);
   const [shortsData, setShortsData] = useState([]);
   const [size, setSize] = useState<number>(50); // size 50 고정
   const [pageToken, setPageToken] = useState<string>("");

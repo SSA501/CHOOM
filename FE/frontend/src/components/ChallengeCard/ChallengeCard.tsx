@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MdOutlineCalendarMonth,
   MdOutlinePeopleAlt,
@@ -13,53 +13,76 @@ import { ShadowContainer } from "../ShadowContainer/style";
 import Video from "../Video/Video";
 import { SideContainer, ChallengeTitle, TableContainer } from "./style";
 
+interface ChallengeDataProps {
+  id: number;
+  title: string;
+  url: string;
+  thumbnailPath: string;
+  sec: number;
+  likeCount: number;
+  viewCount: number;
+  userCount: number;
+  youtubeId: string;
+  status: number;
+  publishedAt: string;
+  bookmarked: boolean;
+}
+
 export type ChallengeProps = {
-  challengeInfo: {
-    id: number;
-    title: string;
-    url: string;
-    thumbnailPath: string;
-    sec: number;
-    likeCount: number;
-    viewCount: number;
-    userCount: number;
-    youtubeId: string;
-    status: number;
-    publishedAt: string;
-    bookmarked: boolean;
-    bookmarkeCount: number;
-  };
+  challengeInfo: ChallengeDataProps;
   bgColor: string;
 };
 
 function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   const navigate = useNavigate();
-  const [challegeInfo, setChallengeInfo] = useState(challengeInfo);
-  const [isLiked, setIsLiked] = useState<boolean>(challegeInfo.bookmarked);
+  const [challengeData, setChallengeData] = useState<ChallengeDataProps>({
+    id: 0,
+    title: "",
+    url: "",
+    thumbnailPath: "",
+    sec: 0,
+    likeCount: 0,
+    viewCount: 0,
+    userCount: 0,
+    youtubeId: "",
+    status: 0,
+    publishedAt: "",
+    bookmarked: false,
+  });
+  const [isLiked, setIsLiked] = useState<boolean | null>(null);
+  const [localLikeCount, setLocalLikeCount] = useState<number>(0);
 
   const handleClickVideo = (videoId: number): void => {
     navigate(`/detail/${videoId}`);
   };
 
   const handleLike = () => {
-    addBookmark(challegeInfo.id)
-      .then((res) => {
-        if (res.statusCode === 200) {
-          setIsLiked(true);
-        }
+    addBookmark(challengeData?.id)
+      .then(() => {
+        setIsLiked(true);
+        setLocalLikeCount((prev: number) => prev + 1);
       })
       .catch((err) => console.log(err));
   };
 
   const handleLikeDelete = () => {
-    removeBookmark(challegeInfo.id)
-      .then((res) => {
-        if (res.statusCode === 200) {
-          setIsLiked(false);
+    removeBookmark(challengeData?.id)
+      .then(() => {
+        setIsLiked(false);
+        if (localLikeCount >= 0) {
+          setLocalLikeCount((prev: number) => prev - 1);
+        } else {
+          setLocalLikeCount(0);
         }
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    setChallengeData(challengeInfo);
+    setIsLiked(challengeInfo?.bookmarked);
+    setLocalLikeCount(challengeInfo?.likeCount);
+  }, [challengeInfo]);
 
   return (
     <ShadowContainer
@@ -72,16 +95,16 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
     >
       <SideContainer>
         <LikeBtn
-          likeCount={challegeInfo.bookmarkeCount}
+          localLikeCount={localLikeCount}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
           handleLike={handleLike}
           handleLikeDelete={handleLikeDelete}
         />
         <ChallengeTitle>
-          {challegeInfo.title.length > 24
-            ? challegeInfo.title.substr(0, 24) + "..."
-            : challegeInfo.title}
+          {challengeData?.title.length > 24
+            ? challengeData?.title.substr(0, 24) + "..."
+            : challengeData?.title}
         </ChallengeTitle>
         <TableContainer>
           <table>
@@ -90,7 +113,7 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
                 <MdOutlinePeopleAlt />
               </td>
               <td>
-                {challegeInfo.userCount}
+                {challengeData?.userCount}
                 <span>명</span>
               </td>
             </tr>
@@ -99,7 +122,7 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
                 <MdOutlineQueryBuilder />
               </td>
               <td>
-                {challegeInfo.sec}
+                {challengeData?.sec}
                 <span>초</span>
               </td>
             </tr>
@@ -107,30 +130,30 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
               <td>
                 <MdOutlineVisibility />
               </td>
-              <td>{challegeInfo.viewCount.toLocaleString("en")}</td>
+              <td>{challengeData?.viewCount.toLocaleString("en")}</td>
             </tr>
             <tr>
               <td>
                 <MdOutlineCalendarMonth />
               </td>
-              <td>{challegeInfo.publishedAt.replace(/-/gi, ".")}</td>
+              <td>{challengeData?.publishedAt.replace(/-/gi, ".")}</td>
             </tr>
           </table>
         </TableContainer>
         <Btn
           btnText={"시작하기"}
-          handleClick={() => navigate(`/dance/${challegeInfo.id}`)}
+          handleClick={() => navigate(`/dance/${challengeData?.id}`)}
           padding={"15px 70px"}
         ></Btn>
       </SideContainer>
       <Video
         width={"270px"}
         height={"480px"}
-        id={challegeInfo.id}
-        title={challegeInfo.title}
-        videoPath={challegeInfo.url}
-        thumbnailPath={challegeInfo.thumbnailPath}
-        handleClickVideo={() => handleClickVideo(challegeInfo.id)}
+        id={challengeData?.id}
+        title={challengeData?.title}
+        videoPath={challengeData?.url}
+        thumbnailPath={challengeData?.thumbnailPath}
+        handleClickVideo={() => handleClickVideo(challengeData?.id)}
       />
     </ShadowContainer>
   );
