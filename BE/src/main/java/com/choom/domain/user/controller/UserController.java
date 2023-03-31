@@ -94,6 +94,9 @@ public class UserController {
     public ResponseEntity<BaseResponse> reissueToken(@CookieValue("refreshToken") String refreshToken, @Value("${jwt.expiration.rtk}") Integer expiration) {
         log.info("Cookie로 받은 refreshToken : " + refreshToken);
         TokenDto token = authService.reissueToken(refreshToken);
+        if (token == null) {
+            return new ResponseEntity<>(BaseResponse.custom(401, "토큰 재발급에 실패했습니다.", null), HttpStatus.UNAUTHORIZED);
+        }
         HttpHeaders headers = new HttpHeaders();
         ResponseCookie cookie = authService.setCookie(token.getRefreshToken(), expiration);
         headers.add("Set-Cookie", cookie.toString());
