@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
+  normalVideo?: boolean;
   id: number | null;
   url?: string;
   videoPath: string;
@@ -34,33 +35,26 @@ function Video({
     >
       {playingVideoId === videoPath ? (
         <>
-          {/* {id ? (
-            <video
-              src={videoPath}
-              autoPlay
-              controls
-              width="270px"
-              height="480px"
-              controlsList="nodownload"
-            />
-          ) : (
+          {url ? (
             <ReactPlayer
               url={url}
               controls
               loop
               muted
               playing
+              width={width ?? "360px"}
+              height={height ?? "640px"}
             />
-          )} */}
-          <ReactPlayer
-            url={url}
-            controls
-            loop
-            muted
-            playing
-            width={width ?? "360px"}
-            height={height ?? "640px"}
-          />
+          ) : (
+            <video
+              src={videoPath}
+              autoPlay
+              controls
+              width={width ?? "360px"}
+              height={height ?? "640px"}
+              controlsList="nodownload"
+            />
+          )}
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
       ) : (

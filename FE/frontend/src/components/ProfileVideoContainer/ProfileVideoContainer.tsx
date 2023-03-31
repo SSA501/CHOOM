@@ -43,30 +43,27 @@ function ProfilePage() {
     console.log(page + "번 페이지 호출 -> 정렬: " + sort);
     setIsLoading(true);
 
-    if (selectHistory) {
-      getMyDanceList(page, 5, sort.sort)
-        .then((res) => {
-          console.log("내가 춘 춤 목록 받기");
-          console.log(res);
-          if (res.statusCode === 200) {
-            setVideoItemList((prevList) => [...prevList, ...res.data.content]);
-            setIsLoading(false);
-          }
-        })
-        .catch((err) => console.log(err));
-    } else {
-      getBookmarkList(page, 5, sort.sort)
-        .then((res) => {
-          console.log("즐겨찾기 목록 받기");
-          console.log(res);
-          if (res.statusCode === 200) {
-            let newList = res.data.content.map((item: any) => {
+    const fetchData = async () => {
+      try {
+        let res;
+        if (selectHistory) {
+          res = await getMyDanceList(page, 5, sort.sort);
+        } else {
+          res = await getBookmarkList(page, 5, sort.sort);
+        }
+
+        if (res.statusCode === 200) {
+          let newData: any[];
+          if (selectHistory) {
+            newData = res.data.content;
+          } else {
+            newData = res.data.content.map((item: any) => {
               let newItem = {
                 id: item.id,
                 danceId: item.danceId,
                 title: item.title,
                 url: item.url,
-                thumbnailPathPath: item.thumbnailPathPath,
+                thumbnailPath: item.thumbnailPath,
                 userCount: item.userCount,
                 status: item.status,
                 createdAt: item.createdAt,
@@ -74,14 +71,18 @@ function ProfilePage() {
               };
               return newItem;
             });
-
-            setVideoItemList((prevList) => [...prevList, ...newList]);
-            setIsLoading(false);
           }
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [page]);
+
+          setVideoItemList((prevList) => [...prevList, ...newData]);
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, [page, sort, selectHistory]);
 
   const updatePage = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
