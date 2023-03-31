@@ -192,7 +192,10 @@ function DanceCam(props: {
     drawCtx();
 
     const videoPose = props.poseList[countFrameNum];
-    isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
+    console.log(videoPose.keypoints.length);
+
+    if (videoPose.keypoints.length > 0)
+      isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
 
     if (
       estimatePoseList &&
@@ -236,6 +239,7 @@ function DanceCam(props: {
       )
         drawScore(scoreTempList[scoreTempList.length - 1].score!);
     } else {
+      console.log("비었다");
       const timeTemp = new Date();
       if (
         (timeTemp.getTime() - startTime.getTime()) / 1000 >
@@ -350,11 +354,19 @@ function DanceCam(props: {
       };
       const pose1Confidence =
         (keypoints1[joint[0]].score! + keypoints1[joint[1]].score!) / 2;
-      pose1ConfidenceSum += pose1Confidence;
+      const pose2Confidence =
+        (keypoints2[joint[0]].score! + keypoints2[joint[1]].score!) / 2;
+      const diffConfidence = Math.abs(pose1Confidence - pose2Confidence);
+
       const norm_v1 = l2_norm(v1);
       const norm_v2 = l2_norm(v2);
-      let tempSum = similarity(norm_v1, norm_v2) * pose1Confidence;
+      let tempSum =
+        diffConfidence > 0.5
+          ? 0
+          : similarity(norm_v1, norm_v2) * (1 - diffConfidence);
+      pose1ConfidenceSum += 1 - diffConfidence;
       sum += tempSum;
+
       return sum;
     });
 
