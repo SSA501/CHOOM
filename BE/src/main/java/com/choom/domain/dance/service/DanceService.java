@@ -137,6 +137,7 @@ public class DanceService {
                     search.setMaxResults(size);
                     search.setFields(YOUTUBE_SEARCH_FIELDS1);
                     search.setPageToken(pageToken);
+                    search.setVideoSyndicated("true");
 
                     try {
                         searchResponse = search.execute();
