@@ -122,7 +122,7 @@ public class DanceService {
                         }
                         danceDetailDtoList.add(danceDetailDto);
                     }
-
+                    searchResponse = null;
                 }else{
                     YouTube.Search.List search = null;
                     try {
@@ -200,10 +200,10 @@ public class DanceService {
         DanceSearchDto danceSearchDto = null;
         if(searchResponse == null){
             danceSearchDto = new DanceSearchDto(dbDanceDetailDtoList,danceDetailDtoList);
-            log.info("url맞냐? "+danceSearchDto.getIsUrl());
+            log.info("url맞냐1? "+danceSearchDto.getIsUrl());
         }else{
             danceSearchDto = new DanceSearchDto(searchResponse,dbDanceDetailDtoList,danceDetailDtoList);
-            log.info("url맞냐? "+danceSearchDto.getIsUrl());
+            log.info("url맞냐2? "+danceSearchDto.getIsUrl());
         }
         return danceSearchDto;
     }
