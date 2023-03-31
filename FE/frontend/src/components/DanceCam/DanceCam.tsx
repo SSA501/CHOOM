@@ -192,7 +192,10 @@ function DanceCam(props: {
     drawCtx();
 
     const videoPose = props.poseList[countFrameNum];
-    isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
+    console.log(videoPose.keypoints.length);
+
+    if (videoPose.keypoints.length > 0)
+      isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
 
     if (
       estimatePoseList &&
@@ -236,6 +239,7 @@ function DanceCam(props: {
       )
         drawScore(scoreTempList[scoreTempList.length - 1].score!);
     } else {
+      console.log("비었다");
       const timeTemp = new Date();
       if (
         (timeTemp.getTime() - startTime.getTime()) / 1000 >
