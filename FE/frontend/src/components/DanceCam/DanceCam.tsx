@@ -6,14 +6,7 @@ import { CamContainer, MyCam, MyCanvas } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { MdPlayCircleOutline } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
-interface Pose {
-  keypoints: poseDetection.Keypoint[];
-}
-interface Score {
-  score?: number;
-  time: number;
-}
+import { Score, Pose } from "../../constants/types";
 
 const VIDEO_CONFIG = {
   audio: false,
@@ -271,6 +264,7 @@ function DanceCam(props: {
     // 다시 scale을 사용하여 원래대로 돌려놓기
     ctx.scale(-1, 1);
   };
+
   const reverseGuide = (keypoints: poseDetection.Keypoint[], color: string) => {
     ctx.save(); // 현재 캔버스 상태를 저장합니다.
 

@@ -11,7 +11,7 @@ export interface Pose {
   keypoints: poseDetection.Keypoint[];
 }
 export interface Score {
-  score: number;
+  score?: number;
   time: number;
 }
 export interface Challenge {

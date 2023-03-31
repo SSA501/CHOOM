@@ -10,10 +10,7 @@ import {
   Label,
 } from "recharts";
 
-interface Score {
-  score: number;
-  time: number;
-}
+import { Score } from "../../constants/types";
 
 function DanceChart(props: {
   scoreList: Score[];
