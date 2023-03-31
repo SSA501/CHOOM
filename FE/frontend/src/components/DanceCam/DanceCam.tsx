@@ -185,6 +185,9 @@ function DanceCam(props: {
         console.log(countFrame);
         countFrame++;
       } else {
+        mediaRecorder?.stop();
+        props.setScore(Math.round(sumScore / scoreTempList.length));
+        props.setScoreList(scoreTempList);
         clearInterval(poseDetection);
       }
     }, 100);
