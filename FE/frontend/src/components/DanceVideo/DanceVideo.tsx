@@ -90,6 +90,9 @@ const DanceVideo = forwardRef(
       // requestAnimationFrame(runFrame);
       const poseDetection = setInterval(() => {
         if (video.current?.paused) {
+          alert("완료");
+          console.log(poseListTemp);
+          props.setPoseList(poseListTemp);
           clearInterval(poseDetection);
         } else {
           renderResult();
