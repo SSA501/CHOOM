@@ -118,6 +118,8 @@ const DanceVideo = forwardRef(
           return newKpts;
         });
         poseListTemp.push({ keypoints: newKpts });
+      } else {
+        poseListTemp.push({ keypoints: [] });
       }
     };
 
