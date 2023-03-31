@@ -19,14 +19,6 @@ function RecentSearch() {
   const [searchList, setSearchList] = useState<any[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getSearchKeywordList()
-      .then((res) => {
-        setSearchList(res?.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
   const handleClick = (searchId: number, searchKeyword: string) => {
     // TODO: 검색 기능 구현하기 -> 기존 키워드로 검색하면 기존 키워드 삭제, 신규로 키워드 추가. 최신으로 갱신
     removeSearchKeyword(searchId);
@@ -53,7 +45,15 @@ function RecentSearch() {
       .catch((err) => console.log(err));
   };
 
-  const searchItemList = searchList.map((item: any) => (
+  useEffect(() => {
+    getSearchKeywordList()
+      .then((res) => {
+        setSearchList(res?.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const searchItemList = searchList?.map((item: any) => (
     <SearchItem key={item.searchId}>
       <p onClick={() => handleClick(item.searchId, item.keyword)}>
         {item.keyword}
@@ -69,7 +69,13 @@ function RecentSearch() {
       <SideContainer>
         <SideTitle title={["최근 검색어", ""]} />
       </SideContainer>
-      <SearchItemContainer>{searchItemList}</SearchItemContainer>
+      <SearchItemContainer>
+        {searchList?.length > 0 ? (
+          <p>최근 검색어가 없습니다.</p>
+        ) : (
+          searchItemList
+        )}
+      </SearchItemContainer>
     </RecentSearchContainer>
   );
 }
