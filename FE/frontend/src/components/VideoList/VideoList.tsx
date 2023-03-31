@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Video from "../Video/Video";
+import { SERVER_URL } from "../../constants/url";
 import { VideoListContainer, VideoItem } from "./style";
 import { MdFavorite } from "react-icons/md";
 
@@ -20,9 +21,10 @@ function VideoList(props: VideoListProps) {
   };
 
   const navigate = useNavigate();
-  const handleClickVideo = (videoId: number): void => {
-    if (props.listOption === "History") navigate(`/dance/${videoId}`);
-    else navigate(`/detail/${videoId}`);
+  const handleClickVideo = (danceId: number): void => {
+    // TODO: 춤 춘 결과 상세페이지 연결
+    if (props.listOption === "History") navigate(`/dance/${danceId}`);
+    else navigate(`/detail/${danceId}`);
   };
 
   var videoItemList;
@@ -41,11 +43,13 @@ function VideoList(props: VideoListProps) {
         }
       >
         <Video
+          width={"270px"}
+          height={"480px"}
           id={item.id}
           title={item.title}
-          videoPath={item.videoPath}
-          thumbnailPath={item.thumbnailPath}
-          handleClickVideo={() => handleClickVideo(item.id)}
+          videoPath={`${SERVER_URL}${item.videoPath}`}
+          thumbnailPath={`${SERVER_URL}${item.thumbnailPath}`}
+          handleClickVideo={() => handleClickVideo(item.danceId)}
         />
         <div>{item.score}</div>
       </VideoItem>
@@ -55,11 +59,13 @@ function VideoList(props: VideoListProps) {
       return (
         <VideoItem bgColor={"black"} isLike={item.isLike}>
           <Video
+            width={"270px"}
+            height={"480px"}
             id={item.id}
             title={item.title}
-            videoPath={item.youtubeUrl}
-            thumbnailPath={item.thumbnailPath}
-            handleClickVideo={() => handleClickVideo(item.id)}
+            videoPath={`${SERVER_URL}${item.url}`}
+            thumbnailPath={`${SERVER_URL}${item.thumbnailPath}`}
+            handleClickVideo={() => handleClickVideo(item.danceId)}
           />
           <MdFavorite onClick={() => handleLike(item.id, item.isLike)} />
         </VideoItem>

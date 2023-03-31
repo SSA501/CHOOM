@@ -8,6 +8,8 @@ interface VideoProps {
   videoPath: string;
   thumbnailPath: string;
   title: string;
+  width?: string;
+  height?: string;
   handleClickVideo: () => void;
 }
 
@@ -16,6 +18,8 @@ function Video({
   // youtubeId,
   thumbnailPath,
   videoPath,
+  width,
+  height,
   handleClickVideo,
 }: VideoProps) {
   const [playingVideoId, setPlayingVideoId] = useState<string>("");
@@ -23,6 +27,8 @@ function Video({
   return (
     <VideoContainer
       key={videoPath}
+      width={width ?? "360px"}
+      height={height ?? "640px"}
       onMouseEnter={(): void => setPlayingVideoId(videoPath)}
       onMouseLeave={(): void => setPlayingVideoId("")}
     >
@@ -52,8 +58,8 @@ function Video({
             loop
             muted
             playing
-            width="360px"
-            height="640px"
+            width={width ?? "360px"}
+            height={height ?? "640px"}
           />
           <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
         </>
@@ -61,8 +67,8 @@ function Video({
         <ThumbnailImg
           src={thumbnailPath}
           alt="썸네일이미지"
-          width="360px"
-          height="640px"
+          width={width ?? "360px"}
+          height={height ?? "640px"}
         />
       )}
     </VideoContainer>

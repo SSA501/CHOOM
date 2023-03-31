@@ -76,7 +76,7 @@ export const removeBookmark = async (danceId: number) => {
 export const getBookmarkList = async (
   page: number,
   size: number,
-  sort: "createdAt,desc" | "createdAt,asc"
+  sort: "score,desc" | "score,asc" | "createdAt,desc" | "createdAt,asc"
 ) => {
   const response = await axiosInstance.get(
     `/bookmark?page=${page}&size=${size}&sort=${sort}`

@@ -4,12 +4,13 @@ import { ListContainer, ListHeader, ListHeaderBtn, DropBtn } from "./style";
 import { MdOutlineVideocam } from "react-icons/md";
 import { CgHeart, CgZeit } from "react-icons/cg";
 import VideoList from "../../components/VideoList/VideoList";
-import axios from "axios";
+import { getMyDanceList } from "../../apis/dance";
+import { getBookmarkList } from "../../apis/challenge";
 
 function ProfilePage() {
   const [videoList, setVideoList] = useState<"History" | "Likes">("History");
   const [videoItemList, setVideoItemList] = useState<any[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const [sort, setSort] = useState<
     | { name: "높은 등급순"; sort: "score,desc" }
     | { name: "낮은 등급순"; sort: "score,asc" }
@@ -39,20 +40,47 @@ function ProfilePage() {
   }, [target]);
 
   useEffect(() => {
-    console.log(page + "번 페이지 호출");
+    console.log(page + "번 페이지 호출 -> 정렬: " + sort);
     setIsLoading(true);
-    axios({
-      method: "get",
-      url: selectHistory
-        ? "/assets/myChallengeList.json"
-        : "/assets/myFavoriteList.json",
-    }).then((response) => {
-      setVideoItemList((prevList) => [
-        ...prevList,
-        ...response.data.data.content,
-      ]);
-      setIsLoading(false);
-    });
+
+    if (selectHistory) {
+      getMyDanceList(page, 5, sort.sort)
+        .then((res) => {
+          console.log("내가 춘 춤 목록 받기");
+          console.log(res);
+          if (res.statusCode === 200) {
+            setVideoItemList((prevList) => [...prevList, ...res.data.content]);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      getBookmarkList(page, 5, sort.sort)
+        .then((res) => {
+          console.log("즐겨찾기 목록 받기");
+          console.log(res);
+          if (res.statusCode === 200) {
+            let newList = res.data.content.map((item: any) => {
+              let newItem = {
+                id: item.id,
+                danceId: item.danceId,
+                title: item.title,
+                url: item.url,
+                thumbnailPathPath: item.thumbnailPathPath,
+                userCount: item.userCount,
+                status: item.status,
+                createdAt: item.createdAt,
+                isLike: true,
+              };
+              return newItem;
+            });
+
+            setVideoItemList((prevList) => [...prevList, ...newList]);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   }, [page]);
 
   const updatePage = (entries: IntersectionObserverEntry[]) => {
@@ -68,24 +96,24 @@ function ProfilePage() {
 
   const changVideoList = (mode: "History" | "Likes") => {
     setVideoList(mode);
-    setPage(1);
+    setPage(0);
     setVideoItemList([]);
     if (mode === "History") {
       setSelectHistory(true);
-      historyDropMenuItemList[0].handleClick();
+      dropMenuItemList[0].handleClick();
     } else {
       setSelectHistory(false);
-      likesDropMenuItemList[0].handleClick();
+      dropMenuItemList[2].handleClick();
     }
   };
 
   useEffect(() => {
-    // TODO: 정렬 요청
-    console.log(sort);
-    setDropMenuOpen(!dropMenuOpen);
+    setPage(0);
+    setVideoItemList([]);
+    setDropMenuOpen(false);
   }, [sort]);
 
-  const historyDropMenuItemList: {
+  const dropMenuItemList: {
     name: "높은 등급순" | "낮은 등급순" | "최신순" | "오래된순";
     handleClick: () => void;
   }[] = [
@@ -105,28 +133,6 @@ function ProfilePage() {
           sort: "score,asc",
         }),
     },
-    {
-      name: "최신순",
-      handleClick: () =>
-        setSort({
-          name: "최신순",
-          sort: "createdAt,desc",
-        }),
-    },
-    {
-      name: "오래된순",
-      handleClick: () =>
-        setSort({
-          name: "오래된순",
-          sort: "createdAt,asc",
-        }),
-    },
-  ];
-
-  const likesDropMenuItemList: {
-    name: "최신순" | "오래된순";
-    handleClick: () => void;
-  }[] = [
     {
       name: "최신순",
       handleClick: () =>
@@ -171,8 +177,8 @@ function ProfilePage() {
           <SmallMenu
             itemList={
               videoList === "History"
-                ? historyDropMenuItemList
-                : likesDropMenuItemList
+                ? dropMenuItemList
+                : dropMenuItemList.slice(2, 4)
             }
             top="60px"
             right="60px"
