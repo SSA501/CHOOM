@@ -1,5 +1,6 @@
 package com.choom.domain.user.service;
 
+import com.choom.domain.user.controller.NicknameClient;
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
@@ -25,12 +26,14 @@ public class AuthService {
     private final KakaoService kakaoService;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
+    private final NicknameClient NicknameCaller;
 
     @Transactional
     public TokenDto kakaoLogin(String code) {
         SocialUserInfoDto userInfo = kakaoService.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
-        String nickname = userInfo.getNickname();
+        String nickname = NicknameCaller.getRandomNickname("text",1,10,"_");
+        log.info("nickname : "+nickname);
         String profileImage = userInfo.getProfileImage();
 
         User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
@@ -57,7 +60,8 @@ public class AuthService {
         }
 
         String identifier = userInfo.getIdentifier();
-        String nickname = userInfo.getNickname();
+        String nickname = NicknameCaller.getRandomNickname("text",1,10,"_");
+        log.info("nickname : "+nickname);
         String profileImage = userInfo.getProfileImage();
 
         User user = userRepository.findByIdentifierAndSocialType(identifier, socialType).orElse(null);
