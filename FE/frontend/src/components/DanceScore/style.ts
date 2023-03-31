@@ -25,7 +25,11 @@ const EditIcon = styled.div<{ isEditing: boolean }>`
       }
     `}
 `;
-
+const ShareContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 const ChallengeTitleContainer = styled.div`
   margin-left: 48px;
   padding: 1em 0;
@@ -48,5 +52,15 @@ const ChallengeTitleContainer = styled.div`
     border-bottom: 3px solid black;
   }
 `;
+const BtnContainer = styled.div`
+  margin-left: 48px;
+  display: flex;
+`;
 
-export { Header, EditIcon, ChallengeTitleContainer };
+export {
+  Header,
+  EditIcon,
+  ChallengeTitleContainer,
+  ShareContainer,
+  BtnContainer,
+};

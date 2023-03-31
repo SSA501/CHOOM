@@ -5,6 +5,7 @@ import { CircleBtnContainer, CircleIconBtn, CircleBtnLabel } from "./style";
 function CircleBtn(props: {
   icon: IconType;
   label?: string;
+  color?: string;
   disabled?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) {
@@ -15,7 +16,7 @@ function CircleBtn(props: {
           <props.icon />
         </CircleIconBtn>
       ) : (
-        <CircleIconBtn onClick={props.onClick}>
+        <CircleIconBtn onClick={props.onClick} color={props.color}>
           <props.icon />
         </CircleIconBtn>
       )}

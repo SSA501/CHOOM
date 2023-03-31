@@ -183,7 +183,7 @@ function DanceCam(props: {
       } else {
         mediaRecorder?.stop();
         mediaRecorderGuide?.stop();
-        props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
+        props.setScore(Math.round(sumScore / (scoreTempList.length - noScore)));
         props.setScoreList(scoreTempList);
         clearInterval(poseDetection);
 

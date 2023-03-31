@@ -98,13 +98,7 @@ function DancePage() {
       {myUrl?.length > 0 ? (
         <SideInfoContainer>
           <SideTitle title={["챌린지", "결과보기🎉"]}></SideTitle>
-          <SideSubTitle
-            title="챌린지 결과 설명 ❓"
-            score={score}
-            myUrl={myUrl}
-            dance={dance!}
-            contents={resultContents}
-          />
+          <SideSubTitle title="챌린지 결과 설명 ❓" contents={resultContents} />
         </SideInfoContainer>
       ) : (
         <SideInfoContainer>
@@ -112,7 +106,6 @@ function DancePage() {
           <SideSubTitle
             title="챌린지 연습 설명 ❓"
             contents={practiceContents}
-            dance={dance!}
           />
         </SideInfoContainer>
       )}
@@ -144,6 +137,7 @@ function DancePage() {
                 setMyUrl={setMyUrl}
                 score={score}
                 dance={dance!}
+                myUrl={myUrl}
                 myBlob={myBlob!}
                 imageFile={imageFile}
               />

@@ -6,5 +6,7 @@ const StyleContainer = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
 `;
-
-export { StyleContainer };
+const DanceResultContainer = styled.div`
+  display: flex;
+`;
+export { StyleContainer, DanceResultContainer };
