@@ -43,6 +43,9 @@ public class MyDance extends BaseTimeEntity {
     @Column(length = 2083)
     private String tiktokUrl;
 
+    @Column(length = 2083, unique = true)
+    private String thumbnailPath;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -60,7 +63,7 @@ public class MyDance extends BaseTimeEntity {
     }
 
     @Builder
-    public MyDance(int score, String matchRate, String videoPath, int videoLength, String title, User user, Dance dance, String tiktokUrl, String youtubeUrl) {
+    public MyDance(int score, String matchRate, String videoPath, int videoLength, String title, User user, Dance dance, String tiktokUrl, String youtubeUrl, String thumbnailPath) {
         this.score = score;
         this.matchRate = matchRate;
         this.videoPath = videoPath;
@@ -70,5 +73,6 @@ public class MyDance extends BaseTimeEntity {
         this.dance = dance;
         this.tiktokUrl = tiktokUrl;
         this.youtubeUrl = youtubeUrl;
+        this.thumbnailPath = thumbnailPath;
     }
 }

@@ -30,11 +30,11 @@ public class MyDanceController {
 
     @PostMapping()
     public ResponseEntity<BaseResponse> addMyDance(@ApiIgnore Authentication authentication, @RequestPart AddMyDanceRequestDto addMyDanceRequestDto,
-                                                   @RequestPart MultipartFile videoFile) throws IOException {
+                                                   @RequestPart MultipartFile videoFile, @RequestPart MultipartFile imageFile) throws IOException {
         log.info("AddMyDanceRequestDto : " + addMyDanceRequestDto);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
         Long userId = customUserDetails.getUserId();
-        AddMyDanceResponseDto addMyDanceResponseDto = myDanceService.addMyDance(userId, addMyDanceRequestDto, videoFile);
+        AddMyDanceResponseDto addMyDanceResponseDto = myDanceService.addMyDance(userId, addMyDanceRequestDto, videoFile, imageFile);
         return new ResponseEntity<>(BaseResponse.success(addMyDanceResponseDto), HttpStatus.OK);
     }
 
