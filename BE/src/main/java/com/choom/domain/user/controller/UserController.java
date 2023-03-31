@@ -32,6 +32,7 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<BaseResponse> userDetails(@ApiIgnore Authentication authentication, @RequestParam(required = false) Long userId) {
+        log.info("userDetails 요청");
         if (userId != null) {
             UserDetailsDto userDetailsDto = userService.findUserDetails(userId);
             return new ResponseEntity<>(BaseResponse.success(userDetailsDto), HttpStatus.OK);
