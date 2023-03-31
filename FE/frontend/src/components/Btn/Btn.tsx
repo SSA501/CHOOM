@@ -3,7 +3,7 @@ import { LoginBtn, Icon, NomalBtn } from "./style";
 
 export type BtnProps = {
   login?: boolean;
-  loginType?: "kakao" | "google" | "tiktok";
+  loginType?: "kakao" | "google" | "tiktok" | "youtube_shorts";
   btnText?: string;
   handleClick: () => void;
   width?: string;

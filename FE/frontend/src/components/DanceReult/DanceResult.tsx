@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DanceChart from "../../components/DanceChart/DanceChart";
 import Btn from "../Btn/Btn";
 import DanceScore from "../DanceScore/DanceScore";
-import { StyleContainer } from "./style";
+import { StyleContainer, DanceResultContainer } from "./style";
 import { Score, Dance } from "../../constants/types";
 import { createChallengeResult } from "../../apis/dance";
 
@@ -11,6 +11,7 @@ function DanceResult(props: {
   score: number;
   danceVideoRef: React.MutableRefObject<any>;
   setMyUrl: (myUrl: string) => void;
+  myUrl: string;
   dance: Dance;
   myBlob: Blob;
   imageFile?: File;
@@ -56,20 +57,28 @@ function DanceResult(props: {
   };
 
   return (
-    <StyleContainer>
-      <DanceScore
-        score={props.score}
-        setChallengeTitle={setChallengeTitle}
-        challengeTitle={challengeTitle}
-        danceId={props.dance.id}
-      />
-      <DanceChart
-        scoreList={props.scoreList}
-        danceVideoRef={props.danceVideoRef}
-        score={props.score}
-      />
-      <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
-    </StyleContainer>
+    <DanceResultContainer>
+      <StyleContainer>
+        <DanceScore
+          score={props.score}
+          setChallengeTitle={setChallengeTitle}
+          challengeTitle={challengeTitle}
+          danceId={props.dance.id}
+        />
+        <div style={{ display: "flex" }}>
+          <DanceChart
+            scoreList={props.scoreList}
+            danceVideoRef={props.danceVideoRef}
+            score={props.score}
+            myUrl={props.myUrl}
+            dance={props.dance}
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
+        </div>
+      </StyleContainer>
+    </DanceResultContainer>
   );
 }
 

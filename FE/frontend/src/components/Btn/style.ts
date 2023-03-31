@@ -6,12 +6,15 @@ interface NormalBtnProps {
   margin?: string;
 }
 
-const LoginBtn = styled.button<{ loginType?: "kakao" | "google" | "tiktok" }>`
+const LoginBtn = styled.button<{
+  loginType?: "kakao" | "google" | "tiktok" | "youtube_shorts";
+  size?: string;
+}>`
   position: relative;
-  width: 115px;
-  height: 115px;
+  width: ${(props) => props.size || "115px"};
+  height: ${(props) => props.size || "115px"};
   border-radius: 60px;
-  margin-inline: 13px;
+  margin-inline: ${(props) => props.size + "px" || "13px"};
   background-color: ${(props) =>
     props.loginType === "kakao"
       ? "#FFE550"
@@ -50,15 +53,16 @@ const CircleBtnContainer = styled.div`
   width: "60px";
 `;
 
-const CircleIconBtn = styled.button<{ time?: number }>`
+const CircleIconBtn = styled.button<{ time?: number; color?: string }>`
   position: relative;
+  margin-right: "10px";
   border: none;
   border-radius: 2rem;
   width: 60px;
   height: 60px;
-  border: 2px solid var(--purple-color);
+  border: 2px solid ${(props) => props.color || "var(--purple-color)"};
   background-color: var(--white-color);
-  color: var(--purple-color);
+  color: ${(props) => props.color || "var(--purple-color)"};
   font-size: 20px;
   margin-top: 20px;
   line-height: 10px;
@@ -67,7 +71,7 @@ const CircleIconBtn = styled.button<{ time?: number }>`
     font-size: 28px !important;
   }
   &:hover {
-    background-color: var(--purple-color);
+    background-color: ${(props) => props.color || "var(--purple-color)"};
     color: var(--white-color);
   }
   &:disabled {
