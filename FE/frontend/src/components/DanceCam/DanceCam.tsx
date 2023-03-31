@@ -181,7 +181,7 @@ function DanceCam(props: {
     // }
     const poseDetection = setInterval(() => {
       if (countFrame < props.poseList.length) {
-        renderResult();
+        renderResult(countFrame);
         console.log(countFrame);
         countFrame++;
       } else {
@@ -190,14 +190,18 @@ function DanceCam(props: {
     }, 100);
   };
 
-  const renderResult = async () => {
+  const renderResult = async (countFrameNum: number) => {
     const estimatePoseList = await props.detector.estimatePoses(cam.current!);
     drawCtx();
 
-    const videoPose = props.poseList[countFrame];
+    const videoPose = props.poseList[countFrameNum];
     isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
 
-    if (estimatePoseList && estimatePoseList.length > 0) {
+    if (
+      estimatePoseList &&
+      estimatePoseList.length > 0 &&
+      videoPose.keypoints.length > 0
+    ) {
       const newKptList: poseDetection.Keypoint[] = [];
       estimatePoseList[0].keypoints.map((kpt: poseDetection.Keypoint) => {
         newKptList.push({
