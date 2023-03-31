@@ -32,6 +32,7 @@ public class GoogleService {
     private static String GOOGLE_CLIENT_ID;
     private static String GOOGLE_CLIENT_SECRET;
     private static String GOOGLE_REDIRECT_URI;
+    private static String UPLOAD_REDIRECT_URI;
 
     @Value("${google.client-id}")
     public void setGoogleClientId(String value) {
@@ -48,6 +49,11 @@ public class GoogleService {
         GOOGLE_REDIRECT_URI = value;
     }
 
+    @Value("${redirect-uri.upload}")
+    public void setUploadRedirectUri(String value) {
+        UPLOAD_REDIRECT_URI = value;
+    }
+
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -57,12 +63,12 @@ public class GoogleService {
     private static String VIDEO_FILE_FORMAT = "video/*";
 
     public SocialUserInfoDto getUserInfo(String code) {
-        String accessToken = getAccessToken(code);
+        String accessToken = getAccessToken("LOGIN", code);
         log.info("구글 accessToken : " + accessToken);
         return getUserInfoByToken(accessToken);
     }
 
-    public String getAccessToken(String code) {
+    public String getAccessToken(String type, String code) {
         String access_Token="";
         String reqURL = "https://oauth2.googleapis.com/token";
 
@@ -80,8 +86,13 @@ public class GoogleService {
             sb.append("&code=" + code);
             sb.append("&client_id=" + GOOGLE_CLIENT_ID);
             sb.append("&client_secret=" + GOOGLE_CLIENT_SECRET);
-            sb.append("&redirect_uri=" + GOOGLE_REDIRECT_URI);
+            if (type.equals("LOGIN")) {
+                sb.append("&redirect_uri=" + GOOGLE_REDIRECT_URI);
+            } else {
+                sb.append("&redirect_uri=" + UPLOAD_REDIRECT_URI);
+            }
             sb.append("&grant_type=" + "authorization_code");
+            log.info(sb.toString());
             bw.write(sb.toString());
             bw.flush();
 

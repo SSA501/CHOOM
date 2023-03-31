@@ -153,7 +153,7 @@ public class MyDanceService {
     private String uploadVideo(String videoPath, String title, String code) {
         try {
             // Authorization.
-            String accessToken = googleService.getAccessToken(code);
+            String accessToken = googleService.getAccessToken("UPLOAD", code);
             Credential credential = googleService.getCredential(accessToken);
             log.info("token : " + credential.getAccessToken());
 
