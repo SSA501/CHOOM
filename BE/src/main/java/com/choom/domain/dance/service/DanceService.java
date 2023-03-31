@@ -101,29 +101,28 @@ public class DanceService {
             }
         }
 
-            // 1. 유튜브 검색 결과
             if (youtube != null) {
                 if(isUrl){
                     if(keyword.contains("?")){
                         keyword = keyword.split("\\?")[0];
                     }
-
-                    Dance dance = danceRepository.findByUrl(keyword).orElse(null);
-
                     String[] urlList = keyword.split("/");
                     keyword = urlList[urlList.length-1];
 
                     log.info("url검색 - keyword : "+keyword);
                     DanceDetailsDto danceDetailDto = getVideoDetail(keyword);
-
-                    if(dance == null){ //처음인경우
-                        Dance insertDance = Dance.builder()
-                            .danceDetailDto(danceDetailDto)
-                            .build();
-                        Dance savedDance = danceRepository.save(insertDance);
-                        danceDetailDto.setId(savedDance.getId());
+                    if(danceDetailDto != null){
+                        Dance dance = danceRepository.findByYoutubeId(keyword).orElse(null);
+                        if(dance == null){ //처음인경우
+                            Dance insertDance = Dance.builder()
+                                .danceDetailDto(danceDetailDto)
+                                .build();
+                            Dance savedDance = danceRepository.save(insertDance);
+                            danceDetailDto.setId(savedDance.getId());
+                        }
+                        danceDetailDtoList.add(danceDetailDto);
                     }
-                    danceDetailDtoList.add(danceDetailDto);
+
                 }else{
                     YouTube.Search.List search = null;
                     try {
@@ -200,8 +199,10 @@ public class DanceService {
         DanceSearchDto danceSearchDto = null;
         if(searchResponse == null){
             danceSearchDto = new DanceSearchDto(dbDanceDetailDtoList,danceDetailDtoList);
+            log.info("url맞냐? "+danceSearchDto.getIsUrl());
         }else{
             danceSearchDto = new DanceSearchDto(searchResponse,dbDanceDetailDtoList,danceDetailDtoList);
+            log.info("url맞냐? "+danceSearchDto.getIsUrl());
         }
         return danceSearchDto;
     }
@@ -225,7 +226,8 @@ public class DanceService {
             throw new RuntimeException(e);
         }
         if(videoListResponse.getItems().size() == 0){
-            throw new IllegalArgumentException("잘못된 검색입니다...");
+            //잘못 된 검색인 경우
+            return null;
         }
         Video videoDetail = videoListResponse.getItems().get(0);
         //1분 이내 영상인지 확인
@@ -241,7 +243,7 @@ public class DanceService {
         }
 
         String url = GOOGLE_YOUTUBE_URL + youtubeId;
-        Dance dance = danceRepository.findByUrl(url).orElse(null);
+        Dance dance = danceRepository.findByYoutubeId(youtubeId).orElse(null);
 
         Long id = null;
         if(dance != null){
