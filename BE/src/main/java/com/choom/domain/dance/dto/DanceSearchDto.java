@@ -14,7 +14,7 @@ public class DanceSearchDto {
     String prevPageToken;
     Integer totalResults;
     Integer resultsPerPage;
-    Boolean isUrl;
+    Boolean isUrl = true;
     List<DanceDetailsDto> dbSearch;
     List<DanceDetailsDto> search;
 
