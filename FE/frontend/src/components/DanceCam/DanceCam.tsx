@@ -11,7 +11,7 @@ interface Pose {
   keypoints: poseDetection.Keypoint[];
 }
 interface Score {
-  score: number;
+  score?: number;
   time: number;
 }
 
@@ -88,6 +88,7 @@ function DanceCam(props: {
   let countScore: number = 0;
   let scoreTempList: Score[] = [];
   let stream: MediaStream;
+  let noScore: number = 0;
 
   useEffect(() => {
     setupCam();
@@ -186,7 +187,7 @@ function DanceCam(props: {
         countFrame++;
       } else {
         mediaRecorder?.stop();
-        props.setScore(Math.round(sumScore / scoreTempList.length));
+        props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
         props.setScoreList(scoreTempList);
         clearInterval(poseDetection);
       }
@@ -236,8 +237,24 @@ function DanceCam(props: {
       }
 
       isGuide && reverseGuide(newKptList, PALLETE.red);
-      if (scoreTempList.length > 0)
-        drawScore(scoreTempList[scoreTempList.length - 1].score);
+      if (
+        scoreTempList.length > 0 &&
+        scoreTempList[scoreTempList.length - 1].score
+      )
+        drawScore(scoreTempList[scoreTempList.length - 1].score!);
+    } else {
+      const timeTemp = new Date();
+      if (
+        (timeTemp.getTime() - startTime.getTime()) / 1000 >
+        scoreTempList.length + 1
+      ) {
+        noScore += 1;
+        scoreTempList.push({
+          time: Math.round(
+            (timeTemp.getTime() - startTime.getTime()) / 1000 - 1
+          ),
+        });
+      }
     }
   };
 
