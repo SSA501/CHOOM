@@ -79,16 +79,22 @@ const DanceVideo = forwardRef(
 
     // 분석
     const runFrame = async () => {
-      if (video.current?.paused) {
-        alert("완료");
-        console.log(poseListTemp);
-        props.setPoseList(poseListTemp);
-        clearInterval(intervalId);
-        return;
-      }
+      // if (video.current?.paused) {
+      //   alert("완료");
+      //   console.log(poseListTemp);
+      //   props.setPoseList(poseListTemp);
+      //   return;
+      // }
 
-      await renderResult();
+      // await renderResult();
       // requestAnimationFrame(runFrame);
+      const poseDetection = setInterval(() => {
+        if (video.current?.paused) {
+          clearInterval(poseDetection);
+        } else {
+          renderResult();
+        }
+      }, 100);
     };
 
     // 결과저장
@@ -111,9 +117,6 @@ const DanceVideo = forwardRef(
         poseListTemp.push({ keypoints: newKpts });
       }
     };
-
-    // 100ms마다 renderResult() 함수 호출
-    let intervalId = setInterval(renderResult, 1000 / 10);
 
     const playVideo = () => {
       if (video.current) video.current.currentTime = 0;

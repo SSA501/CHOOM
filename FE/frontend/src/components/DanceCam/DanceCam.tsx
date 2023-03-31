@@ -162,23 +162,32 @@ function DanceCam(props: {
 
   // frame당 포즈예측
   const renderPrediction = async () => {
-    await renderResult();
-    countFrame++;
-    if (countFrame < props.poseList.length) {
-      requestAnimationFrame(renderPrediction);
-    } else {
-      // 녹화종료
-      props.setScore(Math.round(sumScore / scoreTempList.length));
-      props.setScoreList(scoreTempList);
+    // await renderResult();
+    // countFrame++;
+    // if (countFrame < props.poseList.length) {
+    //   requestAnimationFrame(renderPrediction);
+    // } else {
+    //   // 녹화종료
+    //   props.setScore(Math.round(sumScore / scoreTempList.length));
+    //   props.setScoreList(scoreTempList);
 
-      mediaRecorder?.stop();
-      if (cam.current) {
-        cam.current.srcObject = null;
+    //   mediaRecorder?.stop();
+    //   if (cam.current) {
+    //     cam.current.srcObject = null;
+    //   }
+    //   const tracks = stream.getTracks();
+    //   tracks.forEach((track) => track.stop());
+    //   return;
+    // }
+    const poseDetection = setInterval(() => {
+      if (countFrame < props.poseList.length) {
+        renderResult();
+        console.log(countFrame);
+        countFrame++;
+      } else {
+        clearInterval(poseDetection);
       }
-      const tracks = stream.getTracks();
-      tracks.forEach((track) => track.stop());
-      return;
-    }
+    }, 100);
   };
 
   const renderResult = async () => {
