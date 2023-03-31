@@ -63,8 +63,9 @@ function VideoList(props: VideoListProps) {
             key={item.id}
             id={item.id}
             title={item.title}
-            videoPath={`${SERVER_URL}${item.url}`}
-            thumbnailPath={`${SERVER_URL}${item.thumbnailPath}`}
+            url={item.url}
+            videoPath={item.url}
+            thumbnailPath={item.thumbnailPath}
             handleClickVideo={() => handleClickVideo(item.danceId)}
           />
           <MdFavorite onClick={() => handleLike(item.id, item.isLike)} />
