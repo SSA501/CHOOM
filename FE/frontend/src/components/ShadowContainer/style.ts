@@ -11,6 +11,7 @@ export interface ShadowContainerProps {
   flexWrap?: string;
   justifyContent?: string;
   position?: string;
+  boxShadow?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     flexWrap,
     justifyContent,
     position,
+    boxShadow,
   }) => css`
     width: ${width || "100%"};
     max-width: 1728px;
@@ -43,7 +45,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     margin: ${margin || "0 auto 3em"};
     padding: ${padding || "3em"};
     border: 3px solid black;
-    box-shadow: 12px 12px black;
+    box-shadow: ${boxShadow || "12px 12px black"};
     display: ${display};
     flex-wrap: ${flexWrap};
     justify-content: ${justifyContent};
