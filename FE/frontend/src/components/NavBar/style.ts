@@ -24,7 +24,7 @@ const NavLi = styled.li`
   font-weight: 600;
 `;
 
-const NavBtnLink = styled(NavLink)<{ challenge?: boolean }>`
+const NavBtnLink = styled.a<{ challenge?: boolean }>`
   padding: 1em 0.5em 25px;
   /* & div {
     display: none;

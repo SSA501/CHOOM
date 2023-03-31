@@ -7,6 +7,8 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { addSearchKeyword } from "../../apis/challenge";
+import { useAppSelector } from "../../constants/types";
+import LoginModal from "../Modal/LoginModal";
 import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
 
 interface SearchBarProps {
@@ -17,9 +19,24 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   const [inputValue, setInputValue] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();
+  const isLogin = useAppSelector(
+    (state) => state && state.main && state.main.isLogin
+  );
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  // const showLoginModal = () => {
+  //   if (setLoginModalOpen) setLoginModalOpen(true); // setLoginModalOpen이 undefined 인 경우 대비
+  //   document.body.style.overflow = "hidden";
+  // };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      if (!isLogin) {
+        // showLoginModal();
+        setLoginModalOpen(true);
+        return;
+      }
+
       const trimmedValue = inputValue.trim();
       if (trimmedValue.length < 1) {
         alert("검색어를 입력하세요");
@@ -52,20 +69,23 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   }, [currentQuery, searchParams]);
 
   return (
-    <SearchBarContainer>
-      <SearchIcon>
-        <CgSearch size={"24px"} />
-      </SearchIcon>
-      <SearchInput
-        type="text"
-        value={inputValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-          setInputValue(e.target.value)
-        }
-        onKeyDown={handleKeyDown}
-        placeholder="곡명 혹은 영상 링크를 검색하세요"
-      />
-    </SearchBarContainer>
+    <>
+      <SearchBarContainer>
+        <SearchIcon>
+          <CgSearch size={"24px"} />
+        </SearchIcon>
+        <SearchInput
+          type="text"
+          value={inputValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+            setInputValue(e.target.value)
+          }
+          onKeyDown={handleKeyDown}
+          placeholder="곡명 혹은 영상 링크를 검색하세요"
+        />
+      </SearchBarContainer>
+      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+    </>
   );
 }
 

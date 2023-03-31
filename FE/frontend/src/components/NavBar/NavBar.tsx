@@ -7,13 +7,13 @@ import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
 function NavBar() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const isLogin = useAppSelector((state) => state.main.isLogin);
+  const navigate = useNavigate();
 
   const showLoginModal = () => {
     setLoginModalOpen(true);
     document.body.style.overflow = "hidden";
   };
 
-  const navigate = useNavigate();
   return (
     <header>
       <NavContainer>
@@ -29,13 +29,28 @@ function NavBar() {
         </div>
         <NavUl>
           <NavLi>
-            <NavBtnLink challenge={true} to="/challenge">
+            <NavBtnLink
+              challenge={true}
+              onClick={() => {
+                if (isLogin) {
+                  navigate("/challenge");
+                } else {
+                  showLoginModal();
+                }
+              }}
+            >
               챌린지
             </NavBtnLink>
           </NavLi>
           {isLogin ? (
             <NavLi>
-              <NavBtnLink to="/profile">프로필</NavBtnLink>
+              <NavBtnLink
+                onClick={() => {
+                  if (isLogin) navigate("/profile");
+                }}
+              >
+                프로필
+              </NavBtnLink>
             </NavLi>
           ) : (
             <NavLi>
