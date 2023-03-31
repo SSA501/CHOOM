@@ -62,6 +62,9 @@ public class MyDanceService {
                 .build();
         MyDance insertResult = myDanceRepository.save(myDance);
 
+        // DANCE userCount 증가
+        dance.updateUserCount(dance.getUserCount() + 1);
+
         return AddMyDanceResponseDto.builder()
                 .myDance(insertResult)
                 .build();

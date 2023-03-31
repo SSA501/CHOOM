@@ -63,6 +63,10 @@ public class Dance extends BaseTimeEntity {
     @OneToMany(mappedBy = "dance", cascade = CascadeType.ALL)
     private List<MyDance> myDanceList = new ArrayList<>();
 
+    public void updateUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
     public void updateJsonPath(String jsonPath) {
         this.jsonPath = jsonPath;
     }
