@@ -36,6 +36,8 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     flexWrap,
     justifyContent,
     position,
+    boxShadow,
+    minHeight,
   }) => css`
     width: ${width || "100%"};
     max-width: 1728px;

@@ -37,9 +37,8 @@ function DanceResult(props: {
     const formData = new FormData();
     formData.append("addMyDanceRequestDto", jsonData);
     formData.append("videoFile", videofile);
-    console.log("props.imageFile");
     console.log(props.imageFile);
-    formData.append("imgaeFile", props.imageFile!);
+    formData.append("imageFile", props.imageFile!);
     createChallengeResult(formData)
       .then((res) => {
         console.log(res);

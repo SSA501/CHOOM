@@ -181,11 +181,18 @@ function DanceCam(props: {
         console.log(countFrame);
         countFrame++;
       } else {
+        mediaRecorder?.stop();
+        mediaRecorderGuide?.stop();
+        props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
+        props.setScoreList(scoreTempList);
+        clearInterval(poseDetection);
+
+        // 썸네일 저장
         if (cam.current) {
           cam.current.currentTime = highScore.time;
           const capCanvas = document.createElement("canvas");
-          capCanvas.width = cam.current.videoWidth;
-          capCanvas.height = cam.current.videoHeight;
+          capCanvas.width = cam.current.width;
+          capCanvas.height = cam.current.height;
           const cap = capCanvas.getContext("2d");
           cap?.drawImage(
             cam.current,
@@ -194,22 +201,27 @@ function DanceCam(props: {
             canvas.current!.width,
             canvas.current!.height
           );
-          const imageData = cap?.getImageData(
-            0,
-            0,
-            canvas.current!.width,
-            canvas.current!.height
-          );
-          const imageFile = new File([imageData!.data], "imageFile", {
+          const dataURL = capCanvas?.toDataURL();
+          console.log(dataURL);
+
+          // 데이터 URL에서 base64 인코딩 된 데이터 추출
+          const base64Data = dataURL.split(",")[1];
+
+          // base64 디코딩하여 바이너리 데이터 생성
+          const binaryData = atob(base64Data);
+
+          // 바이너리 데이터를 Uint8Array 형식으로 변환
+          const dataArray = new Uint8Array(binaryData.length);
+          for (let i = 0; i < binaryData.length; i++) {
+            dataArray[i] = binaryData.charCodeAt(i);
+          }
+          const imageFile = new File([dataArray], " imageFile.png", {
             type: "image/png",
           });
+
           props.setimageFile(imageFile);
         }
-        mediaRecorder?.stop();
-        mediaRecorderGuide?.stop();
-        props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
-        props.setScoreList(scoreTempList);
-        clearInterval(poseDetection);
+
         if (cam.current) {
           cam.current.srcObject = null;
         }
