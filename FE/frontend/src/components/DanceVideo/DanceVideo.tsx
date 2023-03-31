@@ -79,15 +79,22 @@ const DanceVideo = forwardRef(
 
     // 분석
     const runFrame = async () => {
-      if (video.current?.paused) {
-        alert("완료");
-        console.log(poseListTemp);
-        props.setPoseList(poseListTemp);
-        return;
-      }
+      // if (video.current?.paused) {
+      //   alert("완료");
+      //   console.log(poseListTemp);
+      //   props.setPoseList(poseListTemp);
+      //   return;
+      // }
 
-      await renderResult();
-      requestAnimationFrame(runFrame);
+      // await renderResult();
+      // requestAnimationFrame(runFrame);
+      const poseDetection = setInterval(() => {
+        if (video.current?.paused) {
+          clearInterval(poseDetection);
+        } else {
+          renderResult();
+        }
+      }, 100);
     };
 
     // 결과저장
