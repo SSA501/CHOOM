@@ -31,10 +31,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> userDetails(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<BaseResponse> userDetails(@ApiIgnore Authentication authentication, @RequestParam(required = false) Long userId) {
+        if (userId != null) {
+            UserDetailsDto userDetailsDto = userService.findUserDetails(userId);
+            return new ResponseEntity<>(BaseResponse.success(userDetailsDto), HttpStatus.OK);
+        }
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        Long userId = customUserDetails.getUserId();
-        UserDetailsDto userDetailsDto = userService.findUserDetails(userId);
+        Long authenticatedUserId = customUserDetails.getUserId();
+        UserDetailsDto userDetailsDto = userService.findUserDetails(authenticatedUserId);
         return new ResponseEntity<>(BaseResponse.success(userDetailsDto), HttpStatus.OK);
     }
 
