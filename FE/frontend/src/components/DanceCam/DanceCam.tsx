@@ -6,14 +6,7 @@ import { CamContainer, MyCam, MyCanvas } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { MdPlayCircleOutline } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
-interface Pose {
-  keypoints: poseDetection.Keypoint[];
-}
-interface Score {
-  score: number;
-  time: number;
-}
+import { Score, Pose } from "../../constants/types";
 
 const VIDEO_CONFIG = {
   audio: false,
@@ -88,6 +81,7 @@ function DanceCam(props: {
   let countScore: number = 0;
   let scoreTempList: Score[] = [];
   let stream: MediaStream;
+  let noScore: number = 0;
 
   useEffect(() => {
     setupCam();
@@ -162,33 +156,49 @@ function DanceCam(props: {
 
   // frame당 포즈예측
   const renderPrediction = async () => {
-    await renderResult();
-    countFrame++;
-    if (countFrame < props.poseList.length) {
-      requestAnimationFrame(renderPrediction);
-    } else {
-      // 녹화종료
-      props.setScore(Math.round(sumScore / scoreTempList.length));
-      props.setScoreList(scoreTempList);
+    // await renderResult();
+    // countFrame++;
+    // if (countFrame < props.poseList.length) {
+    //   requestAnimationFrame(renderPrediction);
+    // } else {
+    //   // 녹화종료
+    //   props.setScore(Math.round(sumScore / scoreTempList.length));
+    //   props.setScoreList(scoreTempList);
 
-      mediaRecorder?.stop();
-      if (cam.current) {
-        cam.current.srcObject = null;
+    //   mediaRecorder?.stop();
+    //   if (cam.current) {
+    //     cam.current.srcObject = null;
+    //   }
+    //   const tracks = stream.getTracks();
+    //   tracks.forEach((track) => track.stop());
+    //   return;
+    // }
+    const poseDetection = setInterval(() => {
+      if (countFrame < props.poseList.length) {
+        renderResult(countFrame);
+        console.log(countFrame);
+        countFrame++;
+      } else {
+        mediaRecorder?.stop();
+        props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
+        props.setScoreList(scoreTempList);
+        clearInterval(poseDetection);
       }
-      const tracks = stream.getTracks();
-      tracks.forEach((track) => track.stop());
-      return;
-    }
+    }, 100);
   };
 
-  const renderResult = async () => {
+  const renderResult = async (countFrameNum: number) => {
     const estimatePoseList = await props.detector.estimatePoses(cam.current!);
     drawCtx();
 
-    const videoPose = props.poseList[countFrame];
+    const videoPose = props.poseList[countFrameNum];
     isGuide && drawGuide(videoPose.keypoints, PALLETE.green);
 
-    if (estimatePoseList && estimatePoseList.length > 0) {
+    if (
+      estimatePoseList &&
+      estimatePoseList.length > 0 &&
+      videoPose.keypoints.length > 0
+    ) {
       const newKptList: poseDetection.Keypoint[] = [];
       estimatePoseList[0].keypoints.map((kpt: poseDetection.Keypoint) => {
         newKptList.push({
@@ -220,8 +230,24 @@ function DanceCam(props: {
       }
 
       isGuide && reverseGuide(newKptList, PALLETE.red);
-      if (scoreTempList.length > 0)
-        drawScore(scoreTempList[scoreTempList.length - 1].score);
+      if (
+        scoreTempList.length > 0 &&
+        scoreTempList[scoreTempList.length - 1].score
+      )
+        drawScore(scoreTempList[scoreTempList.length - 1].score!);
+    } else {
+      const timeTemp = new Date();
+      if (
+        (timeTemp.getTime() - startTime.getTime()) / 1000 >
+        scoreTempList.length + 1
+      ) {
+        noScore += 1;
+        scoreTempList.push({
+          time: Math.round(
+            (timeTemp.getTime() - startTime.getTime()) / 1000 - 1
+          ),
+        });
+      }
     }
   };
 
@@ -238,6 +264,7 @@ function DanceCam(props: {
     // 다시 scale을 사용하여 원래대로 돌려놓기
     ctx.scale(-1, 1);
   };
+
   const reverseGuide = (keypoints: poseDetection.Keypoint[], color: string) => {
     ctx.save(); // 현재 캔버스 상태를 저장합니다.
 
