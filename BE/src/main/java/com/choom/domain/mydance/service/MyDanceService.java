@@ -38,9 +38,12 @@ public class MyDanceService {
     private final DanceRepository danceRepository;
 
     @Transactional
-    public AddMyDanceResponseDto addMyDance(Long userId, AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile) throws IOException {
+    public AddMyDanceResponseDto addMyDance(Long userId, AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile thumbnail) throws IOException {
         // 내 챌린지 영상 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
+
+        // 내 챌린지 영상 썸네일 업로드
+        String thumbnailPath = fileService.fileUpload("mydance/thumbnail", thumbnail);
 
         // MY_DANCE insert
         User user = userRepository.findById(userId)
@@ -53,6 +56,7 @@ public class MyDanceService {
                 .videoLength(myDanceAddRequestDto.getVideoLength())
                 .title(myDanceAddRequestDto.getTitle())
                 .videoPath(videoPath)
+                .thumbnailPath(thumbnailPath)
                 .user(user)
                 .dance(dance)
                 .build();
@@ -92,6 +96,9 @@ public class MyDanceService {
 
         // 내 챌린지 영상 삭제
         fileService.fileDelete(myDance.getVideoPath());
+
+        // 내 챌린지 영상 썸네일 삭제
+        fileService.fileDelete(myDance.getThumbnailPath());
 
         // MY_DANCE delete
         myDanceRepository.deleteById(myDanceId);

@@ -12,6 +12,7 @@ public class AddMyDanceResponseDto {
     private int score;
     private String matchRate;
     private String videoPath;
+    private String thumbnailPath;
     private int videoLength;
     private String title;
 
@@ -22,6 +23,7 @@ public class AddMyDanceResponseDto {
         this.score = myDance.getScore();
         this.matchRate =myDance.getMatchRate();
         this.videoPath = myDance.getVideoPath();
+        this.thumbnailPath = myDance.getThumbnailPath();
         this.videoLength = myDance.getVideoLength();
         this.title = myDance.getTitle();
     }
