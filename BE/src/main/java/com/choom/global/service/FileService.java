@@ -27,7 +27,8 @@ public class FileService {
         //서버에 파일 저장
         String hostname = InetAddress.getLocalHost().getHostName();
         UUID uuid = UUID.randomUUID();
-        String name = uuid.toString() + image.getOriginalFilename();
+        String name = uuid.toString() + image.getOriginalFilename().replaceAll(" ","");
+        log.info(name);
         String path = "";
         File file = null;
 
