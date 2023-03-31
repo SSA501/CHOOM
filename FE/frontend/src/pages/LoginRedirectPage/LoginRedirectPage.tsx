@@ -39,7 +39,7 @@ function LoginRedirectPage({ isGoogle }: LoginRedirectPageProps) {
       loginGoogle(code)
         .then((res) => {
           updateUserStatus(res);
-          navigate(-2);
+          navigate(-3);
         })
         .catch((err) => console.log(err));
     }
