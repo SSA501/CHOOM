@@ -1,5 +1,6 @@
 package com.choom.domain.user.service;
 
+import com.choom.global.service.RandomNicknameService;
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -27,13 +27,14 @@ public class AuthService {
     private final KakaoService kakaoService;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final BlacklistRedisRepository blacklistRedisRepository;
+    private final RandomNicknameService randomNicknameService;
     private final FileService fileService;
 
     @Transactional
     public TokenDto kakaoLogin(String code) {
         SocialUserInfoDto userInfo = kakaoService.getUserInfo(code);
         String identifier = userInfo.getIdentifier();
-        String nickname = userInfo.getNickname();
+        String nickname = randomNicknameService.getRandomNickname("text",1,10,"_");
         String profileImage = userInfo.getProfileImage();
 
         User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
@@ -60,7 +61,7 @@ public class AuthService {
         }
 
         String identifier = userInfo.getIdentifier();
-        String nickname = userInfo.getNickname();
+        String nickname = randomNicknameService.getRandomNickname("text",1,10,"_");
         String profileImage = userInfo.getProfileImage();
 
         User user = userRepository.findByIdentifierAndSocialType(identifier, socialType).orElse(null);
