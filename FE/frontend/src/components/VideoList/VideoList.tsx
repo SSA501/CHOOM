@@ -3,6 +3,7 @@ import Video from "../Video/Video";
 import { SERVER_URL } from "../../constants/url";
 import { VideoListContainer, VideoItem } from "./style";
 import { MdFavorite } from "react-icons/md";
+import { addBookmark, removeBookmark } from "../../apis/challenge";
 
 type VideoListProps = {
   listOption: "History" | "Likes";
@@ -11,11 +12,26 @@ type VideoListProps = {
 };
 
 function VideoList(props: VideoListProps) {
-  const handleLike = (videoId: number, isLike: boolean) => {
-    const newVideoList = props.videoList.map((video) =>
-      video.id === videoId ? { ...video, isLike: !isLike } : video
-    );
-    props.setVideoItemList(newVideoList);
+  const handleLike = (danceId: number, isLike: boolean) => {
+    if (isLike) {
+      removeBookmark(danceId)
+        .then(() => {
+          const newVideoList = props.videoList.map((video) =>
+            video.id === danceId ? { ...video, isLike: !isLike } : video
+          );
+          props.setVideoItemList(newVideoList);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      addBookmark(danceId)
+        .then(() => {
+          const newVideoList = props.videoList.map((video) =>
+            video.id === danceId ? { ...video, isLike: !isLike } : video
+          );
+          props.setVideoItemList(newVideoList);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const navigate = useNavigate();
