@@ -104,13 +104,14 @@ public class DanceService {
             // 1. 유튜브 검색 결과
             if (youtube != null) {
                 if(isUrl){
+                    if(keyword.contains("?")){
+                        keyword = keyword.split("\\?")[0];
+                    }
+
                     Dance dance = danceRepository.findByUrl(keyword).orElse(null);
 
                     String[] urlList = keyword.split("/");
                     keyword = urlList[urlList.length-1];
-                    if(keyword.contains("?")){
-                        keyword = keyword.split("\\?")[0];
-                    }
 
                     log.info("url검색 - keyword : "+keyword);
                     DanceDetailsDto danceDetailDto = getVideoDetail(keyword);
