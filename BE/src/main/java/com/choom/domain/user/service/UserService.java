@@ -48,8 +48,11 @@ public class UserService {
     public void modifyUserProfileImage(Long userId, MultipartFile profileImage) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-        String profileImagePath = fileService.fileUpload("user", profileImage);
-        user.updateProfileImage(profileImagePath);
+        String profileImagePath = user.getProfileImage();
+        log.info(profileImagePath);
+        fileService.fileDelete(profileImagePath);
+        String newProfileImagePath = fileService.fileUpload("user", profileImage);
+        user.updateProfileImage(newProfileImagePath);
         return;
     }
 

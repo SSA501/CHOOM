@@ -8,9 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -76,5 +79,37 @@ public class FileService {
         File file = new File(path);
         if (!file.delete())
             throw new FileDeleteException("파일 삭제에 실패했습니다");
+    }
+
+    public static String saveProfileImage(String type, String nickname, String profileImage) {
+        try {
+            URL imgURL = new URL(profileImage);
+            BufferedImage image = ImageIO.read(imgURL);
+
+            //서버에 파일 저장
+            String hostname = InetAddress.getLocalHost().getHostName();
+            UUID uuid = UUID.randomUUID();
+            String name = nickname + uuid.toString() + ".";
+            String path = "";
+            File file = null;
+            String extension = "png";
+
+            if (hostname.substring(0, 7).equals("DESKTOP")) {
+                path = "C:/choom/" + type + "/";
+            } else {
+                path = "/var/lib/choom/" + type + "/";
+            }
+
+            file = new File(path + name + extension);
+
+            if (!file.getParentFile().exists())
+                file.getParentFile().mkdirs();
+
+            ImageIO.write(image, extension, file);
+            return "/choom/" + type + "/" + name + extension;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
