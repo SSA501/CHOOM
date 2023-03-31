@@ -17,6 +17,7 @@ function DancePage() {
   const [poseList, setPoseList] = useState<Pose[]>([]);
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const [myUrl, setMyUrl] = useState<string>("");
+  const [myGuideUrl, setMyGuideUrl] = useState<string>("");
   const [myBlob, setMyBlob] = useState<Blob>();
   const [challenge, setChallenge] = useState<Challenge>();
   const [dance, setDance] = useState<Dance>();
@@ -123,6 +124,7 @@ function DancePage() {
             ref={danceVideoRef}
             detector={detector!}
             myUrl={myUrl}
+            myGuideUrl={myGuideUrl}
             challenge={challenge}
           />
         )}
@@ -146,6 +148,7 @@ function DancePage() {
             setScoreList={setScoreList}
             setScore={setScore}
             setMyBlob={setMyBlob}
+            setMyGuideUrl={setMyGuideUrl}
           />
         )}
       </ShadowContainer>

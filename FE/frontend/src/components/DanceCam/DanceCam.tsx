@@ -65,6 +65,7 @@ function DanceCam(props: {
   setScoreList: (socreList: Score[]) => void;
   setScore: (score: number) => void;
   setMyBlob: (blob: Blob) => void;
+  setMyGuideUrl: (myGuideUrl: string) => void;
 }) {
   const cam = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -74,6 +75,7 @@ function DanceCam(props: {
 
   let ctx: CanvasRenderingContext2D = canvas.current?.getContext("2d")!;
   let mediaRecorder: MediaRecorder;
+  let mediaRecorderGuide: MediaRecorder;
   let countFrame: number = 0;
   let startTime: Date;
   let scoreTemp: number = 0;
@@ -81,6 +83,7 @@ function DanceCam(props: {
   let countScore: number = 0;
   let scoreTempList: Score[] = [];
   let stream: MediaStream;
+  let streamGuide: MediaStream;
   let noScore: number = 0;
 
   useEffect(() => {
@@ -91,6 +94,8 @@ function DanceCam(props: {
   // 웹캠연결
   const setupCam = async () => {
     stream = await navigator.mediaDevices.getUserMedia(VIDEO_CONFIG);
+    streamGuide = canvas.current!.captureStream();
+
     cam.current!.srcObject = stream;
 
     const options = { mimeType: "video/webm" };
@@ -98,6 +103,9 @@ function DanceCam(props: {
     mediaRecorder.ondataavailable = (event: BlobEvent) =>
       handleDataAvailable(event);
 
+    mediaRecorderGuide = new MediaRecorder(streamGuide, options);
+    mediaRecorderGuide.ondataavailable = (event: BlobEvent) =>
+      handleDataAvailableGuide(event);
     // 비디오가 load 될때까지 기다림
 
     await new Promise<void>((resolve) => {
@@ -117,6 +125,15 @@ function DanceCam(props: {
       const url = URL.createObjectURL(blob);
       props.setMyUrl(url);
       props.setMyBlob(blob);
+    }
+  };
+
+  const handleDataAvailableGuide = (event: BlobEvent) => {
+    if (event.data.size > 0) {
+      const recordedChunks = [event.data];
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+      props.setMyGuideUrl(url);
     }
   };
 

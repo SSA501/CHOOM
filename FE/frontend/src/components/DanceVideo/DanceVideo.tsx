@@ -5,7 +5,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { CgEditFlipH } from "react-icons/cg";
 
 import {
@@ -29,6 +29,7 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
+      myGuideUrl?: string;
       challenge?: Challenge;
     },
     ref: React.ForwardedRef<any>
@@ -40,6 +41,7 @@ const DanceVideo = forwardRef(
     const [isFlipped, setIsFlipped] = useState(false);
     const [isMuted, setIsMuted] = useState(video.current?.muted);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isGuide, setIsGuide] = useState(false);
 
     useImperativeHandle(ref, () => ({
       playVideo,
@@ -182,6 +184,10 @@ const DanceVideo = forwardRef(
       if (video.current) video.current.muted = isMuted!;
     }, [isMuted]);
 
+    const handleGuideClick = () => {
+      setIsGuide(!isGuide);
+    };
+
     return (
       <div>
         {!props.myUrl ? (
@@ -225,11 +231,17 @@ const DanceVideo = forwardRef(
         ) : (
           <MainContainer>
             <ChallengeVideo
-              src={props.myUrl}
+              src={isGuide ? props.myGuideUrl : props.myUrl}
               width={450}
               height={800}
               ref={video}
               controls
+            />
+            <CircleBtn
+              icon={isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
+              onClick={handleGuideClick}
+              label={"가이드"}
+              disabled={props.poseList.length === 0 ? "disabled" : ""}
             />
           </MainContainer>
         )}
