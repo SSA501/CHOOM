@@ -104,6 +104,7 @@ const InfoDetail = styled.table`
     & td > span {
       font-size: 16px;
       line-height: 20px;
+      margin-inline: 2px;
     }
   }
 `;
