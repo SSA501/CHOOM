@@ -67,7 +67,7 @@ function ProfilePage() {
                 userCount: item.userCount,
                 status: item.status,
                 createdAt: item.createdAt,
-                isLike: !selectHistory,
+                isLike: true,
               };
               return newItem;
             });
