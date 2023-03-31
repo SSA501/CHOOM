@@ -4,8 +4,8 @@ import { axiosFileInstance, axiosInstance } from "./instance";
 // 카카오 로그인 리다이렉트
 export const redirectKakao = () => {
   const CLIENT_ID = "113e58b998f18be80dd79db4ef86fee2";
-  // const REDIRECT_URI = "http://localhost:3000/login/oauth2/kakao";
-  const REDIRECT_URI = `${SERVER_URL}/login/oauth2/kakao`;
+  const REDIRECT_URI = "http://localhost:3000/login/oauth2/kakao";
+  // const REDIRECT_URI = `${SERVER_URL}/login/oauth2/kakao`;
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   window.location.href = KAKAO_AUTH_URL;
 };
