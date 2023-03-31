@@ -13,7 +13,7 @@ public class BookmarkDetailsDto {
     private Long danceId;
     private String title;
     private String url;
-    private String videoPath;
+    private String thumbnailPath;
     private int userCount;
     private int status;
     private String createdAt;
@@ -24,7 +24,7 @@ public class BookmarkDetailsDto {
         this.danceId = bookmark.getDance().getId();
         this.title = bookmark.getDance().getTitle();
         this.url = bookmark.getDance().getUrl();
-        this.videoPath = bookmark.getDance().getVideoPath();
+        this.thumbnailPath = bookmark.getDance().getThumbnailPath();
         this.userCount = bookmark.getDance().getUserCount();
         this.status = bookmark.getDance().getStatus();
         this.createdAt = bookmark.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
