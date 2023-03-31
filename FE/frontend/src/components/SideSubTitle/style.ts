@@ -14,6 +14,7 @@ const TitleBar = styled.div`
 const TitleText = styled.div`
   margin: 8px 10%;
   font-size: 22px;
+  display: flex;
 `;
 const ContentsContainer = styled.div`
   margin: 0 5%;

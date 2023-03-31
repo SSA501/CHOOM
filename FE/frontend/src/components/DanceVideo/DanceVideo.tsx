@@ -5,8 +5,8 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-
-import { CgEditFlipH } from "react-icons/cg";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { CgEditFlipH, CgShare } from "react-icons/cg";
 
 import {
   MdSlowMotionVideo,
@@ -17,7 +17,7 @@ import {
 } from "react-icons/md";
 import CircleBtn from "../Btn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
-import { ChallengeVideo } from "./style";
+import { ChallengeVideo, ResultVideo } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { Pose, Challenge } from "../../constants/types";
 import { SERVER_URL } from "../../constants/url";
@@ -29,6 +29,7 @@ const DanceVideo = forwardRef(
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
       myUrl?: string;
+      myGuideUrl?: string;
       challenge?: Challenge;
     },
     ref: React.ForwardedRef<any>
@@ -40,6 +41,7 @@ const DanceVideo = forwardRef(
     const [isFlipped, setIsFlipped] = useState(false);
     const [isMuted, setIsMuted] = useState(video.current?.muted);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isGuide, setIsGuide] = useState(false);
 
     useImperativeHandle(ref, () => ({
       playVideo,
@@ -182,6 +184,10 @@ const DanceVideo = forwardRef(
       if (video.current) video.current.muted = isMuted!;
     }, [isMuted]);
 
+    const handleGuideClick = () => {
+      setIsGuide(!isGuide);
+    };
+
     return (
       <div>
         {!props.myUrl ? (
@@ -224,11 +230,12 @@ const DanceVideo = forwardRef(
           </MainContainer>
         ) : (
           <MainContainer>
-            <ChallengeVideo
-              src={props.myUrl}
+            <ResultVideo
+              src={isGuide ? props.myGuideUrl : props.myUrl}
               width={450}
               height={800}
               ref={video}
+              isGuide={isGuide}
               controls
             />
           </MainContainer>

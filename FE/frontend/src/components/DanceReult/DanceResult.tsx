@@ -13,6 +13,7 @@ function DanceResult(props: {
   setMyUrl: (myUrl: string) => void;
   dance: Dance;
   myBlob: Blob;
+  imageFile?: File;
 }) {
   const [challengeTitle, setChallengeTitle] = useState(props.dance.title);
   useEffect(() => {
@@ -30,12 +31,14 @@ function DanceResult(props: {
       videoLength: props.scoreList.length,
     });
     const jsonData = new Blob([uploaderString], { type: "application/json" });
-    const videofile = new File([props.myBlob!], "videoFile", {
+    const videofile = new File([props.myBlob!], "videoFile.webm", {
       type: "video/webm",
     });
     const formData = new FormData();
     formData.append("addMyDanceRequestDto", jsonData);
     formData.append("videoFile", videofile);
+    console.log(props.imageFile);
+    formData.append("imageFile", props.imageFile!);
     createChallengeResult(formData)
       .then((res) => {
         console.log(res);
@@ -63,6 +66,7 @@ function DanceResult(props: {
       <DanceChart
         scoreList={props.scoreList}
         danceVideoRef={props.danceVideoRef}
+        score={props.score}
       />
       <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
     </StyleContainer>
