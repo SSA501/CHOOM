@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import MainPage from "./pages/MainPage/MainPage";
 import DancePage from "./pages/DancePage/DancePage";
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "./constants/types";
 import { axiosFileInstance, axiosInstance } from "./apis/instance";
 import { logout } from "./apis/user";
 import { updateAccessToken, updateLoginStatus } from "./store/mainReducer";
+import LoginModal from "./components/Modal/LoginModal";
 
 function App() {
   const accessToken = useAppSelector((state) => state.main.accessToken);
@@ -62,21 +63,39 @@ function App() {
     }
   );
 
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const isLogin = useAppSelector((state) => state.main.isLogin);
+  const location = useLocation();
+  const showLoginModal = () => {
+    setLoginModalOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  useEffect(() => {
+    if (location.pathname !== "/" && !isLogin) {
+      showLoginModal();
+      setTimeout(() => navigate("/"), 0);
+    }
+  }, [isLogin, location, navigate]);
+
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<MainPage />} />
-        <Route path="/challenge" element={<SearchPage />} />
-        <Route path="/detail/:danceId" element={<DetailPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/dance/:danceId" element={<DancePage />} />
-        <Route path="/login/oauth2/kakao/*" element={<LoginRedirectPage />} />
-        <Route
-          path="/login/oauth2/google/*"
-          element={<LoginRedirectPage isGoogle />}
-        />
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MainPage />} />
+          <Route path="/challenge" element={<SearchPage />} />
+          <Route path="/detail/:danceId" element={<DetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/dance/:danceId" element={<DancePage />} />
+          <Route path="/login/oauth2/kakao/*" element={<LoginRedirectPage />} />
+          <Route
+            path="/login/oauth2/google/*"
+            element={<LoginRedirectPage isGoogle />}
+          />
+        </Route>
+      </Routes>
+      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+    </>
   );
 }
 
