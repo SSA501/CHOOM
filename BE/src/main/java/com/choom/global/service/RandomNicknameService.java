@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface RandomNicknameService {
 
     @GetMapping()
-    String getRandomNickname(@RequestParam String format,
-        @RequestParam int count,
-        @RequestParam int max_length,
-        @RequestParam String whitespace);
+    String getRandomNickname(@RequestParam(name = "format") String format,
+                             @RequestParam(name = "count") int count,
+                             @RequestParam(name = "max_length") int max_length,
+                             @RequestParam(name = "whitespace") String whitespace);
 }
