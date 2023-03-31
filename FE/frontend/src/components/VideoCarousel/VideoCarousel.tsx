@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ArrowBtn,
   ArrowBtnContainer,
@@ -68,6 +68,10 @@ function VideoCarousel({
       navigate(`/detail/${videoID}`);
     }
   };
+
+  useEffect(() => {
+    if (videoData?.length <= 3) setReachingEnd(true);
+  }, [videoData]);
 
   return (
     <>
