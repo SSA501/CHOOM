@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../constants/url";
 import SmallMenu from "../SmallMenu/SmallMenu";
 import {
   ProfileImg,
@@ -63,14 +64,14 @@ function ProfileCard(props: ProfileProps) {
         if (res.statusCode === 200) {
           setProfileInfo({
             nickname: res.data.nickname,
-            profileImg: res.data.profileImage,
-            challenge: res.data.challengeCount ?? 0,
-            score: res.data.averageScore ?? 0,
-            time: res.data.challengeTime ?? 0,
+            profileImg: `${SERVER_URL}${res.data.profileImage}`,
+            challenge: res.data.userMyDanceDto.challengeCount ?? 0,
+            score: res.data.userMyDanceDto.averageScore ?? 0,
+            time: res.data.userMyDanceDto.challengeTime ?? 0,
           });
           setTmpNickname(res.data.nickname);
-          setTmpProfileImg(res.data.profileImage);
-          getFileFomrUrlImage(res.data.profileImage)
+          setTmpProfileImg(`${SERVER_URL}${res.data.profileImage}`);
+          getFileFomrUrlImage(`${SERVER_URL}${res.data.profileImage}`)
             .then((file) => setProfileImgFile(file))
             .catch((err) => console.log(err));
         }
