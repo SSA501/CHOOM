@@ -11,6 +11,7 @@ export interface ShadowContainerProps {
   flexWrap?: string;
   justifyContent?: string;
   position?: string;
+  minHeight?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     flexWrap,
     justifyContent,
     position,
+    minHeight,
   }) => css`
     width: ${width || "100%"};
     max-width: 1728px;
@@ -48,5 +50,6 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     flex-wrap: ${flexWrap};
     justify-content: ${justifyContent};
     position: ${position};
+    min-height: ${minHeight};
   `}
 `;

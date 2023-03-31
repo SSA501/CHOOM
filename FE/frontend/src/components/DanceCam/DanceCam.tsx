@@ -66,6 +66,7 @@ function DanceCam(props: {
   setScore: (score: number) => void;
   setMyBlob: (blob: Blob) => void;
   setMyGuideUrl: (myGuideUrl: string) => void;
+  setimageFile: (file: File) => void;
 }) {
   const cam = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -85,6 +86,7 @@ function DanceCam(props: {
   let stream: MediaStream;
   let streamGuide: MediaStream;
   let noScore: number = 0;
+  let highScore: Score = { score: 0, time: 0 };
 
   useEffect(() => {
     setupCam();
@@ -166,40 +168,53 @@ function DanceCam(props: {
     await props.danceVideoRef.current.playVideo();
     // 녹화시작
     mediaRecorder?.start();
-
+    mediaRecorderGuide?.start();
     startTime = new Date();
     renderPrediction();
   };
 
   // frame당 포즈예측
   const renderPrediction = async () => {
-    // await renderResult();
-    // countFrame++;
-    // if (countFrame < props.poseList.length) {
-    //   requestAnimationFrame(renderPrediction);
-    // } else {
-    //   // 녹화종료
-    //   props.setScore(Math.round(sumScore / scoreTempList.length));
-    //   props.setScoreList(scoreTempList);
-
-    //   mediaRecorder?.stop();
-    //   if (cam.current) {
-    //     cam.current.srcObject = null;
-    //   }
-    //   const tracks = stream.getTracks();
-    //   tracks.forEach((track) => track.stop());
-    //   return;
-    // }
     const poseDetection = setInterval(() => {
       if (countFrame < props.poseList.length) {
         renderResult(countFrame);
         console.log(countFrame);
         countFrame++;
       } else {
+        if (cam.current) {
+          cam.current.currentTime = highScore.time;
+          const capCanvas = document.createElement("canvas");
+          capCanvas.width = cam.current.videoWidth;
+          capCanvas.height = cam.current.videoHeight;
+          const cap = capCanvas.getContext("2d");
+          cap?.drawImage(
+            cam.current,
+            0,
+            0,
+            canvas.current!.width,
+            canvas.current!.height
+          );
+          const imageData = cap?.getImageData(
+            0,
+            0,
+            canvas.current!.width,
+            canvas.current!.height
+          );
+          const imageFile = new File([imageData!.data], "imageFile", {
+            type: "image/png",
+          });
+          props.setimageFile(imageFile);
+        }
         mediaRecorder?.stop();
+        mediaRecorderGuide?.stop();
         props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
         props.setScoreList(scoreTempList);
         clearInterval(poseDetection);
+        if (cam.current) {
+          cam.current.srcObject = null;
+        }
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
       }
     }, 100);
   };
@@ -238,11 +253,17 @@ function DanceCam(props: {
         (timeTemp.getTime() - startTime.getTime()) / 1000 >
         scoreTempList.length + 1
       ) {
+        const nowScore = Math.round(scoreTemp / countScore);
+        const nowTime = Math.round(
+          (timeTemp.getTime() - startTime.getTime()) / 1000 - 1
+        );
+        if (highScore.score! < nowScore) {
+          highScore.score = nowScore;
+          highScore.time = nowTime;
+        }
         scoreTempList.push({
-          score: Math.round(scoreTemp / countScore),
-          time: Math.round(
-            (timeTemp.getTime() - startTime.getTime()) / 1000 - 1
-          ),
+          score: nowScore,
+          time: nowTime,
         });
         sumScore += Math.round(scoreTemp / countScore);
         scoreTemp = 0;

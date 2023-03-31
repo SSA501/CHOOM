@@ -14,7 +14,6 @@ const MyCam = styled.video`
 const MyCanvas = styled.canvas`
   position: absolute;
   border-radius: 1rem;
-  background-color: aliceblue;
 `;
 
 export { CamContainer, MyCam, MyCanvas };

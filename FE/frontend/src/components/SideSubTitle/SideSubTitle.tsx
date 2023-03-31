@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  TitleContainer,
-  TitleBar,
-  TitleText,
-  ContentsContainer,
-} from "./style";
+import { TitleContainer, TitleBar, TitleText } from "./style";
 import { Dance } from "../../constants/types";
 import { getUserDetail } from "../../apis/user";
 
 function SideSubTitle(props: {
   title: string;
-  contents?: string[];
+  contents: { icon: string; text: string }[];
   score?: number;
   myUrl?: string;
   dance: Dance;
@@ -26,14 +21,15 @@ function SideSubTitle(props: {
         console.log(error);
       });
   }, []);
+
   const handleKakaoClick = () => {
     const shareUrl = "https://j8a501.p.ssafy.io/dance/" + props.dance.id;
     const videoUrl = props.dance.url;
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: props.dance.title,
-        description: `${userData?.nickname}님이${props.dance.title}챌린지에서${props.score}점을 기록했습니다.`,
+        title: `${props.dance.title} ${props.score}점`,
+        description: `${userData?.nickname}님이 ${props.dance.title}챌린지에서 ${props.score}점을 기록했습니다.`,
         imageUrl: props.dance.thumbnailPath,
         link: {
           mobileWebUrl: videoUrl,
@@ -81,16 +77,14 @@ function SideSubTitle(props: {
     <TitleContainer>
       <TitleText>{props.title}</TitleText>
       <TitleBar />
-      {props.contents ? (
-        props.contents?.map((content, i) => {
-          return <TitleText key={i}>{content}</TitleText>;
-        })
-      ) : (
-        <ContentsContainer>
-          <button onClick={handleKakaoClick}>카카오</button>
-          <button onClick={handleClickDownload}>다운로드</button>
-        </ContentsContainer>
-      )}
+      {props.contents.map((content, i) => {
+        return (
+          <TitleText key={i}>
+            <div>{content.icon}</div>
+            <div>{content.text}</div>
+          </TitleText>
+        );
+      })}
     </TitleContainer>
   );
 }

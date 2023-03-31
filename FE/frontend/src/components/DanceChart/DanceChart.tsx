@@ -13,6 +13,7 @@ import {
 import { Score } from "../../constants/types";
 
 function DanceChart(props: {
+  score: number;
   scoreList: Score[];
   danceVideoRef: React.MutableRefObject<any>;
 }) {
@@ -51,8 +52,24 @@ function DanceChart(props: {
           <Area
             type="monotone"
             dataKey="score"
-            stroke="var(--purple-color)"
-            fill="var(--purple-color)"
+            stroke={
+              props.score >= 80
+                ? "var(--green-color)"
+                : props.score >= 60
+                ? "var(--purple-color)"
+                : props.score >= 40
+                ? "var(--blue-color)"
+                : "var(--skyblue-color)"
+            }
+            fill={
+              props.score >= 80
+                ? "var(--green-color)"
+                : props.score >= 60
+                ? "var(--purple-color)"
+                : props.score >= 40
+                ? "var(--blue-color)"
+                : "var(--skyblue-color)"
+            }
           />
         </AreaChart>
       </ResponsiveContainer>

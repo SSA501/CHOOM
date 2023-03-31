@@ -18,6 +18,7 @@ function DancePage() {
   const [detector, setDetector] = useState<poseDetection.PoseDetector>();
   const [myUrl, setMyUrl] = useState<string>("");
   const [myGuideUrl, setMyGuideUrl] = useState<string>("");
+  const [imageFile, setimageFile] = useState<File>();
   const [myBlob, setMyBlob] = useState<Blob>();
   const [challenge, setChallenge] = useState<Challenge>();
   const [dance, setDance] = useState<Dance>();
@@ -27,10 +28,16 @@ function DancePage() {
   const danceVideoRef = useRef<any>();
   const { danceId } = useParams();
 
-  const contents = [
-    "1️⃣ 알아서 잘해보세요",
-    "2️⃣ 어쩌라고요",
-    "3️⃣ 그냥 녹화하면 됩니다^^",
+  const practiceContents = [
+    { icon: "1️⃣", text: "영상을 보면서 연습하세요" },
+    { icon: "2️⃣", text: "녹화버튼 누르고 챌린지영상을 따라해보세요" },
+    { icon: "3️⃣", text: "결과를 확인하세요" },
+  ];
+
+  const resultContents = [
+    { icon: "1️⃣", text: "그래프를 통해 어디가 틀렸는지 확인해보세요" },
+    { icon: "2️⃣", text: "챌린지 다시하기를 통해 다시 도전해보세요" },
+    { icon: "3️⃣", text: "공유하기로 친구에게 자랑해보세요" },
   ];
 
   // 모델 불러오기
@@ -92,18 +99,19 @@ function DancePage() {
         <SideInfoContainer>
           <SideTitle title={["챌린지", "결과보기🎉"]}></SideTitle>
           <SideSubTitle
-            title="소셜 공유 & 다운로드"
+            title="챌린지 결과 설명 ❓"
             score={score}
             myUrl={myUrl}
             dance={dance!}
+            contents={resultContents}
           />
         </SideInfoContainer>
       ) : (
         <SideInfoContainer>
           <SideTitle title={["챌린지", "연습하기🏆"]}></SideTitle>
           <SideSubTitle
-            title="챌린지 연습 방법 ❓"
-            contents={contents}
+            title="챌린지 연습 설명 ❓"
+            contents={practiceContents}
             dance={dance!}
           />
         </SideInfoContainer>
@@ -114,42 +122,46 @@ function DancePage() {
         display="flex"
         justifyContent="space-evenly"
         flexWrap="wrap"
+        minHeight="800px"
       >
         {loading ? (
           <SpinModal />
         ) : (
-          <DanceVideo
-            setPoseList={setPoseList}
-            poseList={poseList}
-            ref={danceVideoRef}
-            detector={detector!}
-            myUrl={myUrl}
-            myGuideUrl={myGuideUrl}
-            challenge={challenge}
-          />
-        )}
-
-        {myUrl?.length > 0 ? (
-          <DanceResult
-            scoreList={scoreList}
-            danceVideoRef={danceVideoRef}
-            setMyUrl={setMyUrl}
-            score={score}
-            dance={dance!}
-            myBlob={myBlob!}
-          />
-        ) : (
-          <DanceCam
-            danceVideoRef={danceVideoRef}
-            detector={detector!}
-            poseList={poseList}
-            myUrl={myUrl}
-            setMyUrl={setMyUrl}
-            setScoreList={setScoreList}
-            setScore={setScore}
-            setMyBlob={setMyBlob}
-            setMyGuideUrl={setMyGuideUrl}
-          />
+          <>
+            <DanceVideo
+              setPoseList={setPoseList}
+              poseList={poseList}
+              ref={danceVideoRef}
+              detector={detector!}
+              myUrl={myUrl}
+              myGuideUrl={myGuideUrl}
+              challenge={challenge}
+            />
+            {myUrl?.length > 0 ? (
+              <DanceResult
+                scoreList={scoreList}
+                danceVideoRef={danceVideoRef}
+                setMyUrl={setMyUrl}
+                score={score}
+                dance={dance!}
+                myBlob={myBlob!}
+                imageFile={imageFile}
+              />
+            ) : (
+              <DanceCam
+                danceVideoRef={danceVideoRef}
+                detector={detector!}
+                poseList={poseList}
+                myUrl={myUrl}
+                setMyUrl={setMyUrl}
+                setScoreList={setScoreList}
+                setScore={setScore}
+                setMyBlob={setMyBlob}
+                setMyGuideUrl={setMyGuideUrl}
+                setimageFile={setimageFile}
+              />
+            )}
+          </>
         )}
       </ShadowContainer>
     </DancePageContainer>

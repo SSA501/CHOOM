@@ -7,8 +7,9 @@ import {
 } from "./style";
 
 function TimerBtn(props: {
-  time: number;
+  time?: number;
   disabled?: string;
+  img?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }) {
   const [color, setColor] = useState("purple");
@@ -38,8 +39,7 @@ function TimerBtn(props: {
           />
         </CircleIconBtn>
       )}
-
-      <CircleBtnLabel disabled={props.disabled}>타이머</CircleBtnLabel>
+      <CircleBtnLabel disabled={props.disabled}>{props.img}</CircleBtnLabel>
     </CircleBtnContainer>
   );
 }

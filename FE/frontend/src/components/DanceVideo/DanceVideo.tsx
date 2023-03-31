@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { CgEditFlipH } from "react-icons/cg";
+import { CgEditFlipH, CgShare } from "react-icons/cg";
 
 import {
   MdSlowMotionVideo,
@@ -17,7 +17,7 @@ import {
 } from "react-icons/md";
 import CircleBtn from "../Btn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
-import { ChallengeVideo } from "./style";
+import { ChallengeVideo, ResultVideo } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { Pose, Challenge } from "../../constants/types";
 import { SERVER_URL } from "../../constants/url";
@@ -230,18 +230,13 @@ const DanceVideo = forwardRef(
           </MainContainer>
         ) : (
           <MainContainer>
-            <ChallengeVideo
+            <ResultVideo
               src={isGuide ? props.myGuideUrl : props.myUrl}
               width={450}
               height={800}
               ref={video}
+              isGuide={isGuide}
               controls
-            />
-            <CircleBtn
-              icon={isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
-              onClick={handleGuideClick}
-              label={"가이드"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
             />
           </MainContainer>
         )}
