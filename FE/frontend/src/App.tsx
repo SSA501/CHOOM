@@ -56,7 +56,7 @@ function App() {
           dispatch(updateLoginStatus(false));
           dispatch(updateAccessToken(""));
           navigate("/");
-          return logout();
+          // return logout();
         }
       }
       return Promise.reject(error);
