@@ -9,7 +9,12 @@ import {
 import { addSearchKeyword } from "../../apis/challenge";
 import { useAppSelector } from "../../constants/types";
 import LoginModal from "../Modal/LoginModal";
-import { SearchBarContainer, SearchIcon, SearchInput } from "./style";
+import {
+  SearchBarContainer,
+  SearchBtn,
+  SearchIcon,
+  SearchInput,
+} from "./style";
 
 interface SearchBarProps {
   currentQuery?: string | null;
@@ -29,35 +34,34 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   //   document.body.style.overflow = "hidden";
   // };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (!isLogin) {
-        // showLoginModal();
-        setLoginModalOpen(true);
-        return;
-      }
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLogin) {
+      // showLoginModal();
+      setLoginModalOpen(true);
+      return;
+    }
 
-      const trimmedValue = inputValue.trim();
-      if (trimmedValue.length < 1) {
-        alert("검색어를 입력하세요");
-        return;
-      }
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue.length < 1) {
+      alert("검색어를 입력하세요");
+      return;
+    }
 
-      // search 실행
-      addSearchKeyword(trimmedValue); // 검색어 추가
+    // search 실행
+    addSearchKeyword(trimmedValue); // 검색어 추가
 
-      if (location.pathname === "/challenge") {
-        // 챌린지 검색 페이지 내에서 검색할 경우
-        setSearchParams({ query: trimmedValue });
-      } else {
-        // 메인 페이지에서 검색할 경우
-        navigate({
-          pathname: "challenge",
-          search: createSearchParams({
-            query: trimmedValue,
-          }).toString(),
-        });
-      }
+    if (location.pathname === "/challenge") {
+      // 챌린지 검색 페이지 내에서 검색할 경우
+      setSearchParams({ query: trimmedValue });
+    } else {
+      // 메인 페이지에서 검색할 경우
+      navigate({
+        pathname: "challenge",
+        search: createSearchParams({
+          query: trimmedValue,
+        }).toString(),
+      });
     }
   };
 
@@ -71,18 +75,26 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   return (
     <>
       <SearchBarContainer>
-        <SearchIcon>
-          <CgSearch size={"24px"} />
-        </SearchIcon>
-        <SearchInput
-          type="text"
-          value={inputValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-            setInputValue(e.target.value)
-          }
-          onKeyDown={handleKeyDown}
-          placeholder="곡명 혹은 영상 링크를 검색하세요"
-        />
+        <form>
+          <SearchIcon>
+            <CgSearch size={"24px"} />
+          </SearchIcon>
+          <SearchInput
+            type="text"
+            value={inputValue}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+              setInputValue(e.target.value)
+            }
+            placeholder="곡명 혹은 영상 링크를 검색하세요"
+          />
+          <SearchBtn
+            type="submit"
+            onSubmit={handleSearch}
+            onClick={handleSearch}
+          >
+            검색
+          </SearchBtn>
+        </form>
       </SearchBarContainer>
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
     </>

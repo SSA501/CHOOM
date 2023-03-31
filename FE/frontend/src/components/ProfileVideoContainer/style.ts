@@ -14,11 +14,11 @@ const ListHeader = styled.div`
 `;
 
 const ListHeaderBtn = styled.button<{ selected: boolean }>`
-  width: 140px;
+  width: 120px;
   height: 66px;
   font-style: normal;
   font-weight: 500;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 29px;
   margin-right: 15px;
   color: #848484;
@@ -34,7 +34,7 @@ const ListHeaderBtn = styled.button<{ selected: boolean }>`
     `}
 
   & > svg {
-    font-size: 24px !important;
+    font-size: 20px !important;
     margin-right: 6px;
   }
 `;

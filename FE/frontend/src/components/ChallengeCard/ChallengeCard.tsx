@@ -44,7 +44,6 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   const handleLike = () => {
     addBookmark(challegeInfo.id)
       .then((res) => {
-        console.log(res.data);
         if (res.statusCode === 200) {
           setIsLiked(true);
         }
@@ -55,7 +54,6 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   const handleLikeDelete = () => {
     removeBookmark(challegeInfo.id)
       .then((res) => {
-        console.log(res.data);
         if (res.statusCode === 200) {
           setIsLiked(false);
         }
@@ -126,6 +124,8 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
         ></Btn>
       </SideContainer>
       <Video
+        width={"270px"}
+        height={"480px"}
         id={challegeInfo.id}
         title={challegeInfo.title}
         videoPath={challegeInfo.url}

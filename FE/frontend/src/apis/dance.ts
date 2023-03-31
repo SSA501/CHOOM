@@ -19,3 +19,15 @@ export const createChallengeResult = async (formData: FormData) => {
   const response = await axiosFileInstance.post("/mydance", formData);
   return response.data;
 };
+
+// 내가 춘 춤 목록 받기
+export const getMyDanceList = async (
+  page: number,
+  size: number,
+  sort: "score,desc" | "score,asc" | "createdAt,desc" | "createdAt,asc"
+) => {
+  const response = await axiosInstance.get(
+    `/mydance?page=${page}&size=${size}&sort=${sort}`
+  );
+  return response.data;
+};
