@@ -2,7 +2,6 @@ package com.choom.domain.dance.dto;
 
 import com.google.api.services.youtube.model.SearchListResponse;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -15,15 +14,22 @@ public class DanceSearchDto {
     String prevPageToken;
     Integer totalResults;
     Integer resultsPerPage;
+    Boolean isUrl;
     List<DanceDetailsDto> dbSearch;
     List<DanceDetailsDto> search;
 
-    @Builder
     public DanceSearchDto(SearchListResponse searchListResponse, List<DanceDetailsDto> dbDanceDetailDtoList, List<DanceDetailsDto> danceDetailDtoList) {
+        this.isUrl = false;
         this.nextPageToken = searchListResponse.getNextPageToken();
         this.prevPageToken = searchListResponse.getPrevPageToken();
         this.totalResults = searchListResponse.getPageInfo().getTotalResults();
         this.resultsPerPage = searchListResponse.getPageInfo().getResultsPerPage();
+        this.dbSearch = dbDanceDetailDtoList;
+        this.search = danceDetailDtoList;
+    }
+
+    public DanceSearchDto(List<DanceDetailsDto> dbDanceDetailDtoList, List<DanceDetailsDto> danceDetailDtoList) {
+        this.isUrl = true;
         this.dbSearch = dbDanceDetailDtoList;
         this.search = danceDetailDtoList;
     }
