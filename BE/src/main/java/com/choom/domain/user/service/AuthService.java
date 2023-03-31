@@ -31,23 +31,6 @@ public class AuthService {
     private final FileService fileService;
 
     @Transactional
-    public TokenDto kakaoLogin(String code) {
-        SocialUserInfoDto userInfo = kakaoService.getUserInfo(code);
-        String identifier = userInfo.getIdentifier();
-        String nickname = randomNicknameService.getRandomNickname("text",1,10,"_");
-        String profileImage = userInfo.getProfileImage();
-
-        User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
-
-        if (user == null) {
-            User newUser = addUser(identifier, nickname, profileImage, SocialType.KAKAO);
-            return issueToken(newUser);
-        }
-
-        return issueToken(user);
-    }
-
-    @Transactional
     public TokenDto socialLogin(String type, String code) {
         SocialUserInfoDto userInfo = null;
         SocialType socialType = null;

@@ -38,6 +38,20 @@ public class UserController {
         return new ResponseEntity<>(BaseResponse.success(userDetailsDto), HttpStatus.OK);
     }
 
+    @PutMapping()
+    public ResponseEntity<BaseResponse> modifyUser(@ApiIgnore Authentication authentication, @RequestPart(required = false) String nickname,
+                                                   @RequestPart(required = false) MultipartFile profileImage) throws IOException {
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
+        Long userId = customUserDetails.getUserId();
+        if (nickname != null) {
+            userService.modifyUserNickname(userId, nickname);
+        }
+        if (profileImage != null) {
+            userService.modifyUserProfileImage(userId, profileImage);
+        }
+        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
+    }
+
     @DeleteMapping()
     public ResponseEntity<BaseResponse> deleteUser(@ApiIgnore Authentication authentication, @ApiIgnore @RequestHeader("Authorization") String token) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
@@ -52,7 +66,7 @@ public class UserController {
 
     @GetMapping("/login/kakao")
     public ResponseEntity<BaseResponse> kakaoLogin(@RequestParam String code, @Value("${jwt.expiration.rtk}") Integer expiration) {
-        TokenDto token = authService.kakaoLogin(code);
+        TokenDto token = authService.socialLogin("KAKAO", code);
         HttpHeaders headers = new HttpHeaders();
         ResponseCookie cookie = authService.setCookie(token.getRefreshToken(), expiration);
         headers.add("Set-Cookie", cookie.toString());
@@ -95,20 +109,6 @@ public class UserController {
         headers.add("Set-Cookie", cookie.toString());
         log.info("delete cookie : " + cookie.toString());
         return new ResponseEntity<>(BaseResponse.success(null), headers, HttpStatus.OK);
-    }
-
-    @PutMapping()
-    public ResponseEntity<BaseResponse> modifyUser(@ApiIgnore Authentication authentication, @RequestPart(required = false) String nickname,
-                                                   @RequestPart(required = false) MultipartFile profileImage) throws IOException {
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
-        Long userId = customUserDetails.getUserId();
-        if (nickname != null) {
-            userService.modifyUserNickname(userId, nickname);
-        }
-        if (profileImage != null) {
-            userService.modifyUserProfileImage(userId, profileImage);
-        }
-        return new ResponseEntity<>(BaseResponse.success(null), HttpStatus.OK);
     }
 
     @GetMapping("/nickname/{nickname}")
