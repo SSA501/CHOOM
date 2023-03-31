@@ -24,7 +24,7 @@ public class DanceRankUserDto {
     public DanceRankUserDto(MyDance myDance) {
         this.userId = myDance.getUser().getId();
         this.profileImage = myDance.getUser().getProfileImage();
-        this.nickname = myDance.getTitle();
+        this.nickname = myDance.getUser().getNickname();
         this.score = myDance.getScore();
         this.videoLength = myDance.getVideoLength();
         this.title = myDance.getTitle();
