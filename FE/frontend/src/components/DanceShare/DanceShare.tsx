@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
-
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { BtnContainer } from "../Dance/style";
 import ShareBtn from "../Btn/ShareBtn";
 import CirlceBtn from "../Btn/CircleBtn";
 import { MdDownload } from "react-icons/md";
 import { getUserDetail } from "../../apis/user";
+import { postingChallenge } from "../../apis/dance";
 import { Dance } from "../../constants/types";
 
-function DanceShare(props: { score: number; myUrl: string; dance: Dance }) {
+function DanceShare(props: {
+  score: number;
+  myUrl: string;
+  dance: Dance;
+  isGuide: boolean;
+  setIsGuide: (isGuide: boolean) => void;
+}) {
   const [userData, setUserData] = useState<any>();
   useEffect(() => {
     getUserDetail()
@@ -71,15 +78,35 @@ function DanceShare(props: { score: number; myUrl: string; dance: Dance }) {
     return fileName;
   };
 
+  const handleGuideClick = () => {
+    props.setIsGuide(!props.isGuide);
+  };
+
+  const handleYoutubeClick = () => {
+    postingChallenge(props.dance.id)
+      .then((res) => console.log(res))
+      .catch((error) => console.error(error));
+  };
+
   return (
     <BtnContainer>
       <ShareBtn label="kakao" size="60px" onClick={handleKakaoClick} />
-      <ShareBtn label="youtube_shorts" size="60px" />
+      <ShareBtn
+        label="youtube_shorts"
+        onClick={handleYoutubeClick}
+        size="60px"
+      />
       <CirlceBtn
         icon={MdDownload}
         label="다운로드"
         color="var(--green-color)"
         onClick={handleClickDownload}
+      />
+      <CirlceBtn
+        icon={props.isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
+        onClick={handleGuideClick}
+        color="var(--green-color)"
+        label={"가이드"}
       />
     </BtnContainer>
   );
