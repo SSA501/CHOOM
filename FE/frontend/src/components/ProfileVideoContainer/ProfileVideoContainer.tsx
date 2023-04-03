@@ -47,9 +47,9 @@ function ProfilePage() {
       try {
         let res;
         if (selectHistory) {
-          res = await getMyDanceList(page, 5, sort.sort);
+          res = await getMyDanceList(page, 10, sort.sort);
         } else {
-          res = await getBookmarkList(page, 5, sort.sort);
+          res = await getBookmarkList(page, 10, sort.sort);
         }
 
         if (res.statusCode === 200) {

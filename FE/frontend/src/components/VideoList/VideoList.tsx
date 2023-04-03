@@ -44,8 +44,7 @@ function VideoList(props: VideoListProps) {
 
   const navigate = useNavigate();
   const handleClickVideo = (danceId: number): void => {
-    // TODO: 춤 춘 결과 상세페이지 연결
-    if (props.listOption === "History") navigate(`/dance/${danceId}`);
+    if (props.listOption === "History") navigate(`/mydance/${danceId}`);
     else navigate(`/detail/${danceId}`);
   };
 

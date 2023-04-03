@@ -42,7 +42,6 @@ const NomalBtn = styled.button<NormalBtnProps>`
     border: 3px solid black;
   `}
 
-  // TODO: 버튼 hover 고려해보기
   &:hover {
     color: black;
     background-color: white;
