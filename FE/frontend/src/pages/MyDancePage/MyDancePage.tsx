@@ -14,7 +14,7 @@ import DanceChart from "../../components/DanceChart/DanceChart";
 import { getChallengeDetail } from "../../apis/challenge";
 
 function MyDancePage() {
-  const { danceId } = useParams();
+  const { myDanceId } = useParams();
   const [dance, setDance] = useState<Dance>();
   const danceVideoRef = useRef<any>();
   const [myDanceInfo, setMyDanceInfo] = useState<{
@@ -23,10 +23,18 @@ function MyDancePage() {
     myUrl: string;
     title: string;
     danceId: string;
-  }>();
+  }>({
+    scoreList: [],
+    score: 0,
+    myUrl: "",
+    title: "",
+    danceId: "",
+  });
   useEffect(() => {
-    getMyDanceDetail(danceId!)
+    console.log("##############");
+    getMyDanceDetail(myDanceId!)
       .then((res) => {
+        console.log(res);
         setMyDanceInfo({
           scoreList: JSON.parse(res.data.matchRate),
           score: res.data.score,
@@ -34,7 +42,7 @@ function MyDancePage() {
           title: res.data.title,
           danceId: res.data.danceId,
         });
-        getChallengeDetail(danceId!)
+        getChallengeDetail(res.data.danceId)
           .then((res) => {
             console.log(res);
             setDance(res.data.dance);
