@@ -15,6 +15,8 @@ import {
   updateRouteHistory,
 } from "./store/mainReducer";
 import LoginModal from "./components/Modal/LoginModal";
+import MyDancePage from "./pages/MyDancePage/MyDancePage";
+import UploadingPage from "./pages/UploadingPage/UploadingPage";
 
 function App() {
   const accessToken = useAppSelector((state) => state.main.accessToken);
@@ -110,6 +112,8 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/dance/:danceId" element={<DancePage />} />
           <Route path="/login/oauth2/kakao/*" element={<LoginRedirectPage />} />
+          <Route path="/mydance/:myDanceId" element={<MyDancePage />} />
+          <Route path="/upload/*" element={<UploadingPage />} />
           <Route
             path="/login/oauth2/google/*"
             element={<LoginRedirectPage isGoogle />}

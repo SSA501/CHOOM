@@ -22,9 +22,9 @@ function DancePage() {
   const [myBlob, setMyBlob] = useState<Blob>();
   const [challenge, setChallenge] = useState<Challenge>();
   const [dance, setDance] = useState<Dance>();
+  const [isGuide, setIsGuide] = useState(true);
   const [scoreList, setScoreList] = useState<Score[]>([]);
   const [score, setScore] = useState<number>(0);
-  const [isGuide, setIsGuide] = useState(false);
   const [loading, setloading] = useState<boolean>(true);
   const danceVideoRef = useRef<any>();
   const { danceId } = useParams();
@@ -129,8 +129,8 @@ function DancePage() {
               detector={detector!}
               myUrl={myUrl}
               myGuideUrl={myGuideUrl}
-              challenge={challenge}
               isGuide={isGuide}
+              challenge={challenge}
             />
             {myUrl?.length > 0 ? (
               <DanceResult
@@ -142,8 +142,8 @@ function DancePage() {
                 myUrl={myUrl}
                 myBlob={myBlob!}
                 imageFile={imageFile}
-                isGuide={isGuide}
                 setIsGuide={setIsGuide}
+                isGuide={isGuide}
               />
             ) : (
               <DanceCam

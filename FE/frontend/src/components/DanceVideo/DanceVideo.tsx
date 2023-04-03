@@ -121,7 +121,6 @@ const DanceVideo = forwardRef(
     };
 
     const changeVideoTime = (time: number) => {
-      console.log(time);
       if (video.current) video.current.currentTime = time;
       video.current?.play();
     };

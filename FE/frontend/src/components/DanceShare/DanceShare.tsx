@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { updateMyDanceId } from "../../store/myDanceReducer";
+import { useDispatch } from "react-redux";
 import { BtnContainer } from "../Dance/style";
 import ShareBtn from "../Btn/ShareBtn";
 import CirlceBtn from "../Btn/CircleBtn";
 import { MdDownload } from "react-icons/md";
-import { getUserDetail } from "../../apis/user";
-import { postingChallenge } from "../../apis/dance";
+import { getUserDetail, redirectYoutube } from "../../apis/user";
 import { Dance } from "../../constants/types";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
 
 function DanceShare(props: {
   score: number;
   myUrl: string;
   dance: Dance;
-  isGuide: boolean;
-  setIsGuide: (isGuide: boolean) => void;
+  isGuide?: boolean;
+  setIsGuide?: (isGuide: boolean) => void;
+  myDanceId: string;
 }) {
   const [userData, setUserData] = useState<any>();
+  const dispatch = useDispatch();
   useEffect(() => {
     getUserDetail()
       .then((res) => {
@@ -58,6 +62,15 @@ function DanceShare(props: {
     });
   };
 
+  const handleGuideClick = () => {
+    props.setIsGuide && props.setIsGuide(!props.isGuide);
+  };
+
+  const handleYoutubeClick = () => {
+    dispatch(updateMyDanceId(props.myDanceId));
+    redirectYoutube();
+  };
+
   const handleClickDownload = () => {
     const a = document.createElement("a");
     document.body.appendChild(a);
@@ -78,23 +91,13 @@ function DanceShare(props: {
     return fileName;
   };
 
-  const handleGuideClick = () => {
-    props.setIsGuide(!props.isGuide);
-  };
-
-  const handleYoutubeClick = () => {
-    postingChallenge(props.dance.id)
-      .then((res) => console.log(res))
-      .catch((error) => console.error(error));
-  };
-
   return (
     <BtnContainer>
       <ShareBtn label="kakao" size="60px" onClick={handleKakaoClick} />
       <ShareBtn
         label="youtube_shorts"
-        onClick={handleYoutubeClick}
         size="60px"
+        onClick={handleYoutubeClick}
       />
       <CirlceBtn
         icon={MdDownload}
@@ -102,12 +105,21 @@ function DanceShare(props: {
         color="var(--green-color)"
         onClick={handleClickDownload}
       />
-      <CirlceBtn
-        icon={props.isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
-        onClick={handleGuideClick}
-        color="var(--green-color)"
-        label={"가이드"}
-      />
+      {props.isGuide !== undefined ? (
+        <CirlceBtn
+          icon={props.isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
+          color="var(--green-color)"
+          onClick={handleGuideClick}
+          label={"가이드"}
+        />
+      ) : (
+        <CirlceBtn
+          icon={MdDelete}
+          color="var(--green-color)"
+          onClick={handleGuideClick}
+          label={"삭제"}
+        />
+      )}
     </BtnContainer>
   );
 }

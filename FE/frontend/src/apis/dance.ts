@@ -33,7 +33,7 @@ export const getMyDanceList = async (
 };
 
 // 내가 춘 춤 상세보기
-export const getMyDanceDetail = async (danceId: number) => {
+export const getMyDanceDetail = async (danceId: string) => {
   const response = await axiosFileInstance.get(`/mydance/${danceId}`);
   return response.data;
 };
@@ -45,11 +45,9 @@ export const removeMyDance = async (danceId: number) => {
 };
 
 // 챌린지 유튜브 포스팅
-export const postingChallenge = async (danceId: string) => {
+export const postingChallenge = async (danceId: string, code: string) => {
   const response = await axiosInstance.put(
-    "/mydance/" +
-      danceId +
-      "/shorts?code=4/0AVHEtk5Cl7ZQvFrZU8QdCV9E-4X_XOFNfBM6nACsxBu--7hTZlfj04vNgJNK4hevoY1DpA",
+    `/mydance/${danceId}/shorts?code=${code}`,
     {}
   );
   return response.data;

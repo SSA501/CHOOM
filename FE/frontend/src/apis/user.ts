@@ -65,3 +65,12 @@ export const updateUserDetail = async (formData: FormData) => {
   const res = await axiosFileInstance.put("/user", formData);
   return res.data;
 };
+
+// 유튜브 로그인 리다이렉트
+export const redirectYoutube = () => {
+  const CLIENT_ID =
+    "124626006679-cq05a5rj2anbrqtfcvv1bjtriqs2pjul.apps.googleusercontent.com";
+  const REDIRECT_URI = `${SERVER_URL}/upload`;
+  const GOOGLE_Upload_URL = `https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload`;
+  window.location.href = GOOGLE_Upload_URL;
+};

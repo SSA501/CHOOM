@@ -18,15 +18,19 @@ function DanceChart(props: {
   scoreList: Score[];
   danceVideoRef: React.MutableRefObject<any>;
   myUrl: string;
+  isGuide?: boolean;
+  setIsGuide?: (isGuide: boolean) => void;
   dance: Dance;
-  isGuide: boolean;
-  setIsGuide: (isGuide: boolean) => void;
+  myDanceId: string;
+  changeVideoTime?: (time: number) => void;
 }) {
   const data = props.scoreList;
 
   const handelChartClick = (e: any) => {
     console.log(e.activeLabel);
-    props.danceVideoRef.current.changeVideoTime(e.activeLabel);
+    props.changeVideoTime
+      ? props.changeVideoTime(e.activeLabel)
+      : props.danceVideoRef.current.changeVideoTime(e.activeLabel);
   };
 
   return (
@@ -38,7 +42,7 @@ function DanceChart(props: {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             width={800}
-            height={450}
+            height={400}
             data={data}
             margin={{
               top: 10,
@@ -84,8 +88,9 @@ function DanceChart(props: {
         dance={props.dance}
         myUrl={props.myUrl}
         score={props.score}
-        isGuide={props.isGuide}
         setIsGuide={props.setIsGuide}
+        isGuide={props.isGuide}
+        myDanceId={props.myDanceId}
       />
     </div>
   );
