@@ -40,7 +40,7 @@ function ProfilePage() {
   }, [target]);
 
   useEffect(() => {
-    console.log(page + "번 페이지 호출 -> 정렬: " + sort);
+    console.log(page + "번 페이지 호출 -> 정렬: " + sort.sort);
     setIsLoading(true);
 
     const fetchData = async () => {

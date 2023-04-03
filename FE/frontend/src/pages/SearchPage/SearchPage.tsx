@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { searchDance } from "../../apis/challenge";
+import {
+  addSearchKeyword,
+  getSearchKeywordList,
+  removeSearchKeyword,
+  searchDance,
+} from "../../apis/challenge";
 import ChallengeCard from "../../components/ChallengeCard/ChallengeCard";
 import RecentSearch from "../../components/RecentSearch/RecentSearch";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -19,7 +24,7 @@ import {
 function SearchPage() {
   const [searchParams, setSearchParams]: [URLSearchParams, Function] =
     useSearchParams();
-  const query = searchParams?.get("query");
+  const query: string | null = searchParams?.get("query");
   const [topData, setTopData] = useState([]);
   const [shortsData, setShortsData] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,6 +33,18 @@ function SearchPage() {
   useEffect(() => {
     if (query) {
       setIsLoading(true);
+      // 키워드 조회
+      getSearchKeywordList()
+        .then((res) => {
+          const result = res?.data.find((item: any) => item.keyword === query);
+          if (result) {
+            removeSearchKeyword(result.searchId);
+          }
+        })
+        .catch((err) => console.log(err));
+      // 키워드 저장
+      addSearchKeyword(query);
+      // 검색 실행
       searchDance(query, 50) // size 50으로 고정
         .then((res) => {
           setIsLoading(false);
