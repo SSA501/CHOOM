@@ -22,18 +22,16 @@ function SearchPage() {
   const query = searchParams?.get("query");
   const [topData, setTopData] = useState([]);
   const [shortsData, setShortsData] = useState([]);
-  const [size, setSize] = useState<number>(50); // size 50 일단 고정
-  const [pageToken, setPageToken] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (query) {
       setIsLoading(true);
-      searchDance(query, pageToken, size)
+      searchDance(query, 50) // size 50으로 고정
         .then((res) => {
           setIsLoading(false);
-          console.log(res);
+          // console.log(res);
           const data = res?.data;
           if (data?.isUrl && data?.dbSearch?.length > 0) {
             // 쇼츠 url 입력이라면 바로 상세페이지로 넘어가기
@@ -49,7 +47,7 @@ function SearchPage() {
         })
         .catch((err) => console.log(err));
     }
-  }, [query, pageToken, size, navigate]);
+  }, [query, navigate]);
 
   return (
     <>
@@ -79,6 +77,7 @@ function SearchPage() {
                         <ChallengeCard
                           challengeInfo={data}
                           bgColor={index === 0 ? "purple" : "green"}
+                          key={index}
                         />
                       </div>
                     ))}
