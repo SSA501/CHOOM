@@ -53,8 +53,30 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   const [isLiked, setIsLiked] = useState<boolean | null>(null);
   const [localLikeCount, setLocalLikeCount] = useState<number>(0);
 
-  const handleClickVideo = (videoId: number): void => {
-    navigate(`/detail/${videoId}`);
+  const handleStartVideo = (id: number | null, youtubeId: string): void => {
+    if (id === null) {
+      addDance(youtubeId)
+        .then((res) => {
+          const danceId = res.data.danceId;
+          navigate(`/dance/${danceId}`);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      navigate(`/dance/${id}`);
+    }
+  };
+
+  const handleClickVideo = (id: number | null, youtubeId: string): void => {
+    if (id === null) {
+      addDance(youtubeId)
+        .then((res) => {
+          const danceId = res.data.danceId;
+          navigate(`/detail/${danceId}`);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      navigate(`/detail/${id}`);
+    }
   };
 
   const handleLike = () => {
@@ -160,7 +182,9 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
         </TableContainer>
         <Btn
           btnText={"시작하기"}
-          handleClick={() => navigate(`/dance/${challengeData?.id}`)}
+          handleClick={() =>
+            handleStartVideo(challengeData.id, challengeData.youtubeId)
+          }
           padding={"15px 70px"}
         ></Btn>
       </SideContainer>
@@ -172,7 +196,9 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
         url={challengeData?.url}
         videoPath={challengeData?.url}
         thumbnailPath={challengeData?.thumbnailPath}
-        handleClickVideo={() => handleClickVideo(challengeData?.id)}
+        handleClickVideo={() =>
+          handleClickVideo(challengeData.id, challengeData.youtubeId)
+        }
       />
     </ShadowContainer>
   );
