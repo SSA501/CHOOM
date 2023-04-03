@@ -21,12 +21,16 @@ function DanceChart(props: {
   isGuide?: boolean;
   setIsGuide?: (isGuide: boolean) => void;
   dance: Dance;
+  myDanceId: string;
+  changeVideoTime?: (time: number) => void;
 }) {
   const data = props.scoreList;
 
   const handelChartClick = (e: any) => {
     console.log(e.activeLabel);
-    props.danceVideoRef.current.changeVideoTime(e.activeLabel);
+    props.changeVideoTime
+      ? props.changeVideoTime(e.activeLabel)
+      : props.danceVideoRef.current.changeVideoTime(e.activeLabel);
   };
 
   return (
@@ -86,6 +90,7 @@ function DanceChart(props: {
         score={props.score}
         setIsGuide={props.setIsGuide}
         isGuide={props.isGuide}
+        myDanceId={props.myDanceId}
       />
     </div>
   );

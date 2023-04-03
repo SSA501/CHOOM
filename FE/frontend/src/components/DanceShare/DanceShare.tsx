@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-
+import { updateMyDanceId } from "../../store/myDanceReducer";
+import { useDispatch } from "react-redux";
 import { BtnContainer } from "../Dance/style";
 import ShareBtn from "../Btn/ShareBtn";
 import CirlceBtn from "../Btn/CircleBtn";
 import { MdDownload } from "react-icons/md";
-import { getUserDetail } from "../../apis/user";
+import { getUserDetail, redirectYoutube } from "../../apis/user";
 import { Dance } from "../../constants/types";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
 
 function DanceShare(props: {
   score: number;
@@ -14,9 +16,10 @@ function DanceShare(props: {
   dance: Dance;
   isGuide?: boolean;
   setIsGuide?: (isGuide: boolean) => void;
+  myDanceId: string;
 }) {
   const [userData, setUserData] = useState<any>();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     getUserDetail()
       .then((res) => {
@@ -63,6 +66,11 @@ function DanceShare(props: {
     props.setIsGuide && props.setIsGuide(!props.isGuide);
   };
 
+  const handleYoutubeClick = () => {
+    dispatch(updateMyDanceId(props.myDanceId));
+    redirectYoutube();
+  };
+
   const handleClickDownload = () => {
     const a = document.createElement("a");
     document.body.appendChild(a);
@@ -86,18 +94,30 @@ function DanceShare(props: {
   return (
     <BtnContainer>
       <ShareBtn label="kakao" size="60px" onClick={handleKakaoClick} />
-      <ShareBtn label="youtube_shorts" size="60px" />
+      <ShareBtn
+        label="youtube_shorts"
+        size="60px"
+        onClick={handleYoutubeClick}
+      />
       <CirlceBtn
         icon={MdDownload}
         label="다운로드"
         color="var(--green-color)"
         onClick={handleClickDownload}
       />
-      {props.isGuide !== undefined && (
+      {props.isGuide !== undefined ? (
         <CirlceBtn
           icon={props.isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
+          color="var(--green-color)"
           onClick={handleGuideClick}
           label={"가이드"}
+        />
+      ) : (
+        <CirlceBtn
+          icon={MdDelete}
+          color="var(--green-color)"
+          onClick={handleGuideClick}
+          label={"삭제"}
         />
       )}
     </BtnContainer>

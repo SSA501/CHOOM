@@ -18,6 +18,7 @@ function DanceResult(props: {
   isGuide: boolean;
   setIsGuide: (isGuide: boolean) => void;
 }) {
+  const [myDanceId, setMyDanceId] = useState("");
   useEffect(() => {
     const uploaderString = JSON.stringify({
       danceId: props.dance.id,
@@ -38,6 +39,7 @@ function DanceResult(props: {
     createChallengeResult(formData)
       .then((res) => {
         console.log(res);
+        setMyDanceId(res.data.id);
       })
       .catch((error) => {
         console.error(error);
@@ -67,6 +69,7 @@ function DanceResult(props: {
             dance={props.dance}
             setIsGuide={props.setIsGuide}
             isGuide={props.isGuide}
+            myDanceId={myDanceId}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>

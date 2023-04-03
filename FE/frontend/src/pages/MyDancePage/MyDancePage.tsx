@@ -24,12 +24,14 @@ function MyDancePage() {
     myUrl: string;
     title: string;
     danceId: string;
+    id: string;
   }>({
     scoreList: [],
     score: 0,
     myUrl: "",
     title: "",
     danceId: "",
+    id: "",
   });
   useEffect(() => {
     getMyDanceDetail(myDanceId!)
@@ -41,6 +43,7 @@ function MyDancePage() {
           myUrl: SERVER_URL + res?.data?.videoPath,
           title: res?.data?.title,
           danceId: res?.data?.danceId,
+          id: res.data.id,
         });
         getChallengeDetail(res?.data?.danceId)
           .then((res) => {
@@ -53,6 +56,11 @@ function MyDancePage() {
         console.log(err);
       });
   }, [myDanceId]);
+
+  const changeVideoTime = (time: number) => {
+    if (danceVideoRef.current) danceVideoRef.current.currentTime = time;
+    danceVideoRef.current?.play();
+  };
   return (
     <DancePageContainer>
       <ShadowContainer
@@ -64,6 +72,7 @@ function MyDancePage() {
       >
         <ResultVideo
           src={myDanceInfo?.myUrl}
+          ref={danceVideoRef}
           width={450}
           height={800}
           controls
@@ -77,11 +86,13 @@ function MyDancePage() {
             />
             <div style={{ display: "flex" }}>
               <DanceChart
+                myDanceId={myDanceInfo!.id}
                 scoreList={myDanceInfo!.scoreList}
                 danceVideoRef={danceVideoRef}
                 score={myDanceInfo!.score}
                 myUrl={myDanceInfo!.myUrl}
                 dance={dance!}
+                changeVideoTime={changeVideoTime}
               />
             </div>
           </StyleContainer>
