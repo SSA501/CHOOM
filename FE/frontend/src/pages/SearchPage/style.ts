@@ -51,6 +51,14 @@ const SpinnerContainer = styled.div`
   margin: auto;
 `;
 
+const NoResultText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  padding: 3em;
+`;
+
 export {
   SearchTopContainer,
   SideContainer,
@@ -59,4 +67,5 @@ export {
   PopularChallengeContainer,
   YoutubeChallengeContainer,
   SpinnerContainer,
+  NoResultText,
 };
