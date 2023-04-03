@@ -13,7 +13,7 @@ export const redirectKakao = () => {
 // 구글 로그인 리다이렉트
 export const redirectGoogle = () => {
   const CLIENT_ID =
-    "478547859062-ji67ae1smq25s6nnktcoqnj1eom8kgm2.apps.googleusercontent.com";
+    "124626006679-cq05a5rj2anbrqtfcvv1bjtriqs2pjul.apps.googleusercontent.com";
   const REDIRECT_URI = `${SERVER_URL}/login/oauth2/google`;
   const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&service=lso&o2v=1&flowName=GeneralOAuthFlow`;
   // const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?client_id=${CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin%2Foauth2%2Fgoogle&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&service=lso&o2v=1&flowName=GeneralOAuthFlow`;
