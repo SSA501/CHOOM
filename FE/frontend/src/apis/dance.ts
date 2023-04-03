@@ -39,7 +39,7 @@ export const getMyDanceDetail = async (danceId: string) => {
 };
 
 // 내가 춘 춤 삭제하기
-export const removeMyDance = async (danceId: number) => {
+export const removeMyDance = async (danceId: string) => {
   const response = await axiosFileInstance.delete(`/mydance/${danceId}`);
   return response.data;
 };

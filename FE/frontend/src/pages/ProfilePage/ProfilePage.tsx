@@ -36,6 +36,7 @@ function ProfilePage() {
       <ProfileVideoContainer />
       {normalModalOpen && (
         <NormalModal
+          modalText={"정말 탈퇴할까요?"}
           setNormalModalOpen={setNormalModalOpen}
           acceptModal={() => withdrawMember()}
         />
