@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { searchDance } from "../../apis/challenge";
+import {
+  addSearchKeyword,
+  getSearchKeywordList,
+  removeSearchKeyword,
+  searchDance,
+} from "../../apis/challenge";
 import ChallengeCard from "../../components/ChallengeCard/ChallengeCard";
 import RecentSearch from "../../components/RecentSearch/RecentSearch";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -19,7 +24,7 @@ import {
 function SearchPage() {
   const [searchParams, setSearchParams]: [URLSearchParams, Function] =
     useSearchParams();
-  const query = searchParams?.get("query");
+  const query: string | null = searchParams?.get("query");
   const [topData, setTopData] = useState([]);
   const [shortsData, setShortsData] = useState([]);
   const [size, setSize] = useState<number>(50); // size 50 일단 고정
@@ -30,6 +35,15 @@ function SearchPage() {
   useEffect(() => {
     if (query) {
       setIsLoading(true);
+      getSearchKeywordList()
+        .then((res) => {
+          const result = res?.data.find((item: any) => item.keyword === query);
+          if (result) {
+            removeSearchKeyword(result.searchId);
+          }
+        })
+        .catch((err) => console.log(err));
+      addSearchKeyword(query);
       searchDance(query, pageToken, size)
         .then((res) => {
           setIsLoading(false);

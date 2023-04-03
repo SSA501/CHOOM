@@ -22,7 +22,7 @@ function VideoList(props: VideoListProps) {
             );
             props.setVideoItemList(newVideoList);
           } else {
-            alert("북마크 해제에 실패하였습니다!");
+            alert("즐겨찾기 해제에 실패하였습니다!");
           }
         })
         .catch((err) => console.log(err));
@@ -35,7 +35,7 @@ function VideoList(props: VideoListProps) {
             );
             props.setVideoItemList(newVideoList);
           } else {
-            alert("북마크 등록에 실패하였습니다!");
+            alert("즐겨찾기 등록에 실패하였습니다!");
           }
         })
         .catch((err) => console.log(err));
