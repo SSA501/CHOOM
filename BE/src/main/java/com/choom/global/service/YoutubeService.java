@@ -172,10 +172,8 @@ public class YoutubeService {
         Video videoDetail = videoListResponse.getItems().get(0);
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
-        if (time.equals("P0D") || time.contains("M")) { // P0D는 라이브 방송
-            if (!time.equals("PT1M")) { //딱 1분인 영상
-                return null;
-            }
+        if (time.equals("P0D") || time.contains("M") || !time.equals("PT1M")) { // P0D는 라이브 방송
+            return null;
         }
 
         Long viewCount = 0L;
