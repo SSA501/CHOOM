@@ -5,6 +5,7 @@ import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 interface VideoProps {
   normalVideo?: boolean;
   id: number | null;
+  youtubeId?: string;
   url?: string;
   videoPath: string;
   thumbnailPath: string;
@@ -16,7 +17,7 @@ interface VideoProps {
 
 function Video({
   url,
-  // youtubeId,
+  youtubeId,
   thumbnailPath,
   videoPath,
   width,
@@ -44,6 +45,7 @@ function Video({
               playing
               width={width ?? "360px"}
               height={height ?? "640px"}
+              key={youtubeId}
             />
           ) : (
             <video
