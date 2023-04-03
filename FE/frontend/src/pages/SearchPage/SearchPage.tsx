@@ -104,7 +104,7 @@ function SearchPage() {
                     title={"SHORTS"}
                     isSearch
                     text={
-                      "유튜브 쇼츠 중 인기 영상을 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요"
+                      "유튜브 쇼츠 중 인기 영상을 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요!"
                     }
                   />
                 </YoutubeChallengeContainer>

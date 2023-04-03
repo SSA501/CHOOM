@@ -21,6 +21,7 @@ import {
   LikeBtnContainer,
   TextBox,
 } from "./style";
+import { SERVER_URL } from "../../constants/url";
 
 interface RankDataTypes {
   userId: number;
@@ -166,7 +167,7 @@ function DetailPage() {
                     score={score}
                     youtubeUrl={youtubeUrl}
                     // tiktokUrl={tiktokUrl}
-                    profileImage={profileImage}
+                    profileImage={`${SERVER_URL}${profileImage}`}
                   />
                 )
               )

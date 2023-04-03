@@ -15,6 +15,7 @@ const BannerContainer = styled.div<{ bgColor: string }>`
 
 const BannerTextContainer = styled.div`
   text-align: center;
+  word-break: keep-all;
 
   p:nth-of-type(1) {
     font-size: 2em;
