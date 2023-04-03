@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  addSearchKeyword,
   getSearchKeywordList,
   removeSearchKeyword,
   searchDance,
@@ -43,7 +42,6 @@ function SearchPage() {
           }
         })
         .catch((err) => console.log(err));
-      addSearchKeyword(query);
       searchDance(query, pageToken, size)
         .then((res) => {
           setIsLoading(false);
