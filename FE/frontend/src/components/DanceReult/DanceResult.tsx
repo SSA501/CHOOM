@@ -59,6 +59,7 @@ function DanceResult(props: {
           score={props.score}
           danceId={props.dance.id}
           title={props.dance.title}
+          myDanceId={myDanceId}
         />
         <div style={{ display: "flex" }}>
           <DanceChart

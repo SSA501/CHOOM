@@ -11,7 +11,12 @@ import {
 } from "./style";
 import { updateChallengeTitle } from "../../apis/challenge";
 
-function DanceScore(props: { score: number; danceId: string; title: string }) {
+function DanceScore(props: {
+  score: number;
+  danceId: string;
+  title: string;
+  myDanceId: string;
+}) {
   const [challengeTitle, setChallengeTitle] = useState("");
   const [currentScore, setCurrentScore] = React.useState(0); // 현재 점수를 상태로 관리
   const data = [
@@ -27,7 +32,7 @@ function DanceScore(props: { score: number; danceId: string; title: string }) {
   const updateChallengeTitleClick = () => {
     setIsEditing(false);
     setChallengeTitle(inputValue);
-    updateChallengeTitle(props.danceId, inputValue);
+    updateChallengeTitle(props.myDanceId, inputValue);
   };
 
   useEffect(() => {
