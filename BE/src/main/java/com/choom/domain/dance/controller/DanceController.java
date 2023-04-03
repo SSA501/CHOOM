@@ -76,7 +76,7 @@ public class DanceController {
     }
 
     @PutMapping("/{danceId}/status")
-    public ResponseEntity<BaseResponse> checkDanceStatus(@ApiIgnore Authentication authentication,
+    public ResponseEntity<BaseResponse> checkDanceStatus(
         @PathVariable Long danceId)
         throws YoutubeDLException, UnknownHostException {
         log.info("danceId : " + danceId);
@@ -85,7 +85,7 @@ public class DanceController {
     }
 
     @PutMapping("/{danceId}")
-    public ResponseEntity<BaseResponse> saveResult(@ApiIgnore Authentication authentication,
+    public ResponseEntity<BaseResponse> saveResult(
         @PathVariable Long danceId, @RequestPart MultipartFile jsonFile) throws IOException {
         log.info("danceId : " + danceId);
         log.info("jsonFile : " + jsonFile);
