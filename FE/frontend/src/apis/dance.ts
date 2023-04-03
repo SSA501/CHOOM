@@ -32,6 +32,18 @@ export const getMyDanceList = async (
   return response.data;
 };
 
+// 내가 춘 춤 상세보기
+export const getMyDanceDetail = async (danceId: number) => {
+  const response = await axiosFileInstance.get(`/mydance/${danceId}`);
+  return response.data;
+};
+
+// 내가 춘 춤 삭제하기
+export const removeMyDance = async (danceId: number) => {
+  const response = await axiosFileInstance.delete(`/mydance/${danceId}`);
+  return response.data;
+};
+
 // 챌린지 유튜브 포스팅
 export const postingChallenge = async (danceId: string) => {
   const response = await axiosInstance.put(

@@ -233,14 +233,14 @@ function ProfileCard(props: ProfileProps) {
           <tr>
             <td>
               {profileInfo.challenge}
-              <span>곡</span>
+              <span>회</span>
             </td>
             <td>
               {profileInfo.score}
               <span>점</span>
             </td>
             <td>
-              {profileInfo.time}
+              {Math.round(profileInfo.time / 60)}
               <span>분</span>
             </td>
           </tr>

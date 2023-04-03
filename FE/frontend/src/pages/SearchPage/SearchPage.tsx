@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { searchDance } from "../../apis/challenge";
 import ChallengeCard from "../../components/ChallengeCard/ChallengeCard";
 import RecentSearch from "../../components/RecentSearch/RecentSearch";
@@ -22,24 +22,34 @@ function SearchPage() {
   const query = searchParams?.get("query");
   const [topData, setTopData] = useState([]);
   const [shortsData, setShortsData] = useState([]);
-  const [size, setSize] = useState<number>(50); // size 50 고정
+  const [size, setSize] = useState<number>(50); // size 50 일단 고정
   const [pageToken, setPageToken] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (query) {
-      console.log(query);
       setIsLoading(true);
       searchDance(query, pageToken, size)
         .then((res) => {
-          console.log(res.data);
-          setTopData(res?.data?.dbSearch);
-          setShortsData(res?.data?.search);
           setIsLoading(false);
+          console.log(res);
+          const data = res?.data;
+          if (data?.isUrl && data?.dbSearch?.length > 0) {
+            // 쇼츠 url 입력이라면 바로 상세페이지로 넘어가기
+            navigate(`/detail/${data?.dbSearch[0]?.id}`);
+          } else if (data?.dbSearch?.length === 0 && data?.search?.length > 0) {
+            // db에 저장된거 없으면 쇼츠 데이터 중에 2개 넣어주기
+            setTopData(data?.search?.slice(0, 2));
+            setShortsData(data?.search?.slice(2));
+          } else {
+            setTopData(data?.dbSearch);
+            setShortsData(data?.search);
+          }
         })
         .catch((err) => console.log(err));
     }
-  }, [query, pageToken, size]);
+  }, [query, pageToken, size, navigate]);
 
   return (
     <>
@@ -53,37 +63,41 @@ function SearchPage() {
       </SearchTopContainer>
       {query ? (
         <>
-          <PopularChallengeContainer>
-            <SideContainer>
-              <SideTitle title={["가장 많이", "참여한 챌린지 🎉"]} />
-            </SideContainer>
-            <div style={{ display: "flex" }}>
-              <div>
-                <ChallengeNumber>#1</ChallengeNumber>
-                <ChallengeCard challengeInfo={topData[0]} bgColor="purple" />
-              </div>
-              <div>
-                <ChallengeNumber>#2</ChallengeNumber>
-                <ChallengeCard challengeInfo={topData[1]} bgColor="green" />
-              </div>
-            </div>
-          </PopularChallengeContainer>
-          <YoutubeChallengeContainer>
-            {isLoading ? (
-              <>
-                <Spinner text={"검색결과 불러오는 중..."} />
-              </>
-            ) : (
-              <VideoCarousel
-                videoData={shortsData}
-                title={"SHORTS"}
-                isSearch
-                text={
-                  "유튜브 쇼츠 중 인기 영상을 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요"
-                }
-              />
-            )}
-          </YoutubeChallengeContainer>
+          {isLoading ? (
+            <Spinner text={"검색결과 불러오는 중... 잠시만요!"} />
+          ) : (
+            <>
+              <PopularChallengeContainer>
+                <div style={{ display: "flex" }}>
+                  <SideContainer>
+                    <SideTitle title={["가장 많이", "참여한 챌린지 🎉"]} />
+                  </SideContainer>
+                  {topData.length > 0 &&
+                    topData?.map((data, index) => (
+                      <div>
+                        <ChallengeNumber>#{index + 1}</ChallengeNumber>
+                        <ChallengeCard
+                          challengeInfo={data}
+                          bgColor={index === 0 ? "purple" : "green"}
+                        />
+                      </div>
+                    ))}
+                </div>
+              </PopularChallengeContainer>
+              {shortsData.length > 0 && (
+                <YoutubeChallengeContainer>
+                  <VideoCarousel
+                    videoData={shortsData}
+                    title={"SHORTS"}
+                    isSearch
+                    text={
+                      "유튜브 쇼츠 중 인기 영상을 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요"
+                    }
+                  />
+                </YoutubeChallengeContainer>
+              )}
+            </>
+          )}
         </>
       ) : (
         <RecentSearch />

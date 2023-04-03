@@ -151,6 +151,7 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
         height={"480px"}
         id={challengeData?.id}
         title={challengeData?.title}
+        url={challengeData?.url}
         videoPath={challengeData?.url}
         thumbnailPath={challengeData?.thumbnailPath}
         handleClickVideo={() => handleClickVideo(challengeData?.id)}
