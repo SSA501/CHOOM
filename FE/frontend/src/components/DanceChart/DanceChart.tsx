@@ -19,8 +19,6 @@ function DanceChart(props: {
   danceVideoRef: React.MutableRefObject<any>;
   myUrl: string;
   dance: Dance;
-  isGuide: boolean;
-  setIsGuide: (isGuide: boolean) => void;
 }) {
   const data = props.scoreList;
 
@@ -31,14 +29,14 @@ function DanceChart(props: {
 
   return (
     <div style={{ display: "flex" }}>
-      <div style={{ height: "450px", width: "45vw" }}>
+      <div style={{ height: "400px", width: "45vw" }}>
         <div style={{ marginLeft: "50px", textAlign: "center" }}>
           클릭을 하면 해당 시간으로 재생됩니다
         </div>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             width={800}
-            height={450}
+            height={400}
             data={data}
             margin={{
               top: 10,
@@ -80,13 +78,7 @@ function DanceChart(props: {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <DanceShare
-        dance={props.dance}
-        myUrl={props.myUrl}
-        score={props.score}
-        isGuide={props.isGuide}
-        setIsGuide={props.setIsGuide}
-      />
+      <DanceShare dance={props.dance} myUrl={props.myUrl} score={props.score} />
     </div>
   );
 }

@@ -15,10 +15,7 @@ function DanceResult(props: {
   dance: Dance;
   myBlob: Blob;
   imageFile?: File;
-  isGuide: boolean;
-  setIsGuide: (isGuide: boolean) => void;
 }) {
-  const [challengeTitle, setChallengeTitle] = useState(props.dance.title);
   useEffect(() => {
     let matchRate = "[";
     matchRate += props.scoreList.map((score) => {
@@ -50,7 +47,6 @@ function DanceResult(props: {
         console.error(error);
       });
 
-    setChallengeTitle(props.dance.title);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,9 +59,8 @@ function DanceResult(props: {
       <StyleContainer>
         <DanceScore
           score={props.score}
-          setChallengeTitle={setChallengeTitle}
-          challengeTitle={challengeTitle}
           danceId={props.dance.id}
+          title={props.dance.title}
         />
         <div style={{ display: "flex" }}>
           <DanceChart
@@ -74,8 +69,6 @@ function DanceResult(props: {
             score={props.score}
             myUrl={props.myUrl}
             dance={props.dance}
-            isGuide={props.isGuide}
-            setIsGuide={props.setIsGuide}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
