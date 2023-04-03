@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<BaseResponse> deleteUser(@ApiIgnore Authentication authentication, @ApiIgnore @RequestHeader("Authorization") String token) {
+    public ResponseEntity<BaseResponse> deleteUser(@ApiIgnore Authentication authentication, @ApiIgnore @RequestHeader("Authorization") String token) throws IOException {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
         Long userId = customUserDetails.getUserId();
         String accessToken = token.substring(7);
