@@ -25,15 +25,18 @@ public class DanceDetailsDto {
     private String publishedAt;
     private boolean isBookmarked;
 
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
-    public void setBookmark(boolean isBookmarked){
+
+    public void setBookmark(boolean isBookmarked) {
         this.isBookmarked = isBookmarked;
     }
 
     @Builder
-    public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,  String thumbnailPath, int likeCount, Long viewCount, int userCount, int status, String publishedAt, boolean isBookmarked) {
+    public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,
+        String thumbnailPath, int likeCount, Long viewCount, int userCount, int status,
+        String publishedAt, boolean isBookmarked) {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();

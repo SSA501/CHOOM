@@ -1,5 +1,6 @@
 package com.choom.domain.dance.controller;
 
+import com.choom.domain.dance.dto.AddDanceResponseDto;
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceSearchDto;
 import com.choom.domain.dance.dto.PopularDanceDto;
@@ -60,10 +61,8 @@ public class DanceController {
         log.info("youtubeId : " + youtubeId);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getDetails();
         Long userId = customUserDetails.getUserId();
-        Long danceId = danceService.addDance(userId, youtubeId);
-        HashMap<String, Long> response = new HashMap<>();
-        response.put("danceId", danceId);
-        return new ResponseEntity<>(BaseResponse.success(response), HttpStatus.OK);
+        AddDanceResponseDto addDanceResponseDto = danceService.addDance(userId, youtubeId);
+        return new ResponseEntity<>(BaseResponse.success(addDanceResponseDto), HttpStatus.OK);
     }
 
     @GetMapping("/{danceId}")

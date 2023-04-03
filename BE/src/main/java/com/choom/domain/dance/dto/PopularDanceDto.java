@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class PopularDanceDto {
+
     private Long id;
     private String title;
     private String url;
