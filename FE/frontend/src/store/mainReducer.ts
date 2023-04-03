@@ -5,6 +5,7 @@ const mainReducer = createSlice({
   initialState: {
     isLogin: false,
     accessToken: "",
+    routeHistory: "",
   },
   reducers: {
     updateLoginStatus: (state, action: PayloadAction<boolean>) => {
@@ -13,8 +14,12 @@ const mainReducer = createSlice({
     updateAccessToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
     },
+    updateRouteHistory: (state, action: PayloadAction<string>) => {
+      state.routeHistory = action.payload;
+    },
   },
 });
 
-export const { updateLoginStatus, updateAccessToken } = mainReducer.actions;
+export const { updateLoginStatus, updateAccessToken, updateRouteHistory } =
+  mainReducer.actions;
 export default mainReducer;
