@@ -272,7 +272,7 @@ public class DanceService {
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
 
-        DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
+        return DanceDetailsDto.builder()
             .id(id)
             .url(url)
             .videoDetail(videoDetail)
@@ -285,7 +285,6 @@ public class DanceService {
             .publishedAt(publishedAt)
             .isBookmarked(isBookmarked)
             .build();
-        return danceDetailDto;
     }
 
     @Transactional
