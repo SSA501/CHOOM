@@ -168,7 +168,7 @@ public class MyDanceService {
             log.info("token : " + credential.getAccessToken());
 
             // 인증 정보를 파일로 저장합니다.
-            saveCredentialsToFile(credential);
+            // saveCredentialsToFile(credential);
 
             String hostname = InetAddress.getLocalHost().getHostName();
             if (hostname.substring(0, 7).equals("DESKTOP")) {
