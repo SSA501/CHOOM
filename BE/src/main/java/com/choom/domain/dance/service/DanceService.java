@@ -1,6 +1,7 @@
 package com.choom.domain.dance.service;
 
 import com.choom.domain.bookmark.entity.BookmarkRepository;
+import com.choom.domain.dance.dto.AddDanceResponseDto;
 import com.choom.domain.dance.dto.DanceDetailsWithRankDto;
 import com.choom.domain.dance.dto.DanceDetailsDto;
 import com.choom.domain.dance.dto.DanceSearchDto;
@@ -289,7 +290,7 @@ public class DanceService {
     }
 
     @Transactional
-    public Long addDance(Long userId, String youtubeId) throws IOException {
+    public AddDanceResponseDto addDance(Long userId, String youtubeId) throws IOException {
         String url = GOOGLE_YOUTUBE_URL + youtubeId;
 
         Dance dance = danceRepository.findByUrl(url).orElse(null);
@@ -303,7 +304,9 @@ public class DanceService {
 
             dance = danceRepository.save(newDance);
         }
-        return dance.getId();
+        return AddDanceResponseDto.builder()
+            .danceId(dance.getId())
+            .build();
     }
 
     @Transactional
