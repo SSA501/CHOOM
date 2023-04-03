@@ -251,7 +251,9 @@ public class YoutubeService {
         //1분 이내 영상인지 확인
         String time = videoDetail.getContentDetails().getDuration();
         if (time.equals("P0D") || time.contains("M")) { // P0D는 라이브 방송
-            return null;
+            if (!time.equals("PT1M")) { //딱 1분인 영상
+                return null;
+            }
         }
 
         Long viewCount = 0L;
@@ -283,8 +285,10 @@ public class YoutubeService {
         String publishedAt = String.valueOf(videoDetail.getSnippet().getPublishedAt())
             .split("T")[0];
         //1분 이내인 경우
-        int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
-
+        int s = 60;
+        if (!time.equals("PT1M")) {
+            s = Integer.parseInt(time.split("T")[1].split("S")[0]);
+        }
         return DanceDetailsDto.builder()
             .id(id)
             .url(url)
