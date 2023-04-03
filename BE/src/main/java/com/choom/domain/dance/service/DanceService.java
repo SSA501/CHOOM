@@ -362,12 +362,10 @@ public class DanceService {
             }
         }
 
-        DanceDetailsWithRankDto danceDetailWithRankDto = DanceDetailsWithRankDto.builder()
+        return DanceDetailsWithRankDto.builder()
             .danceDetailDto(danceDetailDto)
             .danceRankUserDtoList(danceRankUserDtoList)
             .build();
-
-        return danceDetailWithRankDto;
     }
 
     public List<PopularDanceDto> findPopularDance() {
