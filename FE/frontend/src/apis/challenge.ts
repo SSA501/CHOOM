@@ -2,7 +2,11 @@ import { axiosInstance } from "./instance";
 
 // 인기 챌린지 받아오기
 export const getPopularChallenge = async () => {
-  const response = await axiosInstance.get("/dance/popular");
+  const response = await axiosInstance.get("/dance/popular", {
+    headers: {
+      Authorization: "",
+    },
+  });
   return response.data;
 };
 
@@ -21,15 +25,10 @@ export const updateChallengeTitle = async (danceId: string, title: string) => {
 };
 
 // 검색하기
-export const searchDance = async (
-  query: string,
-  pageToken: string,
-  size: number
-) => {
+export const searchDance = async (query: string, size: number) => {
   const response = await axiosInstance.get("/dance", {
     params: {
       keyword: query,
-      pageToken: pageToken,
       size: size,
     },
   });

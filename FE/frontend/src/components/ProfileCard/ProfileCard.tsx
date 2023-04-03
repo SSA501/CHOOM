@@ -240,7 +240,7 @@ function ProfileCard(props: ProfileProps) {
               <span>점</span>
             </td>
             <td>
-              {Math.round(profileInfo.time / 60)}
+              {Math.ceil(profileInfo.time / 60)}
               <span>분</span>
             </td>
           </tr>

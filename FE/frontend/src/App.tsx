@@ -9,8 +9,11 @@ import DetailPage from "./pages/DetailPage/DetailPage";
 import LoginRedirectPage from "./pages/LoginRedirectPage/LoginRedirectPage";
 import { useAppDispatch, useAppSelector } from "./constants/types";
 import { axiosFileInstance, axiosInstance } from "./apis/instance";
-import { logout } from "./apis/user";
-import { updateAccessToken, updateLoginStatus } from "./store/mainReducer";
+import {
+  updateAccessToken,
+  updateLoginStatus,
+  updateRouteHistory,
+} from "./store/mainReducer";
 import LoginModal from "./components/Modal/LoginModal";
 import MyDancePage from "./pages/MyDancePage/MyDancePage";
 import UploadingPage from "./pages/UploadingPage/UploadingPage";
@@ -53,12 +56,11 @@ function App() {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
         } catch (err) {
-          // 갱신 실패시 로그아웃
+          // 갱신 실패시 임의 로그아웃 처리
           console.log("갱신실패", err);
           dispatch(updateLoginStatus(false));
           dispatch(updateAccessToken(""));
           navigate("/");
-          // return logout();
         }
       }
       return Promise.reject(error);
@@ -67,18 +69,38 @@ function App() {
 
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const isLogin = useAppSelector((state) => state.main.isLogin);
+  const routeHistory = useAppSelector((state) => state.main.routeHistory);
   const location = useLocation();
   const showLoginModal = () => {
     setLoginModalOpen(true);
     document.body.style.overflow = "hidden";
   };
+  const closeModal = () => {
+    setLoginModalOpen(false);
+    document.body.style.overflow = "auto";
+  };
 
   useEffect(() => {
-    if (location.pathname !== "/" && !isLogin) {
+    const currentPath = location.pathname;
+    // 로그인 안된 상태로 url 접근하면
+    if (currentPath !== "/" && !isLogin && routeHistory === "") {
+      if (
+        currentPath !== "/login/oauth2/kakao" &&
+        currentPath !== "/login/oauth2/google" &&
+        currentPath !== "/profile"
+      ) {
+        dispatch(updateRouteHistory(currentPath)); // 리다이렉트 이전 페이지 저장
+      }
+      navigate("/");
       showLoginModal();
-      setTimeout(() => navigate("/"), 0);
     }
-  }, [isLogin, location, navigate]);
+
+    // 로그인 하고 돌아와서 routeHistory가 남아있는 상태라면
+    if (routeHistory !== "" && isLogin) {
+      navigate(routeHistory); // 리다이렉트 이전 페이지로 이동
+      dispatch(updateRouteHistory("")); // 저장해둔 리다이렉트 이전 페이지 초기화
+    }
+  }, [dispatch, isLogin, location, navigate, routeHistory]);
 
   return (
     <>

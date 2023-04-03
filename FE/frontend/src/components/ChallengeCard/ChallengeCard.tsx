@@ -12,6 +12,7 @@ import LikeBtn from "../LikeBtn/LikeBtn";
 import { ShadowContainer } from "../ShadowContainer/style";
 import Video from "../Video/Video";
 import { SideContainer, ChallengeTitle, TableContainer } from "./style";
+import { addDance } from "../../apis/challenge";
 
 interface ChallengeDataProps {
   id: number;
@@ -57,12 +58,29 @@ function ChallengeCard({ challengeInfo, bgColor }: ChallengeProps) {
   };
 
   const handleLike = () => {
-    addBookmark(challengeData?.id)
-      .then(() => {
-        setIsLiked(true);
-        setLocalLikeCount((prev: number) => prev + 1);
-      })
-      .catch((err) => console.log(err));
+    if (challengeData.id == null) {
+      addDance(challengeData.youtubeId).then((res) => {
+        if (res.statusCode === 200) {
+          setChallengeData({ ...challengeData, id: res.data.danceId });
+
+          addBookmark(res.data.danceId)
+            .then(() => {
+              setIsLiked(true);
+              setLocalLikeCount((prev: number) => prev + 1);
+            })
+            .catch((err) => console.log(err));
+        } else {
+          alert("즐겨찾기 등록에 실패하였습니다!");
+        }
+      });
+    } else {
+      addBookmark(challengeData?.id)
+        .then(() => {
+          setIsLiked(true);
+          setLocalLikeCount((prev: number) => prev + 1);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const handleLikeDelete = () => {

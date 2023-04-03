@@ -15,20 +15,28 @@ function VideoList(props: VideoListProps) {
   const handleLike = (danceId: number, isLike: boolean) => {
     if (isLike) {
       removeBookmark(danceId)
-        .then(() => {
-          const newVideoList = props.videoList.map((video) =>
-            video.id === danceId ? { ...video, isLike: !isLike } : video
-          );
-          props.setVideoItemList(newVideoList);
+        .then((res) => {
+          if (res.statusCode === 200) {
+            const newVideoList = props.videoList.map((video) =>
+              video.danceId === danceId ? { ...video, isLike: !isLike } : video
+            );
+            props.setVideoItemList(newVideoList);
+          } else {
+            alert("즐겨찾기 해제에 실패하였습니다!");
+          }
         })
         .catch((err) => console.log(err));
     } else {
       addBookmark(danceId)
-        .then(() => {
-          const newVideoList = props.videoList.map((video) =>
-            video.id === danceId ? { ...video, isLike: !isLike } : video
-          );
-          props.setVideoItemList(newVideoList);
+        .then((res) => {
+          if (res.statusCode === 200) {
+            const newVideoList = props.videoList.map((video) =>
+              video.danceId === danceId ? { ...video, isLike: !isLike } : video
+            );
+            props.setVideoItemList(newVideoList);
+          } else {
+            alert("즐겨찾기 등록에 실패하였습니다!");
+          }
         })
         .catch((err) => console.log(err));
     }
@@ -36,8 +44,7 @@ function VideoList(props: VideoListProps) {
 
   const navigate = useNavigate();
   const handleClickVideo = (danceId: number): void => {
-    // TODO: 춤 춘 결과 상세페이지 연결
-    if (props.listOption === "History") navigate(`/dance/${danceId}`);
+    if (props.listOption === "History") navigate(`/mydance/${danceId}`);
     else navigate(`/detail/${danceId}`);
   };
 
@@ -84,7 +91,7 @@ function VideoList(props: VideoListProps) {
             thumbnailPath={item.thumbnailPath}
             handleClickVideo={() => handleClickVideo(item.danceId)}
           />
-          <MdFavorite onClick={() => handleLike(item.id, item.isLike)} />
+          <MdFavorite onClick={() => handleLike(item.danceId, item.isLike)} />
         </VideoItem>
       );
     });
