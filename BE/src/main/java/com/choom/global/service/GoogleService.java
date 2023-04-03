@@ -55,9 +55,7 @@ public class GoogleService {
         String accessToken = getAccessToken("LOGIN", code);
         log.info("구글 accessToken : " + accessToken);
         GoogleUserInfoResponse googleUserInfoResponse = googleUserInfoService.getUserInfo("Bearer " + accessToken);
-        return SocialUserInfoDto.builder()
-                .googleUserInfoResponse(googleUserInfoResponse)
-                .build();
+        return new SocialUserInfoDto(googleUserInfoResponse);
     }
 
     public String getAccessToken(String type, String code) {
