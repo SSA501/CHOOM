@@ -1,5 +1,6 @@
 package com.choom.domain.user.service;
 
+import com.choom.domain.mydance.entity.MyDance;
 import com.choom.global.service.RandomNicknameService;
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,9 +74,17 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteUser(Long userId) {
+    public void deleteUser(Long userId) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        fileService.fileDelete(user.getProfileImage());
+        List<MyDance> myDanceList = user.getMyDanceList();
+        for (MyDance myDance : myDanceList) {
+            String videoPath = myDance.getVideoPath();
+            String thumbnailPath = myDance.getThumbnailPath();
+            fileService.fileDelete(videoPath);
+            fileService.fileDelete(thumbnailPath);
+        }
         userRepository.delete(user);
     }
 
