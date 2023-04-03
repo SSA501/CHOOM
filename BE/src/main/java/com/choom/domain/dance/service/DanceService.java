@@ -115,11 +115,11 @@ public class DanceService {
                 if (danceDetailDto != null) {
                     Dance dance = danceRepository.findByYoutubeId(keyword).orElse(null);
                     if (dance == null) { //처음인경우
-                        Dance insertDance = Dance.builder()
+                        Dance newDance = Dance.builder()
                             .danceDetailDto(danceDetailDto)
                             .build();
-                        Dance savedDance = danceRepository.save(insertDance);
-                        danceDetailDto.setId(savedDance.getId());
+                        danceRepository.save(newDance);
+                        danceDetailDto.setId(newDance.getId());
                     }
                     danceDetailDtoList.add(danceDetailDto);
                 }
@@ -297,11 +297,11 @@ public class DanceService {
         if (dance == null) { //처음인경우
             DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
 
-            Dance insertDance = Dance.builder()
+            Dance newDance = Dance.builder()
                 .danceDetailDto(danceDetailDto)
                 .build();
 
-            dance = danceRepository.save(insertDance);
+            dance = danceRepository.save(newDance);
         }
         return dance.getId();
     }
@@ -337,11 +337,11 @@ public class DanceService {
 
         if (dance == null) { //처음인경우
             //3. DB에 저장
-            Dance insertDance = Dance.builder()
+            Dance newDance = Dance.builder()
                 .danceDetailDto(danceDetailDto)
                 .build();
-            Dance savedDance = danceRepository.save(insertDance);
-            danceDetailDto.setId(savedDance.getId());
+            danceRepository.save(newDance);
+            danceDetailDto.setId(newDance.getId());
 
         } else { //처음이 아닌 경우
             // 3. 상위 순위 유저 3명 (처음인 경우에는 순위가 0임)
