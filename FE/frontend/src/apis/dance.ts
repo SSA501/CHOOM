@@ -49,7 +49,7 @@ export const postingChallenge = async (danceId: string) => {
   const response = await axiosInstance.put(
     "/mydance/" +
       danceId +
-      "/shorts?code=https://accounts.google.com/o/oauth2/auth?client_id=478547859062-ji67ae1smq25s6nnktcoqnj1eom8kgm2.apps.googleusercontent.com&redirect_uri=https://j8a501.p.ssafy.io/upload&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload](https://accounts.google.com/o/oauth2/auth?client_id=478547859062-ji67ae1smq25s6nnktcoqnj1eom8kgm2.apps.googleusercontent.com&redirect_uri=https://j8a501.p.ssafy.io/upload&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload",
+      "/shorts?code=4/0AVHEtk5Cl7ZQvFrZU8QdCV9E-4X_XOFNfBM6nACsxBu--7hTZlfj04vNgJNK4hevoY1DpA",
     {}
   );
   return response.data;
