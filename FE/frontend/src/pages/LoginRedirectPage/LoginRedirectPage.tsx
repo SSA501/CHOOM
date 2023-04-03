@@ -30,7 +30,7 @@ function LoginRedirectPage({ isGoogle }: LoginRedirectPageProps) {
       loginKakao(code)
         .then((res) => {
           updateUserStatus(res);
-          navigate(-1);
+          // navigate(-1);
         })
         .catch((err) => console.log(err));
     }
@@ -39,7 +39,7 @@ function LoginRedirectPage({ isGoogle }: LoginRedirectPageProps) {
       loginGoogle(code)
         .then((res) => {
           updateUserStatus(res);
-          navigate(-3);
+          // navigate(-3);
         })
         .catch((err) => console.log(err));
     }
