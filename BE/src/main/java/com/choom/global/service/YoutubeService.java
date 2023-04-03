@@ -96,7 +96,7 @@ public class YoutubeService {
                 String youtubeId = video.getId().getVideoId();
                 DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
                 danceDetailDtoList.add(danceDetailDto);
-
+                log.info("개별 검색 결과 : "+danceDetailDto.toString());
                 elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
                 if (elapsedTime > maxTime) { // 경과 시간이 최대 시간보다 작으면 반복합니다.
                     log.info("시간초과로 종료됨!");
@@ -104,7 +104,7 @@ public class YoutubeService {
                 }
             }
 
-            log.info("keyword 검색 결과 : "+danceDetailDtoList);
+            log.info("keyword 전체 검색 결과 : "+danceDetailDtoList);
 
             Collections.sort(danceDetailDtoList,
                 (o1, o2) -> {
