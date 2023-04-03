@@ -151,7 +151,7 @@ public class MyDanceService {
                 .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
         String youtubeId = uploadVideo(myDance.getVideoPath(), myDance.getTitle(), code);
-        String youtubeUrl = "https://youtube.com/shorts/"+youtubeId;
+        String youtubeUrl = "https://youtube.com/shorts/" + youtubeId;
 
         myDance.updateYoutubeUrl(youtubeUrl);
 
@@ -168,7 +168,7 @@ public class MyDanceService {
             log.info("token : " + credential.getAccessToken());
 
             // 인증 정보를 파일로 저장합니다.
-            saveCredentialsToFile(credential);
+            // saveCredentialsToFile(credential);
 
             String hostname = InetAddress.getLocalHost().getHostName();
             if (hostname.substring(0, 7).equals("DESKTOP")) {
