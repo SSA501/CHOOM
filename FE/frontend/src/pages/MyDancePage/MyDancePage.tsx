@@ -83,6 +83,7 @@ function MyDancePage() {
               score={myDanceInfo!.score}
               danceId={myDanceInfo!.danceId}
               title={myDanceInfo!.title}
+              myDanceId={myDanceInfo!.id}
             />
             <div style={{ display: "flex" }}>
               <DanceChart
