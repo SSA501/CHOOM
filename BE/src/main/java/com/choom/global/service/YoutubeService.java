@@ -147,86 +147,8 @@ public class YoutubeService {
         }
     }
 
-    public DanceDetailsDto getVideoDetail(Long userId, String youtubeId) {
-        YouTube.Videos.List videoDetails = null;
-        try {
-            videoDetails = youtube.videos().list("contentDetails");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        videoDetails.setKey(YOUTUBE_APIKEY);
-        videoDetails.setId(youtubeId);
-        videoDetails.setPart("statistics,snippet,contentDetails");
-        videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
-
-        try {
-            videoListResponse = videoDetails.execute();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        if (videoListResponse.getItems().size() == 0) {
-            //잘못 된 검색인 경우
-            return null;
-        }
-        Video videoDetail = videoListResponse.getItems().get(0);
-        //1분 이내 영상인지 확인
-        String time = videoDetail.getContentDetails().getDuration();
-        if (time.equals("P0D") || time.contains("M")) { // P0D는 라이브 방송
-            if (!time.equals("PT1M")) { //딱 1분인 영상
-                return null;
-            }
-        }
-
-        Long viewCount = 0L;
-        if (videoDetail.getStatistics().getViewCount() != null) {
-            viewCount = videoDetail.getStatistics().getViewCount().longValue();
-        }
-
-        String url = GOOGLE_YOUTUBE_URL + youtubeId;
-        Dance dance = danceRepository.findByYoutubeId(youtubeId).orElse(null);
-
-        Long id = null;
-        if (dance != null) {
-            id = dance.getId();
-        }
-
-        int userCount = 0;
-        int status = 0;
-        int likeCount = 0;
-        Boolean isBookmarked = false;
-        if (dance != null) {
-            userCount = dance.getUserCount();
-            status = dance.getStatus();
-            likeCount = dance.getBookmarkSize();
-            if (bookmarkRepository.findBookmarkByUserIdAndDanceId(userId, dance.getId())
-                .isPresent()) {
-                isBookmarked = true;
-            }
-        }
-        String publishedAt = String.valueOf(videoDetail.getSnippet().getPublishedAt())
-            .split("T")[0];
-        //1분 이내인 경우
-        int s = 60;
-        if (!time.equals("PT1M")) {
-            s = Integer.parseInt(time.split("T")[1].split("S")[0]);
-        }
-        return DanceDetailsDto.builder()
-            .id(id)
-            .url(url)
-            .videoDetail(videoDetail)
-            .sec(s)
-            .likeCount(likeCount)
-            .viewCount(viewCount)
-            .userCount(userCount)
-            .youtubeId(youtubeId)
-            .status(status)
-            .publishedAt(publishedAt)
-            .isBookmarked(isBookmarked)
-            .build();
-    }
-
     @Async
-    public DanceDetailsDto getVideoDetailAsync(Long userId, String youtubeId) {
+    public DanceDetailsDto getVideoDetail(Long userId, String youtubeId) {
         YouTube.Videos.List videoDetails = null;
         try {
             videoDetails = youtube.videos().list("contentDetails");
