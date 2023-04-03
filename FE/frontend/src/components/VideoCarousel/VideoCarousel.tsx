@@ -45,17 +45,19 @@ function VideoCarousel({
   );
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  // const showLoginModal = () => {
-  //   if (setLoginModalOpen) setLoginModalOpen(true); // setLoginModalOpen이 undefined 인 경우 대비
-  //   document.body.style.overflow = "hidden";
-  // };
+  const showLoginModal = () => {
+    if (setLoginModalOpen) setLoginModalOpen(true); // setLoginModalOpen이 undefined 인 경우 대비
+    document.body.style.overflow = "hidden";
+  };
 
   const handleClickVideo = (videoID: number | string | null): void => {
     if (!isLogin) {
-      // showLoginModal();
-      setLoginModalOpen(true);
+      showLoginModal();
       return;
     }
+
+    if (!loginModalOpen) document.body.style.overflow = "auto";
+
     if (typeof videoID === "string") {
       // 서치에서 보여주는 비디오 중 DB에 저장 안되어 있는 경우 저장 요청
       addDance(videoID)

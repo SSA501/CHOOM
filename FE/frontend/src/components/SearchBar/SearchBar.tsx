@@ -29,18 +29,20 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   );
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  // const showLoginModal = () => {
-  //   if (setLoginModalOpen) setLoginModalOpen(true); // setLoginModalOpen이 undefined 인 경우 대비
-  //   document.body.style.overflow = "hidden";
-  // };
+  const showLoginModal = () => {
+    if (setLoginModalOpen) setLoginModalOpen(true); // setLoginModalOpen이 undefined 인 경우 대비
+    document.body.style.overflow = "hidden";
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLogin) {
-      // showLoginModal();
-      setLoginModalOpen(true);
+      showLoginModal();
+      // setLoginModalOpen(true);
       return;
     }
+
+    if (!loginModalOpen) document.body.style.overflow = "auto";
 
     const trimmedValue = inputValue.trim();
     if (trimmedValue.length < 1) {
