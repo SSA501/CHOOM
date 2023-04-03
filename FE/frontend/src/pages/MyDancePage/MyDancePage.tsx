@@ -12,6 +12,7 @@ import {
 import DanceScore from "../../components/DanceScore/DanceScore";
 import DanceChart from "../../components/DanceChart/DanceChart";
 import { getChallengeDetail } from "../../apis/challenge";
+import { SERVER_URL } from "../../constants/url";
 
 function MyDancePage() {
   const { myDanceId } = useParams();
@@ -31,33 +32,31 @@ function MyDancePage() {
     danceId: "",
   });
   useEffect(() => {
-    console.log("##############");
     getMyDanceDetail(myDanceId!)
       .then((res) => {
         console.log(res);
         setMyDanceInfo({
-          scoreList: JSON.parse(res.data.matchRate),
-          score: res.data.score,
-          myUrl: res.data.videoPath,
-          title: res.data.title,
-          danceId: res.data.danceId,
+          scoreList: JSON.parse(res?.data?.matchRate),
+          score: res?.data?.score,
+          myUrl: SERVER_URL + res?.data?.videoPath,
+          title: res?.data?.title,
+          danceId: res?.data?.danceId,
         });
-        getChallengeDetail(res.data.danceId)
+        getChallengeDetail(res?.data?.danceId)
           .then((res) => {
             console.log(res);
-            setDance(res.data.dance);
+            setDance(res?.data?.dance);
           })
           .catch((err) => console.log(err));
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, [myDanceId]);
   return (
     <DancePageContainer>
       <ShadowContainer
         padding="8px"
-        margin="8px 16px 16px 8px"
         display="flex"
         justifyContent="space-evenly"
         flexWrap="wrap"

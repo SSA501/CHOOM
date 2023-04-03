@@ -12,14 +12,14 @@ import {
 import { updateChallengeTitle } from "../../apis/challenge";
 
 function DanceScore(props: { score: number; danceId: string; title: string }) {
-  const [challengeTitle, setChallengeTitle] = useState(props.title);
+  const [challengeTitle, setChallengeTitle] = useState("");
   const [currentScore, setCurrentScore] = React.useState(0); // 현재 점수를 상태로 관리
   const data = [
     { name: "Group A", value: currentScore },
     { name: "Group B", value: 100 - currentScore },
   ];
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>(challengeTitle);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const cancelUpdateChallengeTitle = () => {
     setIsEditing(false);
@@ -31,6 +31,8 @@ function DanceScore(props: { score: number; danceId: string; title: string }) {
   };
 
   useEffect(() => {
+    setChallengeTitle(props.title);
+    setInputValue(props.title);
     const timer = setInterval(() => {
       if (currentScore < props.score) {
         setCurrentScore((prevScore) => prevScore + 1); // 1씩 증가

@@ -6,9 +6,17 @@ import CirlceBtn from "../Btn/CircleBtn";
 import { MdDownload } from "react-icons/md";
 import { getUserDetail } from "../../apis/user";
 import { Dance } from "../../constants/types";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-function DanceShare(props: { score: number; myUrl: string; dance: Dance }) {
+function DanceShare(props: {
+  score: number;
+  myUrl: string;
+  dance: Dance;
+  isGuide?: boolean;
+  setIsGuide?: (isGuide: boolean) => void;
+}) {
   const [userData, setUserData] = useState<any>();
+
   useEffect(() => {
     getUserDetail()
       .then((res) => {
@@ -51,6 +59,10 @@ function DanceShare(props: { score: number; myUrl: string; dance: Dance }) {
     });
   };
 
+  const handleGuideClick = () => {
+    props.setIsGuide && props.setIsGuide(!props.isGuide);
+  };
+
   const handleClickDownload = () => {
     const a = document.createElement("a");
     document.body.appendChild(a);
@@ -81,6 +93,13 @@ function DanceShare(props: { score: number; myUrl: string; dance: Dance }) {
         color="var(--green-color)"
         onClick={handleClickDownload}
       />
+      {props.isGuide !== undefined && (
+        <CirlceBtn
+          icon={props.isGuide ? AiOutlineEye : AiOutlineEyeInvisible}
+          onClick={handleGuideClick}
+          label={"가이드"}
+        />
+      )}
     </BtnContainer>
   );
 }

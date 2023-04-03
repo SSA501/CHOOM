@@ -15,17 +15,13 @@ function DanceResult(props: {
   dance: Dance;
   myBlob: Blob;
   imageFile?: File;
+  isGuide: boolean;
+  setIsGuide: (isGuide: boolean) => void;
 }) {
   useEffect(() => {
-    let matchRate = "[";
-    matchRate += props.scoreList.map((score) => {
-      return score.score + ",";
-    });
-    matchRate = matchRate.substring(0, matchRate.length - 1) + "]";
-
     const uploaderString = JSON.stringify({
       danceId: props.dance.id,
-      matchRate: matchRate,
+      matchRate: JSON.stringify(props.scoreList),
       score: props.score,
       title: props.dance.title,
       videoLength: props.scoreList.length,
@@ -69,6 +65,8 @@ function DanceResult(props: {
             score={props.score}
             myUrl={props.myUrl}
             dance={props.dance}
+            setIsGuide={props.setIsGuide}
+            isGuide={props.isGuide}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
