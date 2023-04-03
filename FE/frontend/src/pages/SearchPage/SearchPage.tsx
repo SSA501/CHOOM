@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  addSearchKeyword,
   getSearchKeywordList,
   removeSearchKeyword,
   searchDance,
@@ -42,8 +41,6 @@ function SearchPage() {
           }
         })
         .catch((err) => console.log(err));
-      // 키워드 저장
-      addSearchKeyword(query);
       // 검색 실행
       searchDance(query, 50) // size 50으로 고정
         .then((res) => {

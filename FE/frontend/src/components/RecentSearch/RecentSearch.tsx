@@ -20,7 +20,6 @@ function RecentSearch() {
   const navigate = useNavigate();
 
   const handleClick = (searchId: number, searchKeyword: string) => {
-    // TODO: 검색 기능 구현하기 -> 기존 키워드로 검색하면 기존 키워드 삭제, 신규로 키워드 추가. 최신으로 갱신
     removeSearchKeyword(searchId);
     addSearchKeyword(searchKeyword);
     navigate({
@@ -32,7 +31,6 @@ function RecentSearch() {
   };
 
   const handleRemove = (searchId: number) => {
-    // TODO: 삭제 기능 구현하기
     removeSearchKeyword(searchId)
       .then((res) => {
         if (res?.statusCode === 200) {
@@ -71,9 +69,9 @@ function RecentSearch() {
       </SideContainer>
       <SearchItemContainer>
         {searchList?.length > 0 ? (
-          <p>최근 검색어가 없습니다.</p>
-        ) : (
           searchItemList
+        ) : (
+          <p>최근 검색어가 없습니다.</p>
         )}
       </SearchItemContainer>
     </RecentSearchContainer>
