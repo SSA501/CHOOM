@@ -30,7 +30,7 @@ public class MyDanceCustomRepositoryImpl implements MyDanceCustomRepository {
     @Override
     public UserMyDanceDto findMyDanceInfoByUser(User user) {
         UserMyDanceDto userMyDanceDto = queryFactory
-                .select(Projections.constructor(UserMyDanceDto.class, myDance.count(), myDance.videoLength.sum(), myDance.score.avg()))
+                .select(Projections.constructor(UserMyDanceDto.class, myDance.count(), myDance.videoLength.sum(), myDance.score.avg().intValue()))
                 .from(myDance)
                 .where(myDance.user.eq(user))
                 .fetchOne();
