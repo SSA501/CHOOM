@@ -13,7 +13,6 @@ import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
 import com.choom.global.service.FileService;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -45,10 +44,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.api.services.youtube.YouTube;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@Transactional(readOnly = true)
 @Slf4j
+@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DanceService {
 
     private final DanceRepository danceRepository;
@@ -373,10 +372,10 @@ public class DanceService {
 
     public List<PopularDanceDto> findPopularDance() {
         List<Dance> danceList = danceRepository.findPopularDance();
-        List<PopularDanceDto> popularDanceDtoList = danceList.stream()
+        // List<Dance> -> List<PopularDance>
+        return danceList.stream()
             .map(PopularDanceDto::new)
             .collect(Collectors.toList());
-        return popularDanceDtoList;
     }
 
     @Transactional
