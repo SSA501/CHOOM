@@ -33,6 +33,6 @@ public class FindMyDanceResponseDto {
         this.title = myDance.getTitle();
         this.youtubeUrl = myDance.getYoutubeUrl();
         this.tiktokUrl = myDance.getTiktokUrl();
-        this.createdAt = myDance.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));;
+        this.createdAt = myDance.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
 }

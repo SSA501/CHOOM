@@ -21,7 +21,7 @@ public class AddMyDanceResponseDto {
         this.id = myDance.getId();
         this.danceId = myDance.getDance().getId();
         this.score = myDance.getScore();
-        this.matchRate =myDance.getMatchRate();
+        this.matchRate = myDance.getMatchRate();
         this.videoPath = myDance.getVideoPath();
         this.thumbnailPath = myDance.getThumbnailPath();
         this.videoLength = myDance.getVideoLength();

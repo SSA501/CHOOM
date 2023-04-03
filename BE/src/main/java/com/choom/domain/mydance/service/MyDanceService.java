@@ -151,7 +151,7 @@ public class MyDanceService {
                 .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
         String youtubeId = uploadVideo(myDance.getVideoPath(), myDance.getTitle(), code);
-        String youtubeUrl = "https://youtube.com/shorts/"+youtubeId;
+        String youtubeUrl = "https://youtube.com/shorts/" + youtubeId;
 
         myDance.updateYoutubeUrl(youtubeUrl);
 
