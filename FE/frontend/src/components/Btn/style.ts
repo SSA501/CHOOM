@@ -14,7 +14,7 @@ const LoginBtn = styled.button<{
   width: ${(props) => props.size || "115px"};
   height: ${(props) => props.size || "115px"};
   border-radius: 60px;
-  margin-inline: ${(props) => props.size + "px" || "13px"};
+  margin-inline: ${(props) => (props.size ? "0px" : "13px")};
   background-color: ${(props) =>
     props.loginType === "kakao"
       ? "#FFE550"

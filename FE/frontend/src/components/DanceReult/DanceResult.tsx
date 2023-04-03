@@ -15,6 +15,8 @@ function DanceResult(props: {
   dance: Dance;
   myBlob: Blob;
   imageFile?: File;
+  isGuide: boolean;
+  setIsGuide: (isGuide: boolean) => void;
 }) {
   const [challengeTitle, setChallengeTitle] = useState(props.dance.title);
   useEffect(() => {
@@ -72,6 +74,8 @@ function DanceResult(props: {
             score={props.score}
             myUrl={props.myUrl}
             dance={props.dance}
+            isGuide={props.isGuide}
+            setIsGuide={props.setIsGuide}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>

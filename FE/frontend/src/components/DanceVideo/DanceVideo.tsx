@@ -30,6 +30,7 @@ const DanceVideo = forwardRef(
       myUrl?: string;
       myGuideUrl?: string;
       challenge?: Challenge;
+      isGuide: boolean;
     },
     ref: React.ForwardedRef<any>
   ) => {
@@ -40,7 +41,6 @@ const DanceVideo = forwardRef(
     const [isFlipped, setIsFlipped] = useState(false);
     const [isMuted, setIsMuted] = useState(video.current?.muted);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isGuide, setIsGuide] = useState(false);
 
     useImperativeHandle(ref, () => ({
       playVideo,
@@ -174,10 +174,6 @@ const DanceVideo = forwardRef(
       if (video.current) video.current.muted = isMuted!;
     }, [isMuted]);
 
-    const handleGuideClick = () => {
-      setIsGuide(!isGuide);
-    };
-
     return (
       <div>
         {!props.myUrl ? (
@@ -221,11 +217,11 @@ const DanceVideo = forwardRef(
         ) : (
           <MainContainer>
             <ResultVideo
-              src={isGuide ? props.myGuideUrl : props.myUrl}
+              src={props.isGuide ? props.myGuideUrl : props.myUrl}
               width={450}
               height={800}
               ref={video}
-              isGuide={isGuide}
+              isGuide={props.isGuide}
               controls
             />
           </MainContainer>
