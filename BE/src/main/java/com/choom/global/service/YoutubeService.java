@@ -94,7 +94,7 @@ public class YoutubeService {
             for (SearchResult video : searchResultList) {
                 // 비동기로 검색 -> 검색 속도 향상
                 String youtubeId = video.getId().getVideoId();
-                DanceDetailsDto danceDetailDto = getVideoDetailAsync(userId, youtubeId);
+                DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
                 danceDetailDtoList.add(danceDetailDto);
 
                 elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
