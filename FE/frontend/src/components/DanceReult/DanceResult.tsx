@@ -18,17 +18,11 @@ function DanceResult(props: {
   isGuide: boolean;
   setIsGuide: (isGuide: boolean) => void;
 }) {
-  const [challengeTitle, setChallengeTitle] = useState(props.dance.title);
+  const [myDanceId, setMyDanceId] = useState("");
   useEffect(() => {
-    let matchRate = "[";
-    matchRate += props.scoreList.map((score) => {
-      return score.score + ",";
-    });
-    matchRate = matchRate.substring(0, matchRate.length - 1) + "]";
-
     const uploaderString = JSON.stringify({
       danceId: props.dance.id,
-      matchRate: matchRate,
+      matchRate: JSON.stringify(props.scoreList),
       score: props.score,
       title: props.dance.title,
       videoLength: props.scoreList.length,
@@ -45,12 +39,12 @@ function DanceResult(props: {
     createChallengeResult(formData)
       .then((res) => {
         console.log(res);
+        setMyDanceId(res.data.id);
       })
       .catch((error) => {
         console.error(error);
       });
 
-    setChallengeTitle(props.dance.title);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,9 +57,9 @@ function DanceResult(props: {
       <StyleContainer>
         <DanceScore
           score={props.score}
-          setChallengeTitle={setChallengeTitle}
-          challengeTitle={challengeTitle}
           danceId={props.dance.id}
+          title={props.dance.title}
+          myDanceId={myDanceId}
         />
         <div style={{ display: "flex" }}>
           <DanceChart
@@ -74,8 +68,9 @@ function DanceResult(props: {
             score={props.score}
             myUrl={props.myUrl}
             dance={props.dance}
-            isGuide={props.isGuide}
             setIsGuide={props.setIsGuide}
+            isGuide={props.isGuide}
+            myDanceId={myDanceId}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>

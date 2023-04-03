@@ -2,41 +2,42 @@ import React, { useEffect, useState, ChangeEvent } from "react";
 import { CgCheckO, CgCloseO } from "react-icons/cg";
 import { MdOutlineMode } from "react-icons/md";
 import { Pie, PieChart, Cell } from "recharts";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import ShareBtn from "../Btn/ShareBtn";
+
 import {
   Header,
   EditIcon,
   ChallengeTitleContainer,
   ShareContainer,
-  BtnContainer,
 } from "./style";
 import { updateChallengeTitle } from "../../apis/challenge";
 
 function DanceScore(props: {
   score: number;
-  challengeTitle: string;
-  setChallengeTitle: (challenge: string) => void;
   danceId: string;
+  title: string;
+  myDanceId: string;
 }) {
+  const [challengeTitle, setChallengeTitle] = useState("");
   const [currentScore, setCurrentScore] = React.useState(0); // 현재 점수를 상태로 관리
   const data = [
     { name: "Group A", value: currentScore },
     { name: "Group B", value: 100 - currentScore },
   ];
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>(props.challengeTitle);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const cancelUpdateChallengeTitle = () => {
     setIsEditing(false);
   };
   const updateChallengeTitleClick = () => {
     setIsEditing(false);
-    props.setChallengeTitle(inputValue);
-    updateChallengeTitle(props.danceId, inputValue);
+    setChallengeTitle(inputValue);
+    updateChallengeTitle(props.myDanceId, inputValue);
   };
 
   useEffect(() => {
+    setChallengeTitle(props.title);
+    setInputValue(props.title);
     const timer = setInterval(() => {
       if (currentScore < props.score) {
         setCurrentScore((prevScore) => prevScore + 1); // 1씩 증가
@@ -60,7 +61,7 @@ function DanceScore(props: {
               }}
             />
           ) : (
-            <h3>{props.challengeTitle}</h3>
+            <h3>{challengeTitle}</h3>
           )}
 
           <EditIcon isEditing={isEditing}>

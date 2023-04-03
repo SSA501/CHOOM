@@ -71,7 +71,7 @@ function VideoList(props: VideoListProps) {
           title={item.title}
           videoPath={`${SERVER_URL}${item.videoPath}`}
           thumbnailPath={`${SERVER_URL}${item.thumbnailPath}`}
-          handleClickVideo={() => handleClickVideo(item.danceId)}
+          handleClickVideo={() => handleClickVideo(item.id)}
         />
         <div>{item.score}</div>
       </VideoItem>
