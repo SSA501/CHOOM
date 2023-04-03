@@ -9,6 +9,9 @@ import { getUserDetail, redirectYoutube } from "../../apis/user";
 import { Dance } from "../../constants/types";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
+import NormalModal from "../Modal/NormalModal";
+import { removeMyDance } from "../../apis/dance";
+import { useNavigate } from "react-router-dom";
 
 function DanceShare(props: {
   score: number;
@@ -18,7 +21,9 @@ function DanceShare(props: {
   setIsGuide?: (isGuide: boolean) => void;
   myDanceId: string;
 }) {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     getUserDetail()
@@ -91,8 +96,33 @@ function DanceShare(props: {
     return fileName;
   };
 
+  const handleModalOpen = () => {
+    setModalOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const removeDance = (danceId: string) => {
+    removeMyDance(danceId)
+      .then((res) => {
+        if (res.statusCode === 200) {
+          alert("삭제되었습니다!");
+          navigate("/profile");
+        } else {
+          alert("삭제 중 문제가 발생하였습니다.");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <BtnContainer>
+      {modalOpen && (
+        <NormalModal
+          modalText={"정말로 삭제하실 건가요?"}
+          setNormalModalOpen={setModalOpen}
+          acceptModal={() => removeDance(props.myDanceId)}
+        />
+      )}
       <ShareBtn label="kakao" size="60px" onClick={handleKakaoClick} />
       <ShareBtn
         label="youtube_shorts"
@@ -116,7 +146,7 @@ function DanceShare(props: {
         <CirlceBtn
           icon={MdDelete}
           color="var(--green-color)"
-          onClick={handleGuideClick}
+          onClick={handleModalOpen}
           label={"삭제"}
         />
       )}
