@@ -32,16 +32,16 @@ public class GoogleService {
     private final GoogleUserInfoService googleUserInfoService;
 
     @Value("${google.client-id}")
-    private  String GOOGLE_CLIENT_ID;
+    private String GOOGLE_CLIENT_ID;
 
     @Value("${google.client-secret}")
-    private  String GOOGLE_CLIENT_SECRET;
+    private String GOOGLE_CLIENT_SECRET;
 
     @Value("${redirect-uri.google}")
-    private  String GOOGLE_REDIRECT_URI;
+    private String GOOGLE_REDIRECT_URI;
 
     @Value("${redirect-uri.upload}")
-    private  String UPLOAD_REDIRECT_URI;
+    private String UPLOAD_REDIRECT_URI;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
