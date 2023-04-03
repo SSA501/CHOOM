@@ -5,7 +5,14 @@ const RecentSearchContainer = styled.div``;
 const SearchItemContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  padding-right: 50px;
+  padding: 25px 50px 0 0;
+
+  & > p {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    margin-top: 50px;
+  }
 `;
 
 const SearchItem = styled.div`
@@ -13,7 +20,7 @@ const SearchItem = styled.div`
   width: fit-content;
   height: 56px;
   padding: 15px 75px 15px 60px;
-  margin: 17px 23px;
+  margin: 17px 46px 17px 0;
   border-radius: 50px;
   font-style: normal;
   font-weight: 500;
