@@ -85,114 +85,18 @@ public class DanceService {
     @Transactional
     public DanceSearchDto searchDance(Long userId, String keyword, String pageToken, Long size) {
         log.info("Starting YouTube search... " + keyword + " pageToken : " + pageToken);
-        long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
-        long elapsedTime = 0L; // 경과 시간을 초기화합니다.
-        long maxTime = 3000L; // 최대 실행 시간을 3초로 설정합니다.
 
         List<DanceDetailsDto> danceDetailDtoList = new ArrayList<>();
 
-        boolean isUrl = false;
-        String[] checkList = {
-            "https://", "http://", "youtube.com", "youtu.be"
-        };
-        for (String check : checkList) {
-            if (keyword.contains(check)) {
-                isUrl = true;
-                break;
-            }
+        boolean isUrl = checkUrl(keyword);
+
+        if (isUrl) {
+            urlSearch(userId, keyword, danceDetailDtoList);
+        } else {
+            keywordSearch(userId, keyword, pageToken, size, danceDetailDtoList);
         }
 
-        if (youtube != null) {
-            if (isUrl) {
-                if (keyword.contains("?")) {
-                    keyword = keyword.split("\\?")[0];
-                }
-                String[] urlList = keyword.split("/");
-                keyword = urlList[urlList.length - 1];
-
-                log.info("url검색 - keyword : " + keyword);
-                DanceDetailsDto danceDetailDto = getVideoDetail(userId, keyword);
-                if (danceDetailDto != null) {
-                    Dance dance = danceRepository.findByYoutubeId(keyword).orElse(null);
-                    if (dance == null) { //처음인경우
-                        Dance newDance = Dance.builder()
-                            .danceDetailDto(danceDetailDto)
-                            .build();
-                        danceRepository.save(newDance);
-                        danceDetailDto.setId(newDance.getId());
-                    }
-                    danceDetailDtoList.add(danceDetailDto);
-                }
-                searchResponse = null;
-            } else {
-                YouTube.Search.List search = null;
-                try {
-                    search = youtube.search().list("snippet");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                search.setKey(YOUTUBE_APIKEY);
-                search.setQ(keyword + " " + SEARCH_SUFFIX);
-                search.setType("video");
-                search.setVideoDuration("short");
-                search.setMaxResults(size);
-                search.setFields(YOUTUBE_SEARCH_FIELDS1);
-                search.setPageToken(pageToken);
-                search.setVideoSyndicated("true");
-
-                try {
-                    searchResponse = search.execute();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                List<SearchResult> searchResultList = searchResponse.getItems();
-
-                if (searchResultList != null) {
-                    for (SearchResult video : searchResultList) {
-                        // 비동기로 검색 -> 검색 속도 향상
-                        String youtubeId = video.getId().getVideoId();
-                        DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
-
-                        log.info(video.toString());
-                        if (danceDetailDto != null) {
-                            danceDetailDtoList.add(danceDetailDto);
-                        }
-
-                        elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
-                        if (elapsedTime > maxTime) { // 경과 시간이 최대 시간보다 작으면 반복합니다.
-                            log.info("시간초과로 종료됨!");
-                            break;
-                        }
-                    }
-                }
-            }
-
-        }
-
-        Collections.sort(danceDetailDtoList,
-            (o1, o2) -> { //new Comparator<YoutubeResponseDto>() -> lambda
-                // DB에 있는 정보 먼저
-                int id1 = 1;
-                int id2 = 1;
-                if (o1.getId() != null) {
-                    id1 = 0;
-                }
-                if (o2.getId() != null) {
-                    id2 = 0;
-                }
-                if (id1 == id2) {
-                    // 챌린지 참여자 수 -> 원본 영상 시청자 순 으로 정렬
-                    if (o1.getUserCount() == o2.getUserCount()) {
-                        return (int) (o2.getViewCount() - o1.getViewCount());
-                    } else {
-                        return o2.getUserCount() - o1.getUserCount();
-                    }
-                } else {
-                    return id1 - id2;
-                }
-            });
-
+        // 검색 결과 중 DB에 있는 챌린지 중 참여자 수 많은 상위 2개 조회
         List<DanceDetailsDto> dbDanceDetailDtoList = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             if (danceDetailDtoList.size() < 1 || danceDetailDtoList.get(0).getId() == null) {
@@ -200,16 +104,109 @@ public class DanceService {
             }
             dbDanceDetailDtoList.add(danceDetailDtoList.remove(0));
         }
-        DanceSearchDto danceSearchDto = null;
-        if (searchResponse == null) {
-            danceSearchDto = new DanceSearchDto(dbDanceDetailDtoList, danceDetailDtoList);
-            log.info("url맞냐1? " + danceSearchDto.getIsUrl());
-        } else {
-            danceSearchDto = new DanceSearchDto(searchResponse, dbDanceDetailDtoList,
-                danceDetailDtoList);
-            log.info("url맞냐2? " + danceSearchDto.getIsUrl());
+
+        return DanceSearchDto.builder()
+            .isUrl(isUrl)
+            .search(danceDetailDtoList)
+            .dbSearch(dbDanceDetailDtoList)
+            .build();
+    }
+
+    private void keywordSearch(Long userId, String keyword, String pageToken, Long size,
+        List<DanceDetailsDto> danceDetailDtoList) {
+        YouTube.Search.List search = null;
+        try {
+            search = youtube.search().list("snippet");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return danceSearchDto;
+        search.setKey(YOUTUBE_APIKEY);
+        search.setQ(keyword + " " + SEARCH_SUFFIX);
+        search.setType("video");
+        search.setVideoDuration("short");
+        search.setMaxResults(size);
+        search.setFields(YOUTUBE_SEARCH_FIELDS1);
+        search.setPageToken(pageToken);
+        search.setVideoSyndicated("true");
+
+        try {
+            searchResponse = search.execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<SearchResult> searchResultList = searchResponse.getItems();
+
+        if (searchResultList != null) {
+            long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
+            long elapsedTime = 0L; // 경과 시간을 초기화합니다.
+            long maxTime = 3000L; // 최대 실행 시간을 3초로 설정합니다.
+
+            for (SearchResult video : searchResultList) {
+                // 비동기로 검색 -> 검색 속도 향상
+                String youtubeId = video.getId().getVideoId();
+                DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
+                danceDetailDtoList.add(danceDetailDto);
+
+                elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
+                if (elapsedTime > maxTime) { // 경과 시간이 최대 시간보다 작으면 반복합니다.
+                    log.info("시간초과로 종료됨!");
+                    break;
+                }
+            }
+
+            Collections.sort(danceDetailDtoList,
+                (o1, o2) -> {
+                    // DB에 있는 정보 먼저
+                    int id1 = o1.getId() == null ? 1 : 0;
+                    int id2 = o2.getId() == null ? 1 : 0;
+
+                    if (id1 == id2) {
+                        // 챌린지 참여자 수 -> 원본 영상 시청자 순 으로 정렬
+                        if (o1.getUserCount() == o2.getUserCount()) {
+                            return (int) (o2.getViewCount() - o1.getViewCount());
+                        } else {
+                            return o2.getUserCount() - o1.getUserCount();
+                        }
+                    } else {
+                        return id1 - id2;
+                    }
+                });
+        }
+    }
+
+    private void urlSearch(Long userId, String keyword, List<DanceDetailsDto> danceDetailDtoList) {
+        if (keyword.contains("?")) {
+            keyword = keyword.split("\\?")[0];
+        }
+        String[] urlList = keyword.split("/");
+        keyword = urlList[urlList.length - 1];
+        log.info("url검색 - keyword : " + keyword);
+
+        DanceDetailsDto danceDetailDto = getVideoDetail(userId, keyword);
+        if (danceDetailDto != null) {
+            Dance dance = danceRepository.findByYoutubeId(keyword).orElse(null);
+            if (dance == null) { //처음인경우
+                Dance newDance = Dance.builder()
+                    .danceDetailDto(danceDetailDto)
+                    .build();
+                danceRepository.save(newDance);
+                danceDetailDto.setId(newDance.getId());
+            }
+            danceDetailDtoList.add(danceDetailDto);
+        }
+    }
+
+    private static boolean checkUrl(String keyword) {
+        String[] checkList = {
+            "https://", "http://", "youtube.com", "youtu.be"
+        };
+        for (String check : checkList) {
+            if (keyword.contains(check)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Async
