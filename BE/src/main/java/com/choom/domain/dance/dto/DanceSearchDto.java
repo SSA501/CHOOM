@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class DanceSearchDto {
+
     String nextPageToken;
     String prevPageToken;
     Integer totalResults;
@@ -18,7 +19,8 @@ public class DanceSearchDto {
     List<DanceDetailsDto> dbSearch;
     List<DanceDetailsDto> search;
 
-    public DanceSearchDto(SearchListResponse searchListResponse, List<DanceDetailsDto> dbDanceDetailDtoList, List<DanceDetailsDto> danceDetailDtoList) {
+    public DanceSearchDto(SearchListResponse searchListResponse,
+        List<DanceDetailsDto> dbDanceDetailDtoList, List<DanceDetailsDto> danceDetailDtoList) {
         this.isUrl = false;
         this.nextPageToken = searchListResponse.getNextPageToken();
         this.prevPageToken = searchListResponse.getPrevPageToken();
@@ -28,7 +30,8 @@ public class DanceSearchDto {
         this.search = danceDetailDtoList;
     }
 
-    public DanceSearchDto(List<DanceDetailsDto> dbDanceDetailDtoList, List<DanceDetailsDto> danceDetailDtoList) {
+    public DanceSearchDto(List<DanceDetailsDto> dbDanceDetailDtoList,
+        List<DanceDetailsDto> danceDetailDtoList) {
         this.isUrl = true;
         this.dbSearch = dbDanceDetailDtoList;
         this.search = danceDetailDtoList;

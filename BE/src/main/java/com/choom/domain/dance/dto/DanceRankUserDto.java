@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DanceRankUserDto {
+
     Long userId;
     String nickname;
     String profileImage;

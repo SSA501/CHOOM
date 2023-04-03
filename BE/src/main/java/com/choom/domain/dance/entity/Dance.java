@@ -71,15 +71,15 @@ public class Dance extends BaseTimeEntity {
         this.jsonPath = jsonPath;
     }
 
-    public void changeStatus(int status){
+    public void changeStatus(int status) {
         this.status = status;
     }
 
-    public void saveVideoPath(String videoPath){
+    public void saveVideoPath(String videoPath) {
         this.videoPath = videoPath;
     }
 
-    public int getBookmarkSize(){
+    public int getBookmarkSize() {
         return bookmarkList.size();
     }
 
