@@ -147,7 +147,6 @@ public class YoutubeService {
         }
     }
 
-    @Async
     public DanceDetailsDto getVideoDetail(Long userId, String youtubeId) {
         YouTube.Videos.List videoDetails = null;
         try {
