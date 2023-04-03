@@ -1,6 +1,6 @@
 package com.choom.global.service;
 
-import com.choom.global.model.GoogleAccessTokenResponse;
+import com.choom.global.model.SocialAccessTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface GoogleAccessTokenService {
 
     @PostMapping()
-    GoogleAccessTokenResponse getAccessToken(@RequestParam("code") String code,
+    SocialAccessTokenResponse getAccessToken(@RequestParam("code") String code,
                                              @RequestParam("client_id") String client_id,
                                              @RequestParam("client_secret") String client_secret,
                                              @RequestParam("redirect_uri") String redirect_uri,

@@ -1,7 +1,7 @@
 package com.choom.global.service;
 
 import com.choom.domain.user.dto.SocialUserInfoDto;
-import com.choom.global.model.GoogleAccessTokenResponse;
+import com.choom.global.model.SocialAccessTokenResponse;
 import com.choom.global.model.GoogleUserInfoResponse;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -31,30 +31,17 @@ public class GoogleService {
     private final GoogleAccessTokenService googleAccessTokenService;
     private final GoogleUserInfoService googleUserInfoService;
 
-    private static String GOOGLE_CLIENT_ID;
-    private static String GOOGLE_CLIENT_SECRET;
-    private static String GOOGLE_REDIRECT_URI;
-    private static String UPLOAD_REDIRECT_URI;
-
     @Value("${google.client-id}")
-    public void setGoogleClientId(String value) {
-        GOOGLE_CLIENT_ID = value;
-    }
+    private  String GOOGLE_CLIENT_ID;
 
     @Value("${google.client-secret}")
-    public void setGoogleClientSecret(String value) {
-        GOOGLE_CLIENT_SECRET = value;
-    }
+    private  String GOOGLE_CLIENT_SECRET;
 
     @Value("${redirect-uri.google}")
-    public void setGoogleRedirectUri(String value) {
-        GOOGLE_REDIRECT_URI = value;
-    }
+    private  String GOOGLE_REDIRECT_URI;
 
     @Value("${redirect-uri.upload}")
-    public void setUploadRedirectUri(String value) {
-        UPLOAD_REDIRECT_URI = value;
-    }
+    private  String UPLOAD_REDIRECT_URI;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -74,7 +61,7 @@ public class GoogleService {
     }
 
     public String getAccessToken(String type, String code) {
-        GoogleAccessTokenResponse googleAccessTokenResponse = null;
+        SocialAccessTokenResponse googleAccessTokenResponse = null;
         if (type.equals("LOGIN")) {
             googleAccessTokenResponse = googleAccessTokenService.getAccessToken(code, GOOGLE_CLIENT_ID,
                     GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, "authorization_code");
