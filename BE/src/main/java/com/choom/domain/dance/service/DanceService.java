@@ -82,7 +82,7 @@ public class DanceService {
     }
 
     @Transactional
-    public DanceSearchDto searchDance(String keyword, String pageToken,Long size) {
+    public DanceSearchDto searchDance(Long userId, String keyword, String pageToken,Long size) {
         log.info("Starting YouTube search... " +keyword+" pageToken : "+pageToken);
         long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
         long elapsedTime = 0L; // 경과 시간을 초기화합니다.
@@ -110,7 +110,7 @@ public class DanceService {
                     keyword = urlList[urlList.length-1];
 
                     log.info("url검색 - keyword : "+keyword);
-                    DanceDetailsDto danceDetailDto = getVideoDetail(keyword);
+                    DanceDetailsDto danceDetailDto = getVideoDetail(userId, keyword);
                     if(danceDetailDto != null){
                         Dance dance = danceRepository.findByYoutubeId(keyword).orElse(null);
                         if(dance == null){ //처음인경우
@@ -151,7 +151,7 @@ public class DanceService {
                         for (SearchResult video : searchResultList) {
                             // 비동기로 검색 -> 검색 속도 향상
                             String youtubeId = video.getId().getVideoId();
-                            DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+                            DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
 
                             log.info(video.toString());
                             if (danceDetailDto != null)
@@ -209,7 +209,7 @@ public class DanceService {
     }
 
     @Async
-    DanceDetailsDto getVideoDetail(String youtubeId) {
+    DanceDetailsDto getVideoDetail(Long userId, String youtubeId) {
         YouTube.Videos.List videoDetails = null;
         try {
             videoDetails = youtube.videos().list("contentDetails");
@@ -254,14 +254,21 @@ public class DanceService {
         int userCount = 0;
         int status = 0;
         int likeCount = 0;
+        Boolean isBookmarked = false;
         if(dance != null){
             userCount = dance.getUserCount();
             status = dance.getStatus();
             likeCount = dance.getBookmarkSize();
+            if(bookmarkRepository.findBookmarkByUserIdAndDanceId(userId, dance.getId()).isPresent()){
+                isBookmarked = true;
+            }
         }
         String publishedAt = String.valueOf(videoDetail.getSnippet().getPublishedAt()).split("T")[0];
         //1분 이내인 경우
         int s = Integer.parseInt(time.split("T")[1].split("S")[0]);
+
+
+
         DanceDetailsDto danceDetailDto = DanceDetailsDto.builder()
             .id(id)
             .url(url)
@@ -273,18 +280,19 @@ public class DanceService {
             .youtubeId(youtubeId)
             .status(status)
             .publishedAt(publishedAt)
+            .isBookmarked(isBookmarked)
             .build();
         return danceDetailDto;
     }
 
     @Transactional
-    public Long addDance(String youtubeId) throws IOException {
+    public Long addDance(Long userId, String youtubeId) throws IOException {
         String url = GOOGLE_YOUTUBE_URL+youtubeId;
 
         Dance dance = danceRepository.findByUrl(url).orElse(null);
 
         if(dance == null) { //처음인경우
-            DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+            DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
 
             Dance insertDance = Dance.builder()
                 .danceDetailDto(danceDetailDto)
@@ -316,7 +324,7 @@ public class DanceService {
         String url = GOOGLE_YOUTUBE_URL+youtubeId;
 
         // 1. 검색하기 (유튜브API 통해 자세한 동영상 정보 가져오기)
-        DanceDetailsDto danceDetailDto = getVideoDetail(youtubeId);
+        DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
         log.info("1차 검색 정보 : " + danceDetailDto);
 
         // 2. 저장하기 (처음 참여한 경우에만)
