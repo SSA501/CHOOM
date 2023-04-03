@@ -17,6 +17,7 @@ import {
 import LoginModal from "./components/Modal/LoginModal";
 import MyDancePage from "./pages/MyDancePage/MyDancePage";
 import UploadingPage from "./pages/UploadingPage/UploadingPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
 function App() {
   const accessToken = useAppSelector((state) => state.main.accessToken);
@@ -75,10 +76,6 @@ function App() {
     setLoginModalOpen(true);
     document.body.style.overflow = "hidden";
   };
-  const closeModal = () => {
-    setLoginModalOpen(false);
-    document.body.style.overflow = "auto";
-  };
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -100,7 +97,9 @@ function App() {
       navigate(routeHistory); // 리다이렉트 이전 페이지로 이동
       dispatch(updateRouteHistory("")); // 저장해둔 리다이렉트 이전 페이지 초기화
     }
-  }, [dispatch, isLogin, location, navigate, routeHistory]);
+
+    if (!loginModalOpen) document.body.style.overflow = "auto";
+  }, [dispatch, isLogin, location, navigate, routeHistory, loginModalOpen]);
 
   return (
     <>
@@ -118,6 +117,7 @@ function App() {
             path="/login/oauth2/google/*"
             element={<LoginRedirectPage isGoogle />}
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
