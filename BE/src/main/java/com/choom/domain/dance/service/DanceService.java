@@ -158,8 +158,8 @@ public class DanceService {
             Collections.sort(danceDetailDtoList,
                 (o1, o2) -> {
                     // DB에 있는 정보 먼저
-                    int id1 = o1.getId() == null ? 1 : 0;
-                    int id2 = o2.getId() == null ? 1 : 0;
+                    int id1 = (o1.getId() == null) ? 1 : 0;
+                    int id2 = (o2.getId() == null) ? 1 : 0;
 
                     if (id1 == id2) {
                         // 챌린지 참여자 수 -> 원본 영상 시청자 순 으로 정렬
