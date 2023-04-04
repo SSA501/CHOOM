@@ -218,7 +218,7 @@ const DanceVideo = forwardRef(
         ) : (
           <MainContainer>
             <ResultVideo
-              src={props.isGuide ? props.myGuideUrl : props.myUrl}
+              src={props.isGuide ? props.myUrl : props.myGuideUrl}
               width={450}
               height={800}
               ref={video}
