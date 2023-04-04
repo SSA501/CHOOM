@@ -89,7 +89,7 @@ public class YoutubeService {
         if (searchResultList != null) {
             long startTime = System.currentTimeMillis(); // 현재 시간을 밀리초로 가져옵니다.
             long elapsedTime = 0L; // 경과 시간을 초기화합니다.
-            long maxTime = 1000L; // 최대 실행 시간을 2초로 설정합니다.
+            long maxTime = 500L; // 최대 실행 시간을 0.5초로 설정합니다.
 
             for (SearchResult video : searchResultList) {
                 // 비동기로 검색 -> 검색 속도 향상
