@@ -545,12 +545,6 @@ function DanceCam(props: {
             REC
           </Rec>
         )}
-        {isStart && (
-          <Rec>
-            <MdFiberManualRecord />
-            REC
-          </Rec>
-        )}
         {props.poseList.length === 0 && <Rec>댄스 학습중🤸‍♀️</Rec>}
         <TimerBtn
           time={timer}
