@@ -1,6 +1,5 @@
 package com.choom.domain.user.service;
 
-import com.choom.domain.user.entity.Blacklist;
 import com.choom.domain.user.entity.BlacklistRedisRepository;
 import com.choom.domain.user.entity.RefreshToken;
 import com.choom.domain.user.entity.RefreshTokenRedisRepository;
@@ -9,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,7 +15,6 @@ import java.util.Optional;
 public class RedisService {
 
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
-    private final BlacklistRedisRepository blacklistRedisRepository;
 
     @Transactional
     public void saveToken(Long userId, String refreshToken) {

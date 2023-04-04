@@ -1,14 +1,14 @@
 package com.choom.domain.bookmark.entity;
 
-import com.choom.global.model.BaseTimeEntity;
-
-import javax.persistence.*;
-
 import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.user.entity.User;
+import com.choom.global.model.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -26,4 +26,10 @@ public class Bookmark extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DANCE_ID")
     private Dance dance;
+
+    @Builder
+    public Bookmark(User user, Dance dance) {
+        this.user = user;
+        this.dance = dance;
+    }
 }

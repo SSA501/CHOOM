@@ -22,7 +22,7 @@ public class BaseResponse<T> {
     public static <T> BaseResponse<T> success(T body) {
         return new BaseResponse(SUCCESS, SUCCESS_MESSAGE, body);
     }
-    public static <T> BaseResponse<T> customSuccess(int statusCode, String message, T body) {
+    public static <T> BaseResponse<T> custom(int statusCode, String message, T body) {
         return new BaseResponse(statusCode, message, body);
     }
     public static <T> BaseResponse<T> fail() {

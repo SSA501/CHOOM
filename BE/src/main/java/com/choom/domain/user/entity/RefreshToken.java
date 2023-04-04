@@ -13,15 +13,8 @@ import org.springframework.data.redis.core.index.Indexed;
 public class RefreshToken {
     @TimeToLive
     private static Integer expiration;
-
-    @Value("${spring.jwt.expiration.rtk}")
-    public void setExpiration(Integer value){
-        expiration = value;
-    }
-
     @Id
     private Long userId;
-
     @Indexed
     private String token;
 
@@ -29,5 +22,10 @@ public class RefreshToken {
     public RefreshToken(Long userId, String token) {
         this.userId = userId;
         this.token = token;
+    }
+
+    @Value("${spring.jwt.expiration.rtk}")
+    public void setExpiration(Integer value) {
+        expiration = value;
     }
 }

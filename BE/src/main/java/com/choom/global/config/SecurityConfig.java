@@ -63,8 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService, authService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
                 //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .antMatchers("/user/").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/user/login/**", "/dance/popular/**",
+                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
+                .anyRequest().authenticated()
                 .and().cors().configurationSource(corsConfigurationSource());
     }
 

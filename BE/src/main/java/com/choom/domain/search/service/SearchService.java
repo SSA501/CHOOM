@@ -25,12 +25,12 @@ public class SearchService {
     private final SearchRepository searchRepository;
 
     @Transactional
-    public SearchResponseDto addSearch(AddSearchRequestDto addSearchRequestDto) {
+    public SearchResponseDto addSearch(Long userId, AddSearchRequestDto addSearchRequestDto) {
         String keyword = addSearchRequestDto.getKeyword();
 
         // 검색 키워드가 url일 때는 예외 처리
         String[] checkList = {
-                "https://", "http://", "youtube.com", "youtu.be", "tiktok.com"
+                "https://", "http://", "youtube.com", "youtu.be"
         };
         for (String check : checkList) {
             if (keyword.contains(check)) {
@@ -38,8 +38,7 @@ public class SearchService {
             }
         }
 
-        // user 더미데이터
-        User user = userRepository.findById(1L)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
         Search search = Search.builder()
@@ -54,9 +53,8 @@ public class SearchService {
                 .build();
     }
 
-    public List<SearchResponseDto> findSearch() {
-        // user 더미데이터
-        User user = userRepository.findById(1L)
+    public List<SearchResponseDto> findSearch(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
         List<Search> searchList = searchRepository.findTop8ByUserOrderByCreatedAtDesc(user);
@@ -69,8 +67,11 @@ public class SearchService {
     }
 
     @Transactional
-    public void removeSearch(Long searchId) {
-        Search search = searchRepository.findById(searchId)
+    public void removeSearch(Long userId, Long searchId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        Search search = searchRepository.findByIdAndUser(searchId, user)
                 .orElseThrow(() -> new IllegalArgumentException("해당 검색어를 찾을 수 없습니다"));
 
         searchRepository.deleteById(searchId);

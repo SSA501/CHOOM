@@ -13,11 +13,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DanceDetailsWithRankDto {
+
     DanceDetailsDto dance;
     List<DanceRankUserDto> myDance = new ArrayList<>();
 
     @Builder
-    public DanceDetailsWithRankDto(DanceDetailsDto danceDetailDto, List<DanceRankUserDto> danceRankUserDtoList) {
+    public DanceDetailsWithRankDto(DanceDetailsDto danceDetailDto,
+        List<DanceRankUserDto> danceRankUserDtoList) {
         this.dance = danceDetailDto;
         this.myDance = danceRankUserDtoList;
     }

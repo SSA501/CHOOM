@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
 import com.choom.domain.user.dto.TokenDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Date;
 /**
  * jwt 토큰 유틸 정의.
  */
+@Slf4j
 @Component
 public class JwtTokenUtil {
     private static String secretKey;
@@ -58,6 +60,7 @@ public class JwtTokenUtil {
     public static TokenDto getToken(String identifier) {
         String accessToken = getAccessToken(identifier);
         String refreshToken = getRefreshToken(identifier);
+        log.info("accessToken 발급 : " + accessToken);
         return TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

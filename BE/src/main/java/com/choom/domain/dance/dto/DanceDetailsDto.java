@@ -14,30 +14,42 @@ public class DanceDetailsDto {
 
     private Long id;
     private String title;
-    private String description;
     private String url;
     private String thumbnailPath;
     private int sec;
-    private Long likeCount;
+    private int likeCount;
     private Long viewCount;
     private int userCount;
-    private String videoId;
+    private String youtubeId;
     private int status;
     private String publishedAt;
+    private boolean isBookmarked;
+    private boolean isEmbeddable;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setBookmark(boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
+    }
 
     @Builder
-    public DanceDetailsDto(Long id, Video videoDetail, int sec, String videoId, String url,  String thumbnailPath, Long likeCount, Long viewCount, int userCount, int status, String publishedAt) {
+    public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,
+        String thumbnailPath, int likeCount, Long viewCount, int userCount, int status,
+        String publishedAt, boolean isBookmarked, boolean isEmbeddable) {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
-        this.description = videoDetail.getSnippet().getDescription();
-        this.thumbnailPath = thumbnailPath;
+        this.thumbnailPath = videoDetail.getSnippet().getThumbnails().getHigh().getUrl();
         this.sec = sec;
         this.likeCount = likeCount;
         this.viewCount = viewCount;
         this.userCount = userCount;
-        this.videoId = videoId;
+        this.youtubeId = youtubeId;
         this.status = status;
         this.publishedAt = publishedAt;
+        this.isBookmarked = isBookmarked;
+        this.isEmbeddable = isEmbeddable;
     }
 }

@@ -49,12 +49,19 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Search> searchList = new ArrayList<>();
 
-
     @Builder
     public User(String identifier, String nickname, String profileImage, SocialType socialType) {
         this.identifier = identifier;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.socialType = socialType;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

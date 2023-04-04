@@ -14,10 +14,10 @@ public class FindMyDanceResponseDto {
     private int score;
     private String matchRate;
     private String videoPath;
+    private String thumbnailPath;
     private int videoLength;
     private String title;
     private String youtubeUrl;
-    private String tiktokUrl;
     private String createdAt;
 
     @Builder
@@ -27,10 +27,10 @@ public class FindMyDanceResponseDto {
         this.score = myDance.getScore();
         this.matchRate = myDance.getMatchRate();
         this.videoPath = myDance.getVideoPath();
+        this.thumbnailPath = myDance.getThumbnailPath();
         this.videoLength = myDance.getVideoLength();
         this.title = myDance.getTitle();
         this.youtubeUrl = myDance.getYoutubeUrl();
-        this.tiktokUrl = myDance.getTiktokUrl();
-        this.createdAt = myDance.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));;
+        this.createdAt = myDance.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
 }

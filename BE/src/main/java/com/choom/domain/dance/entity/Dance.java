@@ -34,6 +34,10 @@ public class Dance extends BaseTimeEntity {
     @Column(length = 2083, unique = true)
     private String url;
 
+    @NotNull
+    @Column(length = 30, unique = true)
+    private String youtubeId;
+
     @Column(length = 2083, unique = true)
     private String videoPath;
 
@@ -42,6 +46,9 @@ public class Dance extends BaseTimeEntity {
 
     @Column(length = 2083, unique = true)
     private String thumbnailPath;
+
+    @Column(length = 2083, unique = true)
+    private String audioPath;
 
     @NotNull
     @Column
@@ -59,20 +66,32 @@ public class Dance extends BaseTimeEntity {
     @OneToMany(mappedBy = "dance", cascade = CascadeType.ALL)
     private List<MyDance> myDanceList = new ArrayList<>();
 
+    public void updateUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
     public void updateJsonPath(String jsonPath) {
         this.jsonPath = jsonPath;
     }
 
-    public void changeStatus(int status){
+    public void updateAudioPath(String audioPath) {
+        this.audioPath = audioPath;
+    }
+
+    public void changeStatus(int status) {
         this.status = status;
     }
 
-    public void saveVideoPath(String videoPath){
+    public void saveVideoPath(String videoPath) {
         this.videoPath = videoPath;
     }
 
+    public int getBookmarkSize() {
+        return bookmarkList.size();
+    }
+
     @Builder
-    public Dance(Long id, String videoPath, String jsonPath,
+    public Dance(Long id, String videoPath, String jsonPath, String audioPath,
         List<Bookmark> bookmarkList,
         List<MyDance> myDanceList, DanceDetailsDto danceDetailDto) {
         this.id = id;
@@ -80,9 +99,11 @@ public class Dance extends BaseTimeEntity {
         this.url = danceDetailDto.getUrl();
         this.videoPath = videoPath;
         this.jsonPath = jsonPath;
+        this.audioPath = audioPath;
         this.thumbnailPath = danceDetailDto.getThumbnailPath();
         this.userCount = danceDetailDto.getUserCount();
         this.status = danceDetailDto.getStatus();
+        this.youtubeId = danceDetailDto.getYoutubeId();
         this.bookmarkList = bookmarkList;
         this.myDanceList = myDanceList;
     }

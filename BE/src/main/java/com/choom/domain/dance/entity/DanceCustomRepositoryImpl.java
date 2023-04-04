@@ -5,7 +5,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DanceCustomRepositoryImpl implements DanceCustomRepository{
+public class DanceCustomRepositoryImpl implements DanceCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     QDance dance = QDance.dance;
@@ -15,7 +16,7 @@ public class DanceCustomRepositoryImpl implements DanceCustomRepository{
         return queryFactory
             .selectFrom(dance)
             .orderBy(dance.userCount.desc())
-            .limit(3)
+            .limit(10)
             .fetch();
     }
 }

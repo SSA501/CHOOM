@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DanceRepository extends JpaRepository<Dance, Long>, DanceCustomRepository{
+public interface DanceRepository extends JpaRepository<Dance, Long>, DanceCustomRepository {
 
-   Optional<Dance> findByUrl(String url);
+    Optional<Dance> findByUrl(String url);
 
+    Optional<Dance> findById(Long id);
 
+    Optional<Dance> findByYoutubeId(String youtubeId);
 }
