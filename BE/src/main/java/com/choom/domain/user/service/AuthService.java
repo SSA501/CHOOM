@@ -1,13 +1,13 @@
 package com.choom.domain.user.service;
 
 import com.choom.domain.mydance.entity.MyDance;
-import com.choom.global.service.RandomNicknameService;
 import com.choom.domain.user.dto.SocialUserInfoDto;
 import com.choom.domain.user.dto.TokenDto;
 import com.choom.domain.user.entity.*;
 import com.choom.global.service.FileService;
 import com.choom.global.service.GoogleService;
 import com.choom.global.service.KakaoService;
+import com.choom.global.service.RandomNicknameService;
 import com.choom.global.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +24,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
-    private final GoogleService googleService;
-    private final RedisService redisService;
-    private final UserRepository userRepository;
-    private final KakaoService kakaoService;
-    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
-    private final BlacklistRedisRepository blacklistRedisRepository;
-    private final RandomNicknameService randomNicknameService;
     private final FileService fileService;
+    private final RedisService redisService;
+    private final KakaoService kakaoService;
+    private final GoogleService googleService;
+    private final UserRepository userRepository;
+    private final RandomNicknameService randomNicknameService;
+    private final BlacklistRedisRepository blacklistRedisRepository;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     @Transactional
     public TokenDto socialLogin(String type, String code) {
@@ -136,7 +136,7 @@ public class AuthService {
                 .secure(true)
                 .path("/")
                 .sameSite("None")
-                .maxAge(expiration/1000)
+                .maxAge(expiration / 1000)
                 .build();
         return cookie;
     }

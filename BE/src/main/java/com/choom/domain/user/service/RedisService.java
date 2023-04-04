@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RedisService {
 
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
-    private final BlacklistRedisRepository blacklistRedisRepository;
 
     @Transactional
     public void saveToken(Long userId, String refreshToken) {
