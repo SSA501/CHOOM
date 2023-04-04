@@ -93,7 +93,7 @@ function DanceCam(props: {
       setCameras(videoDevices);
       if (videoDevices.length > 0) {
         setSelectedCamera(videoDevices[0].deviceId);
-        setupCam(videoDevices[0].deviceId);
+        setupCam();
       }
     }
     fetchCameras();
@@ -101,16 +101,17 @@ function DanceCam(props: {
 
   useEffect(() => {
     if (selectedCamera) {
-      setupCam(selectedCamera);
+      setupCam();
     }
   }, [selectedCamera]);
 
   // 웹캠연결
-  const setupCam = async (selectedCamera: string) => {
+  const setupCam = async () => {
+    console.log("setup cam");
     const VIDEO_CONFIG = {
       audio: false,
       video: {
-        deviceId: selectedCamera,
+        deviceId: selectedCamera!,
         aspectRatio: 9 / 16,
         frameRate: { ideal: 25 },
       },
