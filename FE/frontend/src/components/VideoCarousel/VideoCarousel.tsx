@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ArrowBtn,
   ArrowBtnContainer,
@@ -73,10 +73,6 @@ function VideoCarousel({
     }
   };
 
-  useEffect(() => {
-    if (videoData?.length <= 3) setReachingEnd(true);
-  }, [videoData]);
-
   return (
     <>
       <CarouselContainer width="90%" bgColor="lightgray">
@@ -111,7 +107,7 @@ function VideoCarousel({
           <Swiper
             modules={[Navigation, A11y]}
             // loop={true}
-            width={1220}
+            width={1300}
             // spaceBetween={10}
             slidesPerView={3}
             // navigation
