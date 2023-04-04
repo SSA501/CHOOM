@@ -25,13 +25,15 @@ import LoginModal from "../Modal/LoginModal";
 
 interface VideoCarouselProps {
   videoData: VideoDataProps[];
-  title: string | React.ReactNode;
+  title: string;
+  titleImg?: string;
   text?: string;
   isSearch?: boolean;
 }
 
 function VideoCarousel({
   videoData,
+  titleImg,
   title,
   text,
   isSearch,
@@ -80,7 +82,15 @@ function VideoCarousel({
       <CarouselContainer width="90%" bgColor="lightgray">
         <LeftTextContainer>
           <CarouselTitle>
-            <h2>{title}</h2>
+            {titleImg && (
+              <img
+                width={"32px"}
+                src={titleImg}
+                alt="제목 이미지"
+                style={{ marginRight: ".3em" }}
+              />
+            )}
+            <span>{title}</span>
           </CarouselTitle>
           <MiddleText>
             <p>{text}</p>
