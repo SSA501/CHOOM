@@ -204,7 +204,6 @@ function DanceCam(props: {
     // 배우고 싶은 영상 재생
     await props.danceVideoRef.current.playVideo();
     // 녹화시작
-    console.log("여기가 문제일껄?" + mediaRecorder);
     mediaRecorder?.start();
     mediaRecorderGuide?.start();
     startTime = new Date();

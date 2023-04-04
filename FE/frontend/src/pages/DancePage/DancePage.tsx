@@ -22,7 +22,7 @@ function DancePage() {
   const [myBlob, setMyBlob] = useState<Blob>();
   const [challenge, setChallenge] = useState<Challenge>();
   const [dance, setDance] = useState<Dance>();
-  const [isGuide, setIsGuide] = useState(true);
+  const [isGuide, setIsGuide] = useState(false);
   const [scoreList, setScoreList] = useState<Score[]>([]);
   const [score, setScore] = useState<number>(0);
   const [loading, setloading] = useState<boolean>(true);
@@ -127,7 +127,6 @@ function DancePage() {
           <>
             <DanceVideo
               setPoseList={setPoseList}
-              setIsGuide={setIsGuide}
               poseList={poseList}
               ref={danceVideoRef}
               detector={detector!}
