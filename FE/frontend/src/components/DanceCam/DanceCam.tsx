@@ -244,6 +244,8 @@ function DanceCam(props: {
         if (cam.current) {
           cam.current.srcObject = null;
         }
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
       }
     }, 100);
   };
