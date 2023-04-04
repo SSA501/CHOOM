@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { DancePageContainer } from "../DancePage/style";
 import { ShadowContainer } from "../../components/ShadowContainer/style";
 import { ResultVideo } from "../../components/DanceVideo/style";
@@ -13,9 +13,11 @@ import DanceScore from "../../components/DanceScore/DanceScore";
 import DanceChart from "../../components/DanceChart/DanceChart";
 import { getChallengeDetail } from "../../apis/challenge";
 import { SERVER_URL } from "../../constants/url";
+import Btn from "../../components/Btn/Btn";
 
 function MyDancePage() {
   const { myDanceId } = useParams();
+  const navigate = useNavigate();
   const [dance, setDance] = useState<Dance>();
   const danceVideoRef = useRef<any>();
   const [myDanceInfo, setMyDanceInfo] = useState<{
@@ -61,6 +63,10 @@ function MyDancePage() {
     if (danceVideoRef.current) danceVideoRef.current.currentTime = time;
     danceVideoRef.current?.play();
   };
+
+  const goToChallenge = () => {
+    navigate(`/detail/${myDanceInfo.danceId}`);
+  };
   return (
     <DancePageContainer>
       <ShadowContainer
@@ -96,6 +102,7 @@ function MyDancePage() {
                 changeVideoTime={changeVideoTime}
               />
             </div>
+            <Btn btnText={"챌린지 상세보기"} handleClick={goToChallenge} />
           </StyleContainer>
         </DanceResultContainer>
       </ShadowContainer>

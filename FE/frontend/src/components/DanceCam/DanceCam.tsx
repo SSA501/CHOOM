@@ -8,22 +8,11 @@ import {
   MdPlayCircleOutline,
   MdOutlineStopCircle,
   MdFiberManualRecord,
+  MdOutlineCameraswitch,
 } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Score, Pose } from "../../constants/types";
-import { relative } from "path";
 
-const VIDEO_CONFIG = {
-  audio: false,
-  video: {
-    facingMode: "user",
-    width: 270,
-    height: 480,
-    frameRate: {
-      ideal: 25,
-    },
-  },
-};
 const BLAZEPOSE_CONFIG = {
   maxposeList: 1,
   type: "full",
@@ -94,13 +83,38 @@ function DanceCam(props: {
   let noScore: number = 0;
   let highScore: Score = { score: 0, time: 0 };
 
+  const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
+  const [camerIndex, setcameraIndex] = useState<number>(0);
+  const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
+
   useEffect(() => {
-    setupCam();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+    async function fetchCameras() {
+      const videoDevices = await getCameras();
+      setCameras(videoDevices);
+      if (videoDevices.length > 0) {
+        setSelectedCamera(videoDevices[0].deviceId);
+      }
+    }
+
+    fetchCameras();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCamera) {
+      setupCam(selectedCamera);
+    }
+  }, [selectedCamera]);
 
   // 웹캠연결
-  const setupCam = async () => {
+  const setupCam = async (selectedCamera: string) => {
+    const VIDEO_CONFIG = {
+      audio: false,
+      video: {
+        deviceId: selectedCamera,
+        aspectRatio: 9 / 16,
+        frameRate: { ideal: 25 },
+      },
+    };
     stream = await navigator.mediaDevices.getUserMedia(VIDEO_CONFIG);
     streamGuide = canvas.current!.captureStream();
 
@@ -497,6 +511,27 @@ function DanceCam(props: {
     window.location.reload();
   };
 
+  async function getCameras(): Promise<MediaDeviceInfo[]> {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
+      return videoDevices;
+    } catch (error) {
+      console.error("Error fetching video devices: ", error);
+      return [];
+    }
+  }
+
+  const handelCamClick = () => {
+    let index = camerIndex;
+    if (index === cameras.length - 1) index = 0;
+    else index += 1;
+    setSelectedCamera(cameras[index].deviceId);
+    setcameraIndex(index);
+  };
+
   return (
     <MainContainer>
       <CamContainer>
@@ -510,10 +545,17 @@ function DanceCam(props: {
             REC
           </Rec>
         )}
-        <CircleBtn
-          icon={isStart ? MdOutlineStopCircle : MdPlayCircleOutline}
-          label={isStart ? "다시 하기" : "녹화 시작"}
-          onClick={isStart ? handleStopBtnClick : handleStartBtnClick}
+        {cameras.length > 1 && (
+          <CircleBtn
+            icon={MdOutlineCameraswitch}
+            onClick={handelCamClick}
+            label={"캠 변경"}
+            disabled={props.poseList.length === 0 ? "disabled" : ""}
+          />
+        )}
+        <TimerBtn
+          time={timer}
+          onClick={handelTimerClick}
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
         <CircleBtn
@@ -522,9 +564,10 @@ function DanceCam(props: {
           label={"가이드"}
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
-        <TimerBtn
-          time={timer}
-          onClick={handelTimerClick}
+        <CircleBtn
+          icon={isStart ? MdOutlineStopCircle : MdPlayCircleOutline}
+          label={isStart ? "다시 하기" : "녹화 시작"}
+          onClick={isStart ? handleStopBtnClick : handleStartBtnClick}
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
       </BtnContainer>
