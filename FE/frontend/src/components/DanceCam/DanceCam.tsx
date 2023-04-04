@@ -93,7 +93,6 @@ function DanceCam(props: {
       setCameras(videoDevices);
       if (videoDevices.length > 0) {
         setSelectedCamera(videoDevices[0].deviceId);
-        setupCam();
       }
     }
     fetchCameras();
@@ -103,7 +102,7 @@ function DanceCam(props: {
     if (selectedCamera) {
       setupCam();
     }
-  }, [selectedCamera]);
+  });
 
   // 웹캠연결
   const setupCam = async () => {
@@ -534,7 +533,6 @@ function DanceCam(props: {
     let index = camerIndex;
     if (index === cameras.length - 1) index = 0;
     else index += 1;
-    console.log(index);
     setSelectedCamera(cameras[index].deviceId);
     setcameraIndex(index);
   };
