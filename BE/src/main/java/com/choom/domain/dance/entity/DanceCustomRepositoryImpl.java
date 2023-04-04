@@ -16,7 +16,7 @@ public class DanceCustomRepositoryImpl implements DanceCustomRepository {
         return queryFactory
             .selectFrom(dance)
             .orderBy(dance.userCount.desc())
-            .limit(3)
+            .limit(10)
             .fetch();
     }
 }
