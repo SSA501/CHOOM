@@ -35,14 +35,14 @@ const BannerTextContainer = styled.div`
   word-break: keep-all;
 
   p:nth-of-type(1) {
-    font-size: 2em;
+    font-size: 2.3rem;
     font-weight: 600;
   }
   p:nth-of-type(2) {
-    width: 50%;
-    font-size: 1em;
-    margin: 1.7em auto 0;
-    line-height: 1.5rem;
+    width: 60%;
+    font-size: 1.2rem;
+    margin: 1.2em auto 0;
+    line-height: 1.7rem;
   }
 `;
 
