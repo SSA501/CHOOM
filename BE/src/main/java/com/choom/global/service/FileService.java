@@ -30,18 +30,19 @@ import java.util.UUID;
 public class FileService {
     public String fileUpload(String type, MultipartFile image) throws IOException {
         //서버에 파일 저장
-        String hostname = InetAddress.getLocalHost().getHostName();
+//        String hostname = InetAddress.getLocalHost().getHostName();
         UUID uuid = UUID.randomUUID();
         String name = uuid.toString() + image.getOriginalFilename().replaceAll(" ","");
         log.info(name);
-        String path = "";
+//        String path = "";
         File file = null;
 
-        if (hostname.substring(0, 7).equals("DESKTOP")) {
-            path = "C:/choom/" + type + "/";
-        } else {
-            path = "/var/lib/choom/" + type + "/";
-        }
+//        if (hostname.substring(0, 7).equals("DESKTOP")) {
+//            path = "C:/choom/" + type + "/";
+//        } else {
+//            path = "/var/lib/choom/" + type + "/";
+//        }
+        String path = setPath(type);
         file = new File(path + name);
 
         if (!file.getParentFile().exists())
@@ -52,14 +53,13 @@ public class FileService {
     }
 
     public Resource fileDownload(String path, HttpHeaders headers) throws IOException {
-        String hostname = InetAddress.getLocalHost().getHostName();
-        if (hostname.substring(0, 7).equals("DESKTOP")) {
-            path = "C:" + path;
-        } else {
-            path = "/var/lib" + path;
-        }
-
-        Resource resource = new FileSystemResource(path);
+//        String hostname = InetAddress.getLocalHost().getHostName();
+//        if (hostname.substring(0, 7).equals("DESKTOP")) {
+//            path = "C:" + path;
+//        } else {
+//            path = "/var/lib" + path;
+//        }
+        Resource resource = new FileSystemResource(getPath(path));
 
         // 원본 파일에서 uuid 자르기
         String filename = resource.getFilename().substring(36);
@@ -75,14 +75,14 @@ public class FileService {
     }
 
     public void fileDelete(String path) throws UnknownHostException {
-        String hostname = InetAddress.getLocalHost().getHostName();
-        if (hostname.substring(0, 7).equals("DESKTOP")) {
-            path = "C:" + path;
-        } else {
-            path = "/var/lib" + path;
-        }
+//        String hostname = InetAddress.getLocalHost().getHostName();
+//        if (hostname.substring(0, 7).equals("DESKTOP")) {
+//            path = "C:" + path;
+//        } else {
+//            path = "/var/lib" + path;
+//        }
 
-        File file = new File(path);
+        File file = new File(getPath(path));
         if (!file.delete())
             throw new FileDeleteException("파일 삭제에 실패했습니다");
     }
@@ -93,19 +93,20 @@ public class FileService {
             BufferedImage image = ImageIO.read(imgURL);
 
             //서버에 파일 저장
-            String hostname = InetAddress.getLocalHost().getHostName();
+//            String hostname = InetAddress.getLocalHost().getHostName();
             UUID uuid = UUID.randomUUID();
             String name = nickname + uuid.toString() + ".";
-            String path = "";
+//            String path = "";
             File file = null;
             String extension = "png";
 
-            if (hostname.substring(0, 7).equals("DESKTOP")) {
-                path = "C:/choom/" + type + "/";
-            } else {
-                path = "/var/lib/choom/" + type + "/";
-            }
+//            if (hostname.substring(0, 7).equals("DESKTOP")) {
+//                path = "C:/choom/" + type + "/";
+//            } else {
+//                path = "/var/lib/choom/" + type + "/";
+//            }
 
+            String path = setPath(type);
             file = new File(path + name + extension);
 
             if (!file.getParentFile().exists())
@@ -120,23 +121,26 @@ public class FileService {
     }
 
     public String extractAudio(String videoPath) throws IOException {
-        String hostname = InetAddress.getLocalHost().getHostName();
+//        String hostname = InetAddress.getLocalHost().getHostName();
         String name = videoPath.split("/")[3].split("\\.")[0] + ".mp3";
         log.info(name);
 
         String audioPath = "";
         String ffmpegPath = "";
 
-        if (hostname.substring(0, 7).equals("DESKTOP")) {
-            videoPath = "C:" + videoPath;
-            audioPath = "C:/choom/audio/";
-            ffmpegPath = "C:/choom/ffmpeg";
-        } else {
-            videoPath = "/var/lib/" + videoPath;
-            audioPath = "/var/lib/choom/audio/";
-            ffmpegPath = "/var/lib/choom/ffmpeg";
-        }
-        Path inputPath = Paths.get(videoPath);
+//        if (hostname.substring(0, 7).equals("DESKTOP")) {
+////            videoPath = "C:" + videoPath;
+////            audioPath = "C:/choom/audio/";
+//            ffmpegPath = "C:/choom/ffmpeg/";
+//        } else {
+////            videoPath = "/var/lib" + videoPath;
+////            audioPath = "/var/lib/choom/audio/";
+//            ffmpegPath = "/var/lib/choom/ffmpeg/";
+//        }
+
+        audioPath = setPath("audio");
+        ffmpegPath = setPath("ffmpeg");
+        Path inputPath = Paths.get(getPath(videoPath));
         Path outputPath = Paths.get(audioPath + name);
         FFmpeg ffmpeg = new FFmpeg(ffmpegPath);
 
@@ -155,28 +159,30 @@ public class FileService {
     }
 
     public String combineAudioVideo(String videoPath, String audioPath) throws IOException {
-        String hostname = InetAddress.getLocalHost().getHostName();
+//        String hostname = InetAddress.getLocalHost().getHostName();
         String ffmpegPath = "";
         String name = "new" + videoPath.split("/")[3];
         String newVideoPath = "";
-        if (hostname.substring(0, 7).equals("DESKTOP")) {
-            newVideoPath = "C:/choom/mydance/" + name;
-            videoPath = "C:" + videoPath;
-            audioPath = "C:" + audioPath;
-            ffmpegPath = "C:/choom/ffmpeg";
-        } else {
-            newVideoPath = "/var/lib/choom/mydance/" + name;
-            videoPath = "/var/lib" + videoPath;
-            audioPath = "/var/lib" + audioPath;
-            ffmpegPath = "/var/lib/choom/ffmpeg";
-        }
+//        if (hostname.substring(0, 7).equals("DESKTOP")) {
+////            newVideoPath = "C:/choom/mydance/" + name;
+////            videoPath = "C:" + videoPath;
+////            audioPath = "C:" + audioPath;
+//            ffmpegPath = "C:/choom/ffmpeg";
+//        } else {
+////            newVideoPath = "/var/lib/choom/mydance/" + name;
+////            videoPath = "/var/lib" + videoPath;
+////            audioPath = "/var/lib" + audioPath;
+//            ffmpegPath = "/var/lib/choom/ffmpeg";
+//        }
+        newVideoPath = setPath("mydance") + name;
+        ffmpegPath = setPath("ffmpeg");
         log.info("newVideoPath : " + newVideoPath);
         log.info("video : " + videoPath);
         log.info("audio : " + audioPath);
         // 입력 영상 파일
-        File videoFile = new File(videoPath);
+        File videoFile = new File(getPath(videoPath));
         // 입력 오디오 파일
-        File audioFile = new File(audioPath);
+        File audioFile = new File(getPath(audioPath));
         // 출력 파일
         File outputFile = new File(newVideoPath); // 덮어씌우기? 안되는듯?
 
@@ -202,5 +208,30 @@ public class FileService {
         log.info("파일이 성공적으로 합쳐졌습니다: " + outputFile.getAbsolutePath());
 
         return "/choom/mydance/" + name;
+    }
+
+    private String setPath(String type) throws UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        String path = "";
+
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            path = "C:/choom/" + type + "/";
+        } else {
+            path = "/var/lib/choom/" + type + "/";
+        }
+
+        return path;
+    }
+
+    private String getPath(String path) throws UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            path = "C:" + path;
+        } else {
+            path = "/var/lib" + path;
+        }
+
+        return path;
     }
 }
