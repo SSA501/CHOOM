@@ -130,7 +130,6 @@ function DanceCam(props: {
     mediaRecorderGuide.ondataavailable = (event: BlobEvent) =>
       handleDataAvailableGuide(event);
     // 비디오가 load 될때까지 기다림
-
     await new Promise<void>((resolve) => {
       cam.current!.onloadedmetadata = () => {
         resolve();
@@ -181,6 +180,11 @@ function DanceCam(props: {
   };
   // 시작버튼 누르면
   const handleStartBtnClick = async () => {
+    if (!mediaRecorder || !mediaRecorderGuide) {
+      alert("Please wait for the camera setup to complete.");
+      return;
+    }
+
     setIsStart(true);
     cam.current!.style.visibility = "hidden";
 
