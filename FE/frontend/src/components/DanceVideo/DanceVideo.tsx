@@ -16,7 +16,7 @@ import {
 } from "react-icons/md";
 import CircleBtn from "../Btn/CircleBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
-import { ChallengeVideo, ResultVideo } from "./style";
+import { Msg, ChallengeVideo, ResultVideo } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import { Pose, Challenge } from "../../constants/types";
 import { SERVER_URL } from "../../constants/url";
@@ -176,7 +176,8 @@ const DanceVideo = forwardRef(
     return (
       <div>
         {!props.myUrl ? (
-          <MainContainer>
+          <MainContainer style={{ position: "relative" }}>
+            {props.poseList.length === 0 && <Msg>챌린지 학습 중 🤸‍♀️</Msg>}
             <ChallengeVideo
               src={SERVER_URL + props.challenge?.videoPath}
               width={450}
@@ -184,7 +185,6 @@ const DanceVideo = forwardRef(
               ref={video}
               controls
             />
-
             <BtnContainer>
               <CircleBtn
                 icon={MdSlowMotionVideo}
