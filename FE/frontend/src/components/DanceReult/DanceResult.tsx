@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DanceChart from "../../components/DanceChart/DanceChart";
 import Btn from "../Btn/Btn";
 import DanceScore from "../DanceScore/DanceScore";
@@ -18,7 +19,9 @@ function DanceResult(props: {
   isGuide: boolean;
   setIsGuide: (isGuide: boolean) => void;
 }) {
+  const navigate = useNavigate();
   const [myDanceId, setMyDanceId] = useState("");
+  const [danceId, setDanceId] = useState();
   useEffect(() => {
     const uploaderString = JSON.stringify({
       danceId: props.dance.id,
@@ -40,6 +43,7 @@ function DanceResult(props: {
       .then((res) => {
         console.log(res);
         setMyDanceId(res.data.id);
+        setDanceId(res.data.danceId);
         props.setMyUrl(res.data.videoPath);
       })
       .catch((error) => {
@@ -51,6 +55,10 @@ function DanceResult(props: {
 
   const handleBackBtnClick = () => {
     props.setMyUrl("");
+    props.setIsGuide(true);
+  };
+  const goToChallenge = () => {
+    navigate(`/detail/${danceId}`);
   };
 
   return (
@@ -76,6 +84,7 @@ function DanceResult(props: {
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
+          <Btn btnText={"챌린지 상세보기"} handleClick={goToChallenge} />
         </div>
       </StyleContainer>
     </DanceResultContainer>

@@ -31,6 +31,7 @@ const DanceVideo = forwardRef(
       myGuideUrl?: string;
       challenge?: Challenge;
       isGuide: boolean;
+      setIsGuide: (isGuide: boolean) => void;
     },
     ref: React.ForwardedRef<any>
   ) => {
@@ -48,6 +49,7 @@ const DanceVideo = forwardRef(
     }));
 
     useEffect(() => {
+      props.myUrl && props.setIsGuide(false);
       console.log(props.challenge?.status);
       props.challenge?.status === 0 && startEstimate();
       props.challenge?.status === 1 && startEstimate();
@@ -218,7 +220,7 @@ const DanceVideo = forwardRef(
         ) : (
           <MainContainer>
             <ResultVideo
-              src={props.isGuide ? props.myUrl : props.myGuideUrl}
+              src={props.isGuide ? props.myGuideUrl : props.myUrl}
               width={450}
               height={800}
               ref={video}
