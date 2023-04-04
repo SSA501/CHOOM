@@ -1,12 +1,12 @@
 import storage from "redux-persist/lib/storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import mainReducer from "./mainReducer";
+import authReducer from "./authReducer";
 import myDanceRuducer from "./myDanceReducer";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 
 const rootReducer = combineReducers({
-  main: mainReducer.reducer,
+  auth: authReducer.reducer,
   myDance: myDanceRuducer.reducer,
 });
 

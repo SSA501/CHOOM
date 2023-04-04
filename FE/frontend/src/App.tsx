@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import MainPage from "./pages/MainPage/MainPage";
@@ -12,15 +12,16 @@ import { axiosFileInstance, axiosInstance } from "./apis/instance";
 import {
   updateAccessToken,
   updateLoginStatus,
+  updateOpenLoginModal,
   updateRouteHistory,
-} from "./store/mainReducer";
+} from "./store/authReducer";
 import LoginModal from "./components/Modal/LoginModal";
 import MyDancePage from "./pages/MyDancePage/MyDancePage";
 import UploadingPage from "./pages/UploadingPage/UploadingPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
 function App() {
-  const accessToken = useAppSelector((state) => state.main.accessToken);
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
   // 헤더 디폴트 추가
   if (accessToken) {
     axiosInstance.defaults.headers.common[
@@ -68,16 +69,24 @@ function App() {
     }
   );
 
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const isLogin = useAppSelector((state) => state.main.isLogin);
-  const routeHistory = useAppSelector((state) => state.main.routeHistory);
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
+  const routeHistory = useAppSelector((state) => state.auth.routeHistory);
+  const openLoginModal = useAppSelector((state) => state.auth.openLoginModal);
+  const [isOenLoginModal, setIsOpenLoginModal] = useState(false);
+
   const location = useLocation();
-  const showLoginModal = () => {
-    setLoginModalOpen(true);
+  const showLoginModal = useCallback(() => {
+    dispatch(updateOpenLoginModal(true));
     document.body.style.overflow = "hidden";
-  };
+  }, [dispatch]);
+  const closeLoginModal = useCallback(() => {
+    dispatch(updateOpenLoginModal(false));
+    document.body.style.overflow = "auto";
+  }, [dispatch]);
 
   useEffect(() => {
+    console.log(openLoginModal);
+    setIsOpenLoginModal(openLoginModal);
     const currentPath = location.pathname;
     // 로그인 안된 상태로 url 접근하면
     if (currentPath !== "/" && !isLogin && routeHistory === "") {
@@ -90,16 +99,29 @@ function App() {
       }
       navigate("/");
       showLoginModal();
+      dispatch(updateOpenLoginModal(false));
     }
 
-    // 로그인 하고 돌아와서 routeHistory가 남아있는 상태라면
-    if (routeHistory !== "" && isLogin) {
-      navigate(routeHistory); // 리다이렉트 이전 페이지로 이동
-      dispatch(updateRouteHistory("")); // 저장해둔 리다이렉트 이전 페이지 초기화
+    if (isLogin) {
+      closeLoginModal();
+      // 로그인 하고 돌아와서 routeHistory가 남아있는 상태라면
+      if (routeHistory !== "") {
+        navigate(routeHistory); // 리다이렉트 이전 페이지로 이동
+        dispatch(updateRouteHistory("")); // 저장해둔 리다이렉트 이전 페이지 초기화
+      }
     }
 
-    if (!loginModalOpen) document.body.style.overflow = "auto";
-  }, [dispatch, isLogin, location, navigate, routeHistory, loginModalOpen]);
+    // if (!loginModalOpen) document.body.style.overflow = "auto";
+  }, [
+    dispatch,
+    isLogin,
+    location,
+    navigate,
+    routeHistory,
+    closeLoginModal,
+    openLoginModal,
+    showLoginModal,
+  ]);
 
   return (
     <>
@@ -120,7 +142,9 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
-      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+      {isOenLoginModal && (
+        <LoginModal setLoginModalOpen={setIsOpenLoginModal} />
+      )}
     </>
   );
 }

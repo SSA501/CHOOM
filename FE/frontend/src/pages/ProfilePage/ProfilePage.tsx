@@ -6,7 +6,7 @@ import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import { ProfileContainer } from "./style";
 import { useAppDispatch } from "../../constants/types";
 import { withdraw } from "../../apis/user";
-import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
+import { updateAccessToken, updateLoginStatus } from "../../store/authReducer";
 
 function ProfilePage() {
   const [normalModalOpen, setNormalModalOpen] = useState<boolean>(false);
