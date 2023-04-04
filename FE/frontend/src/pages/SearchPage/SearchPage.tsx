@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
+  addSearchKeyword,
   getSearchKeywordList,
   removeSearchKeyword,
   searchDance,
@@ -33,7 +34,6 @@ function SearchPage() {
   useEffect(() => {
     if (query) {
       setIsLoading(true);
-      // 키워드 조회
       getSearchKeywordList()
         .then((res) => {
           const result = res?.data.find((item: any) => item.keyword === query);
@@ -42,11 +42,10 @@ function SearchPage() {
           }
         })
         .catch((err) => console.log(err));
-      // 검색 실행
+      addSearchKeyword(query);
       searchDance(query, 50) // size 50으로 고정
         .then((res) => {
           setIsLoading(false);
-          // console.log(res);
           const data = res?.data;
           if (data?.isUrl && data?.dbSearch?.length > 0) {
             // 쇼츠 url 입력이라면 바로 상세페이지로 넘어가기
