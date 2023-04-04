@@ -47,6 +47,9 @@ public class Dance extends BaseTimeEntity {
     @Column(length = 2083, unique = true)
     private String thumbnailPath;
 
+    @Column(length = 2083, unique = true)
+    private String audioPath;
+
     @NotNull
     @Column
     @ColumnDefault("0")
@@ -71,6 +74,10 @@ public class Dance extends BaseTimeEntity {
         this.jsonPath = jsonPath;
     }
 
+    public void updateAudioPath(String audioPath) {
+        this.audioPath = audioPath;
+    }
+
     public void changeStatus(int status) {
         this.status = status;
     }
@@ -84,7 +91,7 @@ public class Dance extends BaseTimeEntity {
     }
 
     @Builder
-    public Dance(Long id, String videoPath, String jsonPath,
+    public Dance(Long id, String videoPath, String jsonPath, String audioPath,
         List<Bookmark> bookmarkList,
         List<MyDance> myDanceList, DanceDetailsDto danceDetailDto) {
         this.id = id;
@@ -92,6 +99,7 @@ public class Dance extends BaseTimeEntity {
         this.url = danceDetailDto.getUrl();
         this.videoPath = videoPath;
         this.jsonPath = jsonPath;
+        this.audioPath = audioPath;
         this.thumbnailPath = danceDetailDto.getThumbnailPath();
         this.userCount = danceDetailDto.getUserCount();
         this.status = danceDetailDto.getStatus();

@@ -19,7 +19,6 @@ public class DanceRankUserDto {
     int videoLength;
     String title;
     String youtubeUrl;
-    String tiktokUrl;
 
     @Builder
     public DanceRankUserDto(MyDance myDance) {
@@ -30,6 +29,5 @@ public class DanceRankUserDto {
         this.videoLength = myDance.getVideoLength();
         this.title = myDance.getTitle();
         this.youtubeUrl = myDance.getYoutubeUrl();
-        this.tiktokUrl = myDance.getTiktokUrl();
     }
 }

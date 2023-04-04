@@ -39,8 +39,26 @@ public class MyDanceService {
 
     @Transactional
     public AddMyDanceResponseDto addMyDance(Long userId, AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile thumbnail) throws IOException {
-        // 내 챌린지 영상 업로드
+        // 원본 영상 오디오 존재 여부 확인
+        Dance dance = danceRepository.findById(myDanceAddRequestDto.getDanceId())
+                .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
+        String audioPath = dance.getAudioPath();
+        log.info("이미 있는 audioPath : " + audioPath);
+
+        // 없으면 오디오 추출하고 저장
+        if (audioPath == null) {
+            audioPath = fileService.extractAudio(dance.getVideoPath());
+            log.info("새로 만든 audioPath : " + audioPath);
+            dance.updateAudioPath(audioPath);
+        }
+
+        // 내 챌린지 영상 (오디오 X) 파일 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
+        log.info("합치기 전 videoPath : " + videoPath);
+
+        // 내 챌린지 영상 + 원본 오디오
+        videoPath = fileService.combineAudioVideo(videoPath, audioPath);
+        log.info("합치기 후 videoPath : " + videoPath);
 
         // 내 챌린지 영상 썸네일 업로드
         String thumbnailPath = fileService.fileUpload("mydance/thumbnail", thumbnail);
@@ -48,8 +66,6 @@ public class MyDanceService {
         // MY_DANCE insert
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
-        Dance dance = danceRepository.findById(myDanceAddRequestDto.getDanceId())
-                .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
         MyDance myDance = MyDance.builder()
                 .score(myDanceAddRequestDto.getScore())
                 .matchRate(myDanceAddRequestDto.getMatchRate())
