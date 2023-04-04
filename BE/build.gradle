@@ -84,6 +84,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.1'
 	implementation "io.github.openfeign:feign-httpclient:11.9.1"
+
+	// FFmpegWrapper - https://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg
+	implementation group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.6.2'
 }
 
 tasks.named('test') {
