@@ -50,9 +50,6 @@ function SearchBar({ currentQuery }: SearchBarProps) {
       return;
     }
 
-    // search 실행
-    addSearchKeyword(trimmedValue); // 검색어 추가
-
     if (location.pathname === "/challenge") {
       // 챌린지 검색 페이지 내에서 검색할 경우
       setSearchParams({ query: trimmedValue });

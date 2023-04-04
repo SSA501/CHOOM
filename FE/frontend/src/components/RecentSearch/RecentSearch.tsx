@@ -10,7 +10,6 @@ import { CgClose } from "react-icons/cg";
 import SideTitle from "../SideTitle/SideTitle";
 import { SideContainer } from "../../pages/SearchPage/style";
 import {
-  addSearchKeyword,
   getSearchKeywordList,
   removeSearchKeyword,
 } from "../../apis/challenge";
@@ -21,7 +20,6 @@ function RecentSearch() {
 
   const handleClick = (searchId: number, searchKeyword: string) => {
     removeSearchKeyword(searchId);
-    addSearchKeyword(searchKeyword);
     navigate({
       pathname: "",
       search: createSearchParams({
