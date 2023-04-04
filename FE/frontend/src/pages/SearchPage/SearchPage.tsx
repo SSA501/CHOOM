@@ -29,11 +29,13 @@ function SearchPage() {
   const [topData, setTopData] = useState([]);
   const [shortsData, setShortsData] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("검색결과가 없어요ㅠㅠ");
   const navigate = useNavigate();
 
   useEffect(() => {
     if (query) {
       setIsLoading(true);
+      // 검색어 조회
       getSearchKeywordList()
         .then((res) => {
           const result = res?.data.find((item: any) => item.keyword === query);
@@ -42,21 +44,47 @@ function SearchPage() {
           }
         })
         .catch((err) => console.log(err));
-      addSearchKeyword(query);
+
+      // 검색 실행
       searchDance(query, 10) // size 10으로 고정
         .then((res) => {
+          console.log(res);
           setIsLoading(false);
           const data = res?.data;
-          if (data?.isUrl && data?.dbSearch?.length > 0) {
-            // 쇼츠 url 입력이라면 바로 상세페이지로 넘어가기
-            navigate(`/detail/${data?.dbSearch[0]?.id}`);
-          } else if (data?.dbSearch?.length === 0 && data?.search?.length > 0) {
-            // db에 저장된거 없으면 쇼츠 데이터 중에 2개 넣어주기
-            setTopData(data?.search?.slice(0, 2));
-            setShortsData(data?.search?.slice(2));
+          // url일 경우
+          if (data?.isUrl) {
+            if (data?.dbSearch?.length > 0) {
+              if (data?.dbSearch[0]?.embeddable) {
+                // 쇼츠 url 입력이고 외부 재생 가능시 바로 상세페이지로 넘어가기
+                navigate(`/detail/${data?.dbSearch[0]?.id}`);
+              } else {
+                setErrorMsg("외부에서 조회 불가능한 영상입니다.");
+              }
+            } else {
+              setErrorMsg("쇼츠 URL이 아닙니다. 링크를 다시 확인해주세요!");
+            }
           } else {
-            setTopData(data?.dbSearch);
-            setShortsData(data?.search);
+            addSearchKeyword(query); // url 아닐때만 검색어 저장
+            // db에 저장된거 없으면
+            if (data?.dbSearch?.length === 0) {
+              if (data?.search?.length > 0) {
+                // 쇼츠 데이터 있으면 그중에 2개 넣어주기
+                setTopData(data?.search?.slice(0, 2));
+                setShortsData(data?.search?.slice(2));
+              } else {
+                // 쇼츠 데이터도 없으면
+                setErrorMsg("검색결과가 없어요ㅠㅠ");
+              }
+            } else if (data?.dbSearch?.length === 1) {
+              const tmpTop: (number | string | null)[] = [] as never[];
+              tmpTop.push(data?.dbSearch[0]);
+              tmpTop.push(data?.search[0]);
+              setTopData(tmpTop as never[]);
+              setShortsData(data?.search?.slice(1));
+            } else {
+              setTopData(data?.dbSearch);
+              setShortsData(data?.search);
+            }
           }
         })
         .catch((err) => console.log(err));
@@ -111,7 +139,7 @@ function SearchPage() {
               )}
               {topData.length === 0 && shortsData.length === 0 && (
                 <NoResultText>
-                  <p>검색결과가 없어요 ㅠㅠ</p>
+                  <p>{errorMsg}</p>
                 </NoResultText>
               )}
             </>
