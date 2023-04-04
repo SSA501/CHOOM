@@ -102,6 +102,7 @@ function DanceCam(props: {
     if (selectedCamera) {
       console.log("setup camera");
       setupCam(selectedCamera);
+      setupCam(selectedCamera);
     }
   }, [selectedCamera]);
 
@@ -525,7 +526,7 @@ function DanceCam(props: {
     }
   }
 
-  const handelCamClick = () => {
+  const handleCamClick = () => {
     let index = camerIndex;
     if (index === cameras.length - 1) index = 0;
     else index += 1;
@@ -551,7 +552,7 @@ function DanceCam(props: {
         {cameras.length > 1 && (
           <CircleBtn
             icon={MdOutlineCameraswitch}
-            onClick={handelCamClick}
+            onClick={handleCamClick}
             label={"캠 변경"}
             disabled={props.poseList.length === 0 ? "disabled" : ""}
           />
