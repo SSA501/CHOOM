@@ -71,7 +71,6 @@ function DetailPage() {
 
   const handleLike = () => {
     if (danceId) {
-      console.log("좋아요");
       addBookmark(+danceId)
         .then(() => {
           setIsLiked(true);
@@ -83,7 +82,6 @@ function DetailPage() {
 
   const handleLikeDelete = () => {
     if (danceId) {
-      console.log("좋아요취ㅣ소");
       removeBookmark(+danceId)
         .then(() => {
           setIsLiked(false);

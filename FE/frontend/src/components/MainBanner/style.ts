@@ -10,12 +10,4 @@ const MainTopContainer = styled.div`
   position: relative;
 `;
 
-const BannerIconsContainer = styled.div`
-  position: absolute;
-  bottom: 36%;
-  left: -10px;
-  z-index: 1;
-  text-align: center;
-`;
-
-export { MainTopContainer, BannerIconsContainer };
+export { MainTopContainer };

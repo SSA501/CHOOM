@@ -18,6 +18,7 @@ import {
   ChallengeNumber,
   PopularChallengeContainer,
   YoutubeChallengeContainer,
+  NoResultText,
 } from "./style";
 
 function SearchPage() {
@@ -108,6 +109,11 @@ function SearchPage() {
                     }
                   />
                 </YoutubeChallengeContainer>
+              )}
+              {topData.length === 0 && shortsData.length === 0 && (
+                <NoResultText>
+                  <p>검색결과가 없어요 ㅠㅠ</p>
+                </NoResultText>
               )}
             </>
           )}
