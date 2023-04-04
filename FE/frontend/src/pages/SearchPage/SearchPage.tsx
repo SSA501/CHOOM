@@ -43,7 +43,7 @@ function SearchPage() {
         })
         .catch((err) => console.log(err));
       addSearchKeyword(query);
-      searchDance(query, 50) // size 50으로 고정
+      searchDance(query, 10) // size 10으로 고정
         .then((res) => {
           setIsLoading(false);
           const data = res?.data;
