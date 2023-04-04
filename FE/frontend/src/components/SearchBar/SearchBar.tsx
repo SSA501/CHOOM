@@ -25,7 +25,7 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogin = useAppSelector(
-    (state) => state && state.main && state.main.isLogin
+    (state) => state && state.auth && state.auth.isLogin
   );
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,9 +49,6 @@ function SearchBar({ currentQuery }: SearchBarProps) {
       alert("검색어를 입력하세요");
       return;
     }
-
-    // search 실행
-    addSearchKeyword(trimmedValue); // 검색어 추가
 
     if (location.pathname === "/challenge") {
       // 챌린지 검색 페이지 내에서 검색할 경우

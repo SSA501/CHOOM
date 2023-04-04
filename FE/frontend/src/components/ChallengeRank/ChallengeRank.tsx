@@ -1,5 +1,4 @@
-import React from "react";
-import { useNavigate } from "react-router";
+import React, { useState } from "react";
 import {
   ProfileDetailContainer,
   ProfilePicContainer,
@@ -7,6 +6,7 @@ import {
   RankInnerDiv,
   RankOuterContainer,
 } from "./style";
+import RankModal from "../Modal/RankModal";
 
 interface ChallengeRankProps {
   userId: number;
@@ -25,61 +25,61 @@ function ChallengeRank({
   // tiktokUrl,
   profileImage,
 }: ChallengeRankProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleClickProfile = () => {
+    setModalOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
   return (
-    <RankOuterContainer key={userId}>
-      <RankContainer>
-        <ProfilePicContainer>
-          <img
-            src={profileImage}
-            width="60px"
-            height="60px"
-            alt={`${nickname}님의 프로필 사진`}
-          />
-        </ProfilePicContainer>
-        <ProfileDetailContainer>
-          <h3>{score}점</h3>
-          <RankInnerDiv>
-            <p>{nickname}</p>
-            <div>
-              {youtubeUrl !== null ? (
-                <a href={youtubeUrl}>
+    <>
+      <RankOuterContainer key={userId}>
+        <RankContainer>
+          <ProfilePicContainer onClick={handleClickProfile}>
+            <img
+              src={profileImage}
+              width="60px"
+              height="60px"
+              alt={`${nickname}님의 프로필 사진`}
+            />
+          </ProfilePicContainer>
+          <ProfileDetailContainer>
+            <h3>{score}점</h3>
+            <RankInnerDiv>
+              <p>{nickname}</p>
+              <div>
+                {youtubeUrl !== null ? (
+                  <a href={youtubeUrl}>
+                    <img
+                      width={"32px"}
+                      style={{ marginRight: "1em" }}
+                      src={"/assets/icon_youtube_shorts.png"}
+                      alt="쇼츠 챌린지 링크"
+                    />
+                  </a>
+                ) : (
                   <img
                     width={"32px"}
                     style={{ marginRight: "1em" }}
-                    src={"/assets/icon_youtube_shorts.png"}
-                    alt="쇼츠 챌린지 링크"
+                    src={"/assets/icon_youtube_shorts_disable.png"}
+                    alt="쇼츠 챌린지 링크 없음"
                   />
-                </a>
-              ) : (
-                <img
-                  width={"32px"}
-                  style={{ marginRight: "1em" }}
-                  src={"/assets/icon_youtube_shorts_disable.png"}
-                  alt="쇼츠 챌린지 링크 없음"
-                />
-              )}
-              {/* {tiktokUrl !== "" ? (
-                <a href={tiktokUrl}>
-                  <img
-                    width={"42px"}
-                    style={{ marginRight: "1em" }}
-                    src={"/assets/icon_tiktok.png"}
-                    alt="틱톡 챌린지 링크"
-                  />
-                </a>
-              ) : (
-                <img
-                  width={"42px"}
-                  style={{ marginRight: "1em" }}
-                  src={"/assets/icon_tiktok_disable.png"}
-                  alt="틱톡 챌린지 링크 없음"
-                />
-              )} */}
-            </div>
-          </RankInnerDiv>
-        </ProfileDetailContainer>
-      </RankContainer>
-    </RankOuterContainer>
+                )}
+              </div>
+            </RankInnerDiv>
+          </ProfileDetailContainer>
+        </RankContainer>
+      </RankOuterContainer>
+      {modalOpen && (
+        <RankModal
+          userId={userId}
+          nickname={nickname}
+          profileImage={profileImage}
+          setModalOpen={setModalOpen}
+        />
+      )}
+    </>
   );
 }
 

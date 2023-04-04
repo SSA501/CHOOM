@@ -3,7 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { loginGoogle, loginKakao } from "../../apis/user";
 import Spinner from "../../components/Spinner/Spinner";
 import { useAppDispatch } from "../../constants/types";
-import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
+import {
+  updateAccessToken,
+  updateLoginStatus,
+  updateOpenLoginModal,
+} from "../../store/authReducer";
 
 interface LoginRedirectPageProps {
   isGoogle?: boolean;
@@ -30,7 +34,7 @@ function LoginRedirectPage({ isGoogle }: LoginRedirectPageProps) {
       loginKakao(code)
         .then((res) => {
           updateUserStatus(res);
-          // navigate(-1);
+          dispatch(updateOpenLoginModal(false));
         })
         .catch((err) => console.log(err));
     }
@@ -39,7 +43,7 @@ function LoginRedirectPage({ isGoogle }: LoginRedirectPageProps) {
       loginGoogle(code)
         .then((res) => {
           updateUserStatus(res);
-          // navigate(-3);
+          dispatch(updateOpenLoginModal(false));
         })
         .catch((err) => console.log(err));
     }

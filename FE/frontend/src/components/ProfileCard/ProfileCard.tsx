@@ -18,7 +18,7 @@ import { CgCheckO, CgCloseO, CgMathPlus } from "react-icons/cg";
 import { TbSettings } from "react-icons/tb";
 import { ShadowContainer } from "../ShadowContainer/style";
 import { useAppDispatch } from "../../constants/types";
-import { updateAccessToken, updateLoginStatus } from "../../store/mainReducer";
+import { updateAccessToken, updateLoginStatus } from "../../store/authReducer";
 import {
   checkNickname,
   getUserDetail,
