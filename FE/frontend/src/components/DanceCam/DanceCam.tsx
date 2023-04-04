@@ -64,11 +64,13 @@ function DanceCam(props: {
 }) {
   const cam = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  let capCanvas = useRef<HTMLCanvasElement>(null);
   const similarity = require("cosine-similarity");
   const [timer, setTimer] = useState(2);
   const [isGuide, setIsGuide] = useState(true);
   const [isStart, setIsStart] = useState(false);
 
+  let cap: CanvasRenderingContext2D = capCanvas.current?.getContext("2d")!;
   let ctx: CanvasRenderingContext2D = canvas.current?.getContext("2d")!;
   let mediaRecorder: MediaRecorder;
   let mediaRecorderGuide: MediaRecorder;
@@ -88,15 +90,21 @@ function DanceCam(props: {
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
 
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true }).then(
+      () => fetchCameras(),
+      () => {
+        alert("카메라 권한을 얻을 수 없습니다.");
+        window.history.back();
+      }
+    );
+
     async function fetchCameras() {
       const videoDevices = await getCameras();
       setCameras(videoDevices);
       if (videoDevices.length > 0) {
         setSelectedCamera(videoDevices[0].deviceId);
-        setupCam();
       }
     }
-    fetchCameras();
   }, []);
 
   useEffect(() => {
@@ -138,6 +146,9 @@ function DanceCam(props: {
 
     cam.current!.play();
     ctx = canvas.current?.getContext("2d")!;
+
+    capCanvas.current!.width = cam.current!.width;
+    capCanvas.current!.height = cam.current!.height;
   };
 
   const handleDataAvailable = (event: BlobEvent) => {
@@ -215,25 +226,13 @@ function DanceCam(props: {
         clearInterval(poseDetection);
 
         // 썸네일 저장
+        const dataURL = capCanvas.current?.toDataURL();
         if (cam.current) {
-          cam.current.currentTime = highScore.time;
-          const capCanvas = document.createElement("canvas");
-          capCanvas.width = cam.current.width;
-          capCanvas.height = cam.current.height;
-          const cap = capCanvas.getContext("2d");
-          cap?.drawImage(
-            cam.current,
-            0,
-            0,
-            canvas.current!.width,
-            canvas.current!.height
-          );
-          const dataURL = capCanvas?.toDataURL();
           // 데이터 URL에서 base64 인코딩 된 데이터 추출
-          const base64Data = dataURL.split(",")[1];
+          const base64Data = dataURL?.split(",")[1];
 
           // base64 디코딩하여 바이너리 데이터 생성
-          const binaryData = atob(base64Data);
+          const binaryData = atob(base64Data!);
 
           // 바이너리 데이터를 Uint8Array 형식으로 변환
           const dataArray = new Uint8Array(binaryData.length);
@@ -295,8 +294,13 @@ function DanceCam(props: {
           (timeTemp.getTime() - startTime.getTime()) / 1000 - 1
         );
         if (highScore.score! < nowScore) {
-          highScore.score = nowScore;
-          highScore.time = nowTime;
+          cap?.drawImage(
+            cam.current!,
+            0,
+            0,
+            canvas.current!.width,
+            canvas.current!.height
+          );
         }
         scoreTempList.push({
           score: nowScore,
@@ -541,6 +545,7 @@ function DanceCam(props: {
   return (
     <MainContainer>
       <CamContainer>
+        <MyCanvas width={450} height={800} ref={capCanvas} />
         <MyCanvas width={450} height={800} ref={canvas} />
         <MyCam width={450} height={800} ref={cam} />
       </CamContainer>
