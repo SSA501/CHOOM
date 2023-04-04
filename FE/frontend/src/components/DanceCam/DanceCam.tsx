@@ -88,6 +88,8 @@ function DanceCam(props: {
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
 
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia();
+
     async function fetchCameras() {
       const videoDevices = await getCameras();
       setCameras(videoDevices);
@@ -101,7 +103,6 @@ function DanceCam(props: {
   useEffect(() => {
     if (selectedCamera) {
       console.log("setup camera");
-      setupCam(selectedCamera);
       setupCam(selectedCamera);
     }
   }, [selectedCamera]);
