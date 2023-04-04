@@ -30,18 +30,11 @@ import java.util.UUID;
 public class FileService {
     public String fileUpload(String type, MultipartFile image) throws IOException {
         //서버에 파일 저장
-//        String hostname = InetAddress.getLocalHost().getHostName();
         UUID uuid = UUID.randomUUID();
         String name = uuid.toString() + image.getOriginalFilename().replaceAll(" ","");
         log.info(name);
-//        String path = "";
         File file = null;
 
-//        if (hostname.substring(0, 7).equals("DESKTOP")) {
-//            path = "C:/choom/" + type + "/";
-//        } else {
-//            path = "/var/lib/choom/" + type + "/";
-//        }
         String path = setPath(type);
         file = new File(path + name);
 
@@ -53,12 +46,6 @@ public class FileService {
     }
 
     public Resource fileDownload(String path, HttpHeaders headers) throws IOException {
-//        String hostname = InetAddress.getLocalHost().getHostName();
-//        if (hostname.substring(0, 7).equals("DESKTOP")) {
-//            path = "C:" + path;
-//        } else {
-//            path = "/var/lib" + path;
-//        }
         Resource resource = new FileSystemResource(getPath(path));
 
         // 원본 파일에서 uuid 자르기
@@ -75,13 +62,6 @@ public class FileService {
     }
 
     public void fileDelete(String path) throws UnknownHostException {
-//        String hostname = InetAddress.getLocalHost().getHostName();
-//        if (hostname.substring(0, 7).equals("DESKTOP")) {
-//            path = "C:" + path;
-//        } else {
-//            path = "/var/lib" + path;
-//        }
-
         File file = new File(getPath(path));
         if (!file.delete())
             throw new FileDeleteException("파일 삭제에 실패했습니다");
@@ -93,19 +73,10 @@ public class FileService {
             BufferedImage image = ImageIO.read(imgURL);
 
             //서버에 파일 저장
-//            String hostname = InetAddress.getLocalHost().getHostName();
             UUID uuid = UUID.randomUUID();
             String name = nickname + uuid.toString() + ".";
-//            String path = "";
             File file = null;
             String extension = "png";
-
-//            if (hostname.substring(0, 7).equals("DESKTOP")) {
-//                path = "C:/choom/" + type + "/";
-//            } else {
-//                path = "/var/lib/choom/" + type + "/";
-//            }
-
             String path = setPath(type);
             file = new File(path + name + extension);
 
@@ -121,22 +92,11 @@ public class FileService {
     }
 
     public String extractAudio(String videoPath) throws IOException {
-//        String hostname = InetAddress.getLocalHost().getHostName();
         String name = videoPath.split("/")[3].split("\\.")[0] + ".mp3";
         log.info(name);
 
         String audioPath = "";
         String ffmpegPath = "";
-
-//        if (hostname.substring(0, 7).equals("DESKTOP")) {
-////            videoPath = "C:" + videoPath;
-////            audioPath = "C:/choom/audio/";
-//            ffmpegPath = "C:/choom/ffmpeg/";
-//        } else {
-////            videoPath = "/var/lib" + videoPath;
-////            audioPath = "/var/lib/choom/audio/";
-//            ffmpegPath = "/var/lib/choom/ffmpeg/";
-//        }
 
         audioPath = setPath("audio");
         ffmpegPath = setPath("ffmpeg");
@@ -159,21 +119,9 @@ public class FileService {
     }
 
     public String combineAudioVideo(String videoPath, String audioPath) throws IOException {
-//        String hostname = InetAddress.getLocalHost().getHostName();
         String ffmpegPath = "";
         String name = "new" + videoPath.split("/")[3];
         String newVideoPath = "";
-//        if (hostname.substring(0, 7).equals("DESKTOP")) {
-////            newVideoPath = "C:/choom/mydance/" + name;
-////            videoPath = "C:" + videoPath;
-////            audioPath = "C:" + audioPath;
-//            ffmpegPath = "C:/choom/ffmpeg";
-//        } else {
-////            newVideoPath = "/var/lib/choom/mydance/" + name;
-////            videoPath = "/var/lib" + videoPath;
-////            audioPath = "/var/lib" + audioPath;
-//            ffmpegPath = "/var/lib/choom/ffmpeg";
-//        }
         newVideoPath = setPath("mydance") + name;
         ffmpegPath = setPath("ffmpeg");
         log.info("newVideoPath : " + newVideoPath);

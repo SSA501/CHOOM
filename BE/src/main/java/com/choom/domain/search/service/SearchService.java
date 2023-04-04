@@ -30,7 +30,7 @@ public class SearchService {
 
         // 검색 키워드가 url일 때는 예외 처리
         String[] checkList = {
-                "https://", "http://", "youtube.com", "youtu.be", "tiktok.com"
+                "https://", "http://", "youtube.com", "youtu.be"
         };
         for (String check : checkList) {
             if (keyword.contains(check)) {
