@@ -49,8 +49,9 @@ export const reissueToken = async () => {
 };
 
 // 회원 정보 받기
-export const getUserDetail = async () => {
-  const res = await axiosInstance.get("/user");
+export const getUserDetail = async (userId?: number) => {
+  const queryParam = userId !== undefined ? `?userId=${userId}` : "";
+  const res = await axiosInstance.get(`/user/${queryParam}`);
   return res.data;
 };
 
