@@ -18,8 +18,43 @@ const MyCanvas = styled.canvas`
 
 const Rec = styled.div`
   position: absolute;
-  right: 10px;
+  position: absolute;
   top: 20px;
+  right: 90px;
+  width: 100px;
+  text-align: center;
+  color: red;
+  font-weight: 900;
+
+  -webkit-animation: blink 0.7s ease-in-out infinite alternate;
+  -moz-animation: blink 0.7s ease-in-out infinite alternate;
+  animation: blink 0.7s ease-in-out infinite alternate;
+
+  @-webkit-keyframes blink {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes blink {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes blink {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
   & > svg {
     cursor: default !important  ;
     color: red;
