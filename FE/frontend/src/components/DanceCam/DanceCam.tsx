@@ -90,7 +90,10 @@ function DanceCam(props: {
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true }).then(
       () => {},
-      () => window.history.back
+      () => {
+        alert("카메라 권한을 얻을 수 없습니다.");
+        window.history.back();
+      }
     );
 
     async function fetchCameras() {
