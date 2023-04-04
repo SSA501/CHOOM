@@ -1,96 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getPopularChallenge } from "../../apis/challenge";
 import MainBanner from "../../components/MainBanner/MainBanner";
 import ScrollingText from "../../components/ScrollingText/ScrollingText";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import SearchArea from "../../components/SearchArea/SearchArea";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
-import { TopContainer } from "./style";
+import { AnimatedComponent, TopContainer } from "./style";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 export interface VideoDataProps {
-  id: number;
-  videoPath: string;
-  thumbnailSrc: string;
-  frameColor?: string;
+  id: number | null;
   title: string;
-  url: string;
+  url?: string;
+  thumbnailPath: string;
+  sec?: number;
+  likeCount?: number;
+  viewCount?: number;
   userCount: number;
+  youtubeId: string;
   status: number;
+  videoPath?: string;
+  publishedAt?: string;
+  bookmarked?: boolean;
 }
 
 function MainPage() {
-  const popularVideoData: VideoDataProps[] = [
-    {
-      id: 1,
-      videoPath:
-        "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-      title: "하입보이",
-      url: "https://youtu.be/videoId",
-      userCount: 2,
-      status: 2,
-    },
-    {
-      id: 2,
-      videoPath:
-        "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-      title: "하입보이",
-      url: "https://youtu.be/videoId",
-      userCount: 2,
-      status: 2,
-    },
-    {
-      id: 3,
-      // videoPath: "https://www.youtube.com/shorts/fYQxthUKung",
-      videoPath:
-        "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-      title: "하입보이",
-      url: "https://youtu.be/videoId",
-      userCount: 2,
-      status: 2,
-    },
-    {
-      id: 4,
-      videoPath:
-        "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-      title: "하입보이",
-      url: "https://youtu.be/videoId",
-      userCount: 2,
-      status: 2,
-    },
-    {
-      id: 5,
-      videoPath:
-        "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-      title: "하입보이",
-      url: "https://youtu.be/videoId",
-      userCount: 2,
-      status: 2,
-    },
-  ];
+  const [popularVideoData, setPopularVideoData] = useState<VideoDataProps[]>(
+    []
+  );
+  const [isFirstVisible, firstRref] = useIntersectionObserver();
+  const [isSecondVisible, secondRef] = useIntersectionObserver();
+
+  useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "CHOOM";
+
+    getPopularChallenge()
+      .then((res) => {
+        setPopularVideoData(res.data);
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>
-      <TopContainer>
-        <MainBanner />
-        <SearchBar />
-      </TopContainer>
-      <ScrollingText />
-      <VideoCarousel
-        title={"요즘 인기있는 챌린지 🔥"}
-        text={
-          "최근 가장 인기있는 챌린지를 모아봤어요 어떤 챌린지를 할지 요즘 가장 인기있는 챌린지를 모아봤어요 어떤 챌린지를 할지 고민된다면 추천해요"
-        }
-        videoData={popularVideoData}
-        handleBtnClick={() => {}}
-      />
+      <AnimatedComponent isVisible={isFirstVisible} ref={firstRref}>
+        <TopContainer>
+          <MainBanner />
+          <SearchArea />
+        </TopContainer>
+      </AnimatedComponent>
+      <AnimatedComponent isVisible={isSecondVisible} ref={secondRef}>
+        <ScrollingText />
+        <VideoCarousel
+          title={"요즘 인기있는 챌린지 🔥"}
+          text={
+            "최근 가장 인기있는 챌린지를 모아봤어요 어떤 챌린지를 할지 고민된다면 시도해보는 건 어때요? 😆"
+          }
+          videoData={popularVideoData}
+        />
+      </AnimatedComponent>
     </>
   );
 }

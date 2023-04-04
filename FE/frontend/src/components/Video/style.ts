@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Btn from "../Btn/Btn";
 
-const VideoContainer = styled.div`
-  width: 270px;
-  /* height: 480px; */
+const VideoContainer = styled.div<{ width: string; height: string }>`
   position: relative;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
 
   iframe,
   video {
@@ -28,4 +28,8 @@ const BtnDetail = styled(Btn)`
   border: none;
 `;
 
-export { VideoContainer, BtnDetail };
+const ThumbnailImg = styled.img`
+  object-fit: cover;
+`;
+
+export { VideoContainer, BtnDetail, ThumbnailImg };

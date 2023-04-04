@@ -1,72 +1,98 @@
+import React from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
-  Legend,
-} from "chart.js";
-import { useRef } from "react";
-import { Line, getElementAtEvent } from "react-chartjs-2";
+  ResponsiveContainer,
+  Label,
+} from "recharts";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import { Dance, Score } from "../../constants/types";
+import DanceShare from "../DanceShare/DanceShare";
 
-interface Score {
+function DanceChart(props: {
   score: number;
-  time: number;
-}
+  scoreList: Score[];
+  danceVideoRef: React.MutableRefObject<any>;
+  myUrl: string;
+  isGuide?: boolean;
+  setIsGuide?: (isGuide: boolean) => void;
+  dance: Dance;
+  myDanceId: string;
+  changeVideoTime?: (time: number) => void;
+}) {
+  const data = props.scoreList;
 
-function DanceChart(props: { scoreList: Score[] }) {
-  const chartRef = useRef();
-
-  console.log(props.scoreList);
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Chart.js Line Chart",
-      },
-    },
-  };
-  const labels = props.scoreList.map((v) => v.time);
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "일치율",
-        data: props.scoreList.map((v) => v.score),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-    ],
-  };
-
-  const handelClickChart = (event: any) => {
-    console.log(getElementAtEvent(chartRef.current!, event));
+  const handelChartClick = (e: any) => {
+    console.log(e.activeLabel);
+    props.changeVideoTime
+      ? props.changeVideoTime(e.activeLabel)
+      : props.danceVideoRef.current.changeVideoTime(e.activeLabel);
   };
 
   return (
-    <Line
-      options={options}
-      data={data}
-      ref={chartRef}
-      onClick={handelClickChart}
-    />
+    <div style={{ display: "flex" }}>
+      <div style={{ height: "450px", width: "45vw" }}>
+        <div style={{ marginLeft: "50px", textAlign: "center" }}>
+          클릭을 하면 해당 시간으로 재생됩니다
+        </div>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            width={800}
+            height={400}
+            data={data}
+            margin={{
+              top: 10,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }}
+            onClick={(e) => handelChartClick(e)}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="time">
+              <Label value="초" offset={10} position="right" />
+            </XAxis>
+            <YAxis type="number" domain={[0, 100]} />
+
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="score"
+              stroke={
+                props.score >= 80
+                  ? "var(--green-color)"
+                  : props.score >= 60
+                  ? "var(--purple-color)"
+                  : props.score >= 40
+                  ? "var(--blue-color)"
+                  : "var(--skyblue-color)"
+              }
+              fill={
+                props.score >= 80
+                  ? "var(--green-color)"
+                  : props.score >= 60
+                  ? "var(--purple-color)"
+                  : props.score >= 40
+                  ? "var(--blue-color)"
+                  : "var(--skyblue-color)"
+              }
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+      <DanceShare
+        dance={props.dance}
+        myUrl={props.myUrl}
+        score={props.score}
+        setIsGuide={props.setIsGuide}
+        isGuide={props.isGuide}
+        myDanceId={props.myDanceId}
+      />
+    </div>
   );
 }
 

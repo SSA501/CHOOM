@@ -1,19 +1,19 @@
 import styled from "styled-components";
 
-const Background = styled.div`
-  position: absolute;
+const Background = styled.div<{ opacity?: string }>`
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: black;
-  opacity: 0.5;
+  opacity: ${(props) => props.opacity || "0.7"};
   overflow: hidden;
   z-index: 999;
 `;
 
 const Modal = styled.div<{ width: string; height: string }>`
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -23,10 +23,10 @@ const Modal = styled.div<{ width: string; height: string }>`
   z-index: 999;
 `;
 
-const CloseBtn = styled.button`
+const CloseBtn = styled.button<{ top?: string; right?: string }>`
   position: absolute;
-  top: 25px;
-  right: 30px;
+  top: ${(props) => props.top || "25px"};
+  right: ${(props) => props.right || "30px"};
 `;
 
 const ModalTitle = styled.p`
@@ -40,7 +40,6 @@ const ModalTitle = styled.p`
 `;
 
 const ModalContent = styled.p`
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
   font-size: 28px;
@@ -52,7 +51,6 @@ const BtnDiv = styled.div`
   padding-top: 55px;
   margin: auto;
   text-align: center;
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
@@ -89,6 +87,16 @@ const LogoImg = styled.img`
   margin-top: 87px;
 `;
 
+const RankTopContainer = styled.div`
+  padding: 0 0 1em;
+  font-size: 1.8rem;
+  font-weight: 600;
+  img {
+    border-radius: 50%;
+    margin-bottom: 0.5em;
+  }
+`;
+
 export {
   Background,
   Modal,
@@ -99,4 +107,5 @@ export {
   AcceptBtn,
   CancelBtn,
   LogoImg,
+  RankTopContainer,
 };

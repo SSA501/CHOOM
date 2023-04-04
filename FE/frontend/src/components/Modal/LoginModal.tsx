@@ -10,14 +10,13 @@ import {
 } from "./style";
 import { CgClose } from "react-icons/cg";
 import { ShadowContainer } from "../ShadowContainer/style";
-import { loginKakao } from "../../apis/api";
+import { redirectGoogle, redirectKakao } from "../../apis/user";
 
 interface LoginModalProps {
-  setIsLogin: (isLogin: boolean) => void;
   setLoginModalOpen: (loginModalOpen: boolean) => void;
 }
 
-function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
+function LoginModal({ setLoginModalOpen }: LoginModalProps) {
   const closeModal = () => {
     setLoginModalOpen(false);
     document.body.style.overflow = "auto";
@@ -41,20 +40,12 @@ function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
   });
 
   const handleLoginGoogle = () => {
-    // TODO: 구글 로그인 기능 구현
+    redirectGoogle();
     closeModal();
-    setIsLogin(true);
   };
-  const handleLoginTiktok = () => {
-    // TODO: 틱톡 로그인 기능 구현
 
-    closeModal();
-    setIsLogin(true);
-  };
   const handleLoginKaKao = () => {
-    // TODO: 카톡 로그인 기능 구현
-    loginKakao();
-    setIsLogin(true);
+    redirectKakao();
     closeModal();
   };
 
@@ -74,7 +65,7 @@ function LoginModal({ setIsLogin, setLoginModalOpen }: LoginModalProps) {
           <ModalTitle>LOGIN</ModalTitle>
           <BtnDiv>
             <Btn login loginType={"google"} handleClick={handleLoginGoogle} />
-            <Btn login loginType={"tiktok"} handleClick={handleLoginTiktok} />
+            {/* <Btn login loginType={"tiktok"} handleClick={handleLoginTiktok} /> */}
             <Btn login loginType={"kakao"} handleClick={handleLoginKaKao} />
           </BtnDiv>
           <LogoImg src="/assets/logo.png" alt="logo" />

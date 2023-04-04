@@ -15,6 +15,7 @@ const TitleBar = styled.div`
 const TitleText = styled.div`
   word-break: break-all;
   font-size: 36px;
+  line-height: 44px;
   vertical-align: middle;
   font-weight: bold;
   margin-right: 10%;

@@ -8,10 +8,12 @@ type ChildrenProp = {
 const CarouselContainer = styled(ShadowContainer)<ChildrenProp>`
   display: flex;
   gap: 2em;
+  padding: 5em 3.5em;
 `;
 
 const LeftTextContainer = styled.div`
-  flex: 3;
+  /* flex: 3; */
+  width: 17%;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -33,8 +35,8 @@ const MiddleText = styled.div`
 const RightSwiperContainer = styled.div`
   display: flex;
   gap: 1em;
-  flex: 6;
-  max-width: 967px;
+  flex: 1;
+  /* max-width: 967px; */
   overflow: hidden;
 `;
 

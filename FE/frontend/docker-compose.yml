@@ -1,0 +1,11 @@
+# docker-compose.yml
+version: "3.7"
+
+services:
+  frontend:
+    build: .
+    ports:
+      - 3000:3000
+    restart: always
+    volumes:
+      - /home/ubuntu/files:/app/build/choom

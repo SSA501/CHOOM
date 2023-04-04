@@ -1,26 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
-import { createSearchParams, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import { addSearchKeyword } from "../../apis/challenge";
+import { useAppSelector } from "../../constants/types";
+import LoginModal from "../Modal/LoginModal";
 import {
   SearchBarContainer,
-  SearchCircle,
-  SearchContainer,
+  SearchBtn,
   SearchIcon,
   SearchInput,
 } from "./style";
 
-function SearchBar() {
-  const [inputValue, setInputValue] = useState("");
-  const navigate = useNavigate();
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      const trimmedValue = inputValue.trim();
-      if (trimmedValue.length < 1) {
-        alert("검색어를 입력하세요");
-        return;
-      }
+interface SearchBarProps {
+  currentQuery?: string | null;
+}
 
-      // search 실행
+function SearchBar({ currentQuery }: SearchBarProps) {
+  const [inputValue, setInputValue] = useState<string>("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isLogin = useAppSelector(
+    (state) => state && state.auth && state.auth.isLogin
+  );
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showLoginModal = () => {
+    if (setLoginModalOpen) setLoginModalOpen(true); // setLoginModalOpen이 undefined 인 경우 대비
+    document.body.style.overflow = "hidden";
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLogin) {
+      showLoginModal();
+      // setLoginModalOpen(true);
+      return;
+    }
+
+    if (!loginModalOpen) document.body.style.overflow = "auto";
+
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue.length < 1) {
+      alert("검색어를 입력하세요");
+      return;
+    }
+
+    if (location.pathname === "/challenge") {
+      // 챌린지 검색 페이지 내에서 검색할 경우
+      setSearchParams({ query: trimmedValue });
+    } else {
+      // 메인 페이지에서 검색할 경우
       navigate({
         pathname: "challenge",
         search: createSearchParams({
@@ -30,24 +64,39 @@ function SearchBar() {
     }
   };
 
+  useEffect(() => {
+    if (currentQuery) setInputValue(currentQuery);
+    if (!searchParams.get("query")) {
+      setInputValue("");
+    }
+  }, [currentQuery, searchParams]);
+
   return (
-    <SearchContainer>
-      <SearchCircle>SEARCH</SearchCircle>
+    <>
       <SearchBarContainer>
-        <SearchIcon>
-          <CgSearch size={"24px"} />
-        </SearchIcon>
-        <SearchInput
-          type="text"
-          value={inputValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-            setInputValue(e.target.value)
-          }
-          onKeyDown={handleKeyDown}
-          placeholder="곡명 혹은 영상 링크를 검색하세요"
-        />
+        <form>
+          <SearchIcon>
+            <CgSearch size={"24px"} />
+          </SearchIcon>
+          <SearchInput
+            type="text"
+            value={inputValue}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+              setInputValue(e.target.value)
+            }
+            placeholder="곡명 혹은 영상 링크를 검색하세요"
+          />
+          <SearchBtn
+            type="submit"
+            onSubmit={handleSearch}
+            onClick={handleSearch}
+          >
+            검색
+          </SearchBtn>
+        </form>
       </SearchBarContainer>
-    </SearchContainer>
+      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+    </>
   );
 }
 

@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../constants/types";
 import LoginModal from "../Modal/LoginModal";
 import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
 
 function NavBar() {
-  const [isLogin, setIsLogin] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
+  const navigate = useNavigate();
 
   const showLoginModal = () => {
     setLoginModalOpen(true);
     document.body.style.overflow = "hidden";
   };
 
-  const navigate = useNavigate();
   return (
     <header>
       <NavContainer>
@@ -28,13 +29,28 @@ function NavBar() {
         </div>
         <NavUl>
           <NavLi>
-            <NavBtnLink challenge={true} to="/challenge">
+            <NavBtnLink
+              challenge={true}
+              onClick={() => {
+                if (isLogin) {
+                  navigate("/challenge");
+                } else {
+                  showLoginModal();
+                }
+              }}
+            >
               챌린지
             </NavBtnLink>
           </NavLi>
           {isLogin ? (
             <NavLi>
-              <NavBtnLink to="/profile">프로필</NavBtnLink>
+              <NavBtnLink
+                onClick={() => {
+                  if (isLogin) navigate("/profile");
+                }}
+              >
+                프로필
+              </NavBtnLink>
             </NavLi>
           ) : (
             <NavLi>
@@ -43,12 +59,7 @@ function NavBar() {
           )}
         </NavUl>
       </NavContainer>
-      {loginModalOpen && (
-        <LoginModal
-          setIsLogin={setIsLogin}
-          setLoginModalOpen={setLoginModalOpen}
-        />
-      )}
+      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
     </header>
   );
 }

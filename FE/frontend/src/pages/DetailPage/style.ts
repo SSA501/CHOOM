@@ -1,12 +1,13 @@
+import { ShadowContainer } from "./../../components/ShadowContainer/style";
 import styled from "styled-components";
 
 const DetailPageContainer = styled.div`
   padding: 3em 1em;
-  width: 82%;
-  /* max-width: 1728px; */
+  /* width: 82%; */
+  max-width: 1728px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 
   @media screen and (max-width: 1500px) {
@@ -18,70 +19,62 @@ const VideoContainer = styled.div`
   width: 360px;
   height: 640px;
   max-width: 50%;
+  iframe,
+  video {
+    border-radius: 25px;
+  }
 `;
 
 const DetailContainer = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 3vw;
-`;
-
-const ChallengeTitleContainer = styled.div`
-  padding: 1em 0;
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  max-width: 480px;
-  h3 {
-    padding-right: 2em;
-    line-height: 1.2em;
-    font-size: 1.2em;
-    font-weight: 600;
-  }
-  div {
-    position: relative;
-    span {
-      visibility: hidden;
-      position: absolute;
-      width: 4.4em;
-      background-color: var(--lightgray-color);
-      color: var(--darkgray-color);
-      text-align: center;
-      padding: 5px;
-      border-radius: 6px;
-      bottom: 1.75em;
-      margin-left: -2.5em;
-    }
-    :hover span {
-      visibility: visible;
-    }
+`;
+
+const InnerShadowContainer = styled(ShadowContainer)`
+  width: 480px;
+  height: 520px;
+`;
+
+const LikeBtnContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: -6em;
+`;
+
+const ChallengeDetailTitle = styled.h2`
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.5em 0.3em;
+  border-bottom: 2px solid black;
+`;
+
+const DetailTopContainer = styled.div`
+  margin-top: 2em;
+  @media screen and (min-width: 1500px) {
+    display: flex;
+    column-gap: 4em;
   }
 `;
 
-const TableContainer = styled.div`
-  margin: 1em 10% 0;
-  background-color: var(--purple-color);
-  border-radius: 25px;
+const DetailBtnContainer = styled.div`
   text-align: center;
+`;
 
-  div {
-    display: flex;
-    margin: 0 auto;
-    padding: 1em 0;
-    strong {
-      width: 50%;
-      font-weight: 600;
-    }
-    p {
-      width: 50%;
-    }
-  }
+const TextBox = styled.div`
+  padding-top: 50%;
+  text-align: center;
 `;
 
 export {
   DetailPageContainer,
   VideoContainer,
   DetailContainer,
-  ChallengeTitleContainer,
-  TableContainer,
+  InnerShadowContainer,
+  LikeBtnContainer,
+  ChallengeDetailTitle,
+  DetailTopContainer,
+  DetailBtnContainer,
+  TextBox,
 };

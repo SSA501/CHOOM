@@ -5,19 +5,34 @@ type SmallMenuProps = {
   itemList: { name: string; handleClick: () => void }[];
   top: string;
   right: string;
+  dropMenu?: boolean;
 };
 
 function SmallMenu(props: SmallMenuProps) {
   const menuItemList = props.itemList.map((item: any) => (
-    <MenuBtn key={item.name} onClick={item.handleClick}>
+    <MenuBtn
+      dropMenu={props.dropMenu}
+      key={item.name}
+      color={item.color}
+      onClick={item.handleClick}
+    >
       {item.name}
     </MenuBtn>
   ));
 
   return (
-    <Menu top={props.top} right={props.right}>
-      {menuItemList}
-    </Menu>
+    <>
+      {props.dropMenu && (
+        <Menu dropMenu={props.dropMenu} top={props.top} right={props.right}>
+          {menuItemList}
+        </Menu>
+      )}
+      {!props.dropMenu && (
+        <Menu top={props.top} right={props.right}>
+          {menuItemList}
+        </Menu>
+      )}
+    </>
   );
 }
 

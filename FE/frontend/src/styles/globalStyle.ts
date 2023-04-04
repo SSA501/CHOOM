@@ -23,13 +23,15 @@ const GlobalStyle = createGlobalStyle`
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-    unicode-range: U+0041-005A, U+0061-007A;
+    unicode-range: U+0041-005A, U+0061-007A, U+0030-0039;
 }
 
   :root {
     /* Colors */
     --purple-color:#EBB1FF;
     --green-color:#B6F56A;
+    --blue-color:#95CAFE;
+    --skyblue-color:#7CF7FF;
     --lightgray-color:#F2F2F2;
     --darkgray-color:#3A3A3A;
     --black-color:#000000;
@@ -39,6 +41,10 @@ const GlobalStyle = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
   }
+  
+  *::-webkit-scrollbar{
+    width: 0px;
+  } 
   
   html, body {
     width: 100%;

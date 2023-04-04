@@ -1,23 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../constants/url";
 import SmallMenu from "../SmallMenu/SmallMenu";
 import {
-  ProfileDiv,
-  SettingBtn,
-  EditProfileBtn,
   ProfileImg,
   ProfileImgBG,
   AddProfileImgBtn,
+  NicknameContainer,
   Nickname,
   ErrorMsg,
   InfoDetail,
+  SettingBtn,
+  BtnContainer,
+  EditProfileBtn,
 } from "./style";
-import { ReactComponent as YellowBoom } from "../../assets/icon_yellow_boom.svg";
-import { ReactComponent as GreenEllipse } from "../../assets/icon_green_ellipse.svg";
-import { ReactComponent as OrangeFlower } from "../../assets/icon_orange_flower.svg";
-import { ReactComponent as LayoutBottom } from "../../assets/layout_bottom.svg";
 import { CgCheckO, CgCloseO, CgMathPlus } from "react-icons/cg";
 import { TbSettings } from "react-icons/tb";
+import { ShadowContainer } from "../ShadowContainer/style";
+import { useAppDispatch } from "../../constants/types";
+import { updateAccessToken, updateLoginStatus } from "../../store/authReducer";
+import {
+  checkNickname,
+  getUserDetail,
+  logout,
+  updateUserDetail,
+} from "../../apis/user";
 
 type ProfileInfo = {
   nickname: string;
@@ -33,12 +40,13 @@ type ProfileProps = {
 
 function ProfileCard(props: ProfileProps) {
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
-    nickname: "왕십리 춤신춤킹",
-    profileImg: "/assets/profile_sample.jpg",
-    challenge: 27,
-    score: 9,
-    time: 123,
+    nickname: "닉네임",
+    profileImg: "",
+    challenge: 0,
+    score: 0,
+    time: 0,
   });
+  const [profileImgFile, setProfileImgFile] = useState<File | undefined>();
   const [tmpProfileImg, setTmpProfileImg] = useState<string>(
     profileInfo.profileImg
   );
@@ -48,10 +56,37 @@ function ProfileCard(props: ProfileProps) {
   const [editProfileMode, setEditProfileMode] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const showSmallMenu = () => {
-    setSmallMenuOpen(!smallMenuOpen);
-  };
+  useEffect(() => {
+    getUserDetail()
+      .then((res) => {
+        if (res.statusCode === 200) {
+          setProfileInfo({
+            nickname: res.data.nickname,
+            profileImg: `${SERVER_URL}${res.data.profileImage}`,
+            challenge: res.data.userMyDanceDto.challengeCount ?? 0,
+            score: res.data.userMyDanceDto.averageScore ?? 0,
+            time: res.data.userMyDanceDto.challengeTime ?? 0,
+          });
+          setTmpNickname(res.data.nickname);
+          setTmpProfileImg(`${SERVER_URL}${res.data.profileImage}`);
+          getFileFomrUrlImage(`${SERVER_URL}${res.data.profileImage}`)
+            .then((file) => setProfileImgFile(file))
+            .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  async function getFileFomrUrlImage(url: string) {
+    const res = await fetch(url);
+    const data = await res.blob();
+    const fileName = url.split("/").pop();
+    const fileExt = url.split(".").pop();
+    const metaData = { type: `image/${fileExt}` };
+    return new File([data], fileName ? fileName : "profile image", metaData);
+  }
 
   const menuItemList = [
     {
@@ -61,13 +96,26 @@ function ProfileCard(props: ProfileProps) {
         showSmallMenu();
       },
     },
-    { name: "로그아웃", handleClick: () => logout() },
-    { name: "탈퇴하기", handleClick: () => props.showNormalModal() },
+    { name: "로그아웃", handleClick: () => handleLogout() },
+    {
+      name: "탈퇴하기",
+      color: "red",
+      handleClick: () => props.showNormalModal(),
+    },
   ];
 
-  const logout = () => {
-    // TODO: 로그아웃 기능 구현
-    navigate("/");
+  const showSmallMenu = () => {
+    setSmallMenuOpen(!smallMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout()
+      .then(() => {
+        dispatch(updateLoginStatus(false));
+        dispatch(updateAccessToken(""));
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleProfileImg = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +125,7 @@ function ProfileCard(props: ProfileProps) {
       reader.onload = (e) => {
         if (e.target) {
           setTmpProfileImg(e.target.result as string);
+          setProfileImgFile(files[0]);
         }
       };
       reader.readAsDataURL(files[0]);
@@ -84,60 +133,73 @@ function ProfileCard(props: ProfileProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    checkNicknameOverlap(e.target.value);
     setTmpNickname(e.target.value);
-    if (profileInfo.nickname === e.target.value) {
-      setNicknameOverlap(true);
-    } else {
-      setNicknameOverlap(false);
-    }
+  };
+
+  const checkNicknameOverlap = (nickname: string) => {
+    checkNickname(nickname)
+      .then((res) => {
+        if (res.statusCode === 200) {
+          setNicknameOverlap(false);
+        } else {
+          setNicknameOverlap(true);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const cancelEditProfile = () => {
-    setTmpProfileImg(profileInfo.profileImg ?? "");
+    setTmpProfileImg(profileInfo.profileImg);
     setTmpNickname(profileInfo.nickname);
     setEditProfileMode(false);
   };
 
   const editProfile = () => {
-    // TODO: 프로필 수정 요청 구현
-    const newProfileInfo = {
-      nickname: tmpNickname,
-      profileImg: tmpProfileImg,
-      challenge: profileInfo.challenge,
-      score: profileInfo.score,
-      time: profileInfo.time,
-    };
-    setProfileInfo(newProfileInfo);
-    setEditProfileMode(false);
+    checkNicknameOverlap(tmpNickname);
+
+    if (!nicknameOverlap) {
+      if (!profileImgFile) {
+        alert("프로필 사진을 등록해주세요!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("nickname", tmpNickname);
+      formData.append("profileImage", profileImgFile);
+
+      updateUserDetail(formData)
+        .then((res) => {
+          if (res.statusCode === 200) {
+            const newProfileInfo = {
+              nickname: tmpNickname,
+              profileImg: tmpProfileImg,
+              challenge: profileInfo.challenge,
+              score: profileInfo.score,
+              time: profileInfo.time,
+            };
+            setProfileInfo(newProfileInfo);
+            setEditProfileMode(false);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
-    <ProfileDiv>
-      {!editProfileMode && (
-        <SettingBtn onClick={showSmallMenu}>
-          <TbSettings fontSize={"29px"} />
-        </SettingBtn>
-      )}
-      {editProfileMode && (
-        <>
-          <EditProfileBtn onClick={cancelEditProfile}>
-            <CgCloseO fontSize={"29px"} />
-          </EditProfileBtn>
-          <EditProfileBtn editAccept onClick={editProfile}>
-            <CgCheckO fontSize={"29px"} />
-          </EditProfileBtn>
-        </>
-      )}
-      {smallMenuOpen && (
-        <SmallMenu itemList={menuItemList} top="65px" right="14px"></SmallMenu>
-      )}
-
+    <ShadowContainer
+      width={"100%"}
+      height={"204px"}
+      padding={"27px"}
+      bgColor={editProfileMode ? "lightgray" : "white"}
+      style={{ position: "relative", display: "flex" }}
+    >
       <ProfileImg BgImg={tmpProfileImg}>
         {editProfileMode && (
           <>
             <ProfileImgBG />
             <AddProfileImgBtn htmlFor="profile-img">
-              <CgMathPlus fontSize={"45px"} fontWeight={"900"} />
+              <CgMathPlus />
             </AddProfileImgBtn>
             <input
               id="profile-img"
@@ -149,29 +211,20 @@ function ProfileCard(props: ProfileProps) {
           </>
         )}
       </ProfileImg>
-      <Nickname
-        type="text"
-        onChange={handleChange}
-        value={tmpNickname}
-        disabled={!editProfileMode}
-      />
-      {editProfileMode && nicknameOverlap && (
-        <ErrorMsg>해당 닉네임은 이미 존재합니다.</ErrorMsg>
-      )}
+      <NicknameContainer>
+        <Nickname
+          type="text"
+          onChange={handleChange}
+          value={tmpNickname}
+          disabled={!editProfileMode}
+        />
+        {editProfileMode && nicknameOverlap && (
+          <ErrorMsg>해당 닉네임은 이미 존재합니다.</ErrorMsg>
+        )}
+      </NicknameContainer>
 
       <InfoDetail>
         <tbody>
-          <tr>
-            <td>
-              <YellowBoom />
-            </td>
-            <td>
-              <GreenEllipse />
-            </td>
-            <td>
-              <OrangeFlower />
-            </td>
-          </tr>
           <tr>
             <td>챌린지</td>
             <td>점수</td>
@@ -180,21 +233,41 @@ function ProfileCard(props: ProfileProps) {
           <tr>
             <td>
               {profileInfo.challenge}
-              <span>곡</span>
+              <span>회</span>
             </td>
             <td>
               {profileInfo.score}
               <span>점</span>
             </td>
             <td>
-              {profileInfo.time}
+              {Math.ceil(profileInfo.time / 60)}
               <span>분</span>
             </td>
           </tr>
         </tbody>
       </InfoDetail>
-      <LayoutBottom />
-    </ProfileDiv>
+
+      <BtnContainer>
+        {!editProfileMode && (
+          <SettingBtn onClick={showSmallMenu}>
+            <TbSettings />
+          </SettingBtn>
+        )}
+        {editProfileMode && (
+          <>
+            <EditProfileBtn onClick={cancelEditProfile}>
+              <CgCloseO />
+            </EditProfileBtn>
+            <EditProfileBtn editAccept onClick={editProfile}>
+              <CgCheckO />
+            </EditProfileBtn>
+          </>
+        )}
+      </BtnContainer>
+      {smallMenuOpen && (
+        <SmallMenu itemList={menuItemList} top="65px" right="14px"></SmallMenu>
+      )}
+    </ShadowContainer>
   );
 }
 

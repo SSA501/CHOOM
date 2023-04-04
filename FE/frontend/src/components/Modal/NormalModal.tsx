@@ -11,11 +11,13 @@ import {
 } from "./style";
 
 function NormalModal(props: {
+  modalText: string;
   setNormalModalOpen: (normalModalOpen: boolean) => void;
   acceptModal: () => void;
 }) {
   const closeModal = () => {
     props.setNormalModalOpen(false);
+    document.body.style.overflow = "auto";
   };
 
   const acceptModal = () => {
@@ -28,7 +30,7 @@ function NormalModal(props: {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (modalRef.current && !modalRef.current.contains(target)) {
-        props.setNormalModalOpen(false);
+        closeModal();
       }
     };
 
@@ -49,7 +51,7 @@ function NormalModal(props: {
           bgColor={"white"}
           padding={"3em 0px"}
         >
-          <ModalContent>정말 탈퇴할까요?</ModalContent>
+          <ModalContent>{props.modalText}</ModalContent>
           <BtnDiv>
             <CancelBtn onClick={closeModal}>No</CancelBtn>
             <span>/</span>

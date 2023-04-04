@@ -1,19 +1,25 @@
 import React, {
   useState,
+  useEffect,
   useRef,
   forwardRef,
   useImperativeHandle,
 } from "react";
 import { CgEditFlipH } from "react-icons/cg";
-import { MdSlowMotionVideo, MdVolumeUp, MdPlayArrow } from "react-icons/md";
-import CircleBtn from "../CircleBtn/CircleBtn";
-import { MainContainer, BtnContainer } from "../Dance/style";
-import { ChallengeVideo } from "./style";
-import * as poseDetection from "@tensorflow-models/pose-detection";
 
-interface Pose {
-  keypoints: poseDetection.Keypoint[];
-}
+import {
+  MdSlowMotionVideo,
+  MdVolumeUp,
+  MdPlayArrow,
+  MdVolumeOff,
+  MdStop,
+} from "react-icons/md";
+import CircleBtn from "../Btn/CircleBtn";
+import { MainContainer, BtnContainer } from "../Dance/style";
+import { Msg, ChallengeVideo, ResultVideo } from "./style";
+import * as poseDetection from "@tensorflow-models/pose-detection";
+import { Pose, Challenge } from "../../constants/types";
+import { SERVER_URL } from "../../constants/url";
 
 const DanceVideo = forwardRef(
   (
@@ -21,28 +27,51 @@ const DanceVideo = forwardRef(
       setPoseList: (poseList: Pose[]) => void;
       poseList: Pose[];
       detector: poseDetection.PoseDetector;
+      myUrl?: string;
+      myGuideUrl?: string;
+      challenge?: Challenge;
+      isGuide: boolean;
     },
     ref: React.ForwardedRef<any>
   ) => {
     let poseListTemp: Pose[] = [];
 
-    const [videoUrl, setVideoUrl] = useState<string>("");
     const video = useRef<HTMLVideoElement>(null);
+    const [playRate, setPlayRate] = useState(1.0);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const [isMuted, setIsMuted] = useState(video.current?.muted);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useImperativeHandle(ref, () => ({
       playVideo,
+      changeVideoTime,
     }));
 
-    // 비디오 업로드
-    const uploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = (event.target as HTMLInputElement)?.files?.[0];
-      if (file !== undefined) {
-        setVideoUrl(URL.createObjectURL(file));
-      }
-    };
+    useEffect(() => {
+      console.log(props.challenge?.status);
+      props.challenge?.status === 0 && startEstimate();
+      props.challenge?.status === 1 && startEstimate();
+      props.challenge?.status === 2 &&
+        fetch(SERVER_URL + props.challenge.jsonPath)
+          .then((response) => response.json())
+          .then((data) => {
+            props.setPoseList(data);
+          });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // 분석시작
     const startEstimate = async () => {
+      // Wait for video to be loaded.
+      if (video.current) video.current.load();
+      if (video.current)
+        await new Promise((resolve) => {
+          if (video.current)
+            video.current.onloadeddata = () => {
+              resolve(video);
+            };
+        });
+
       if (video.current) {
         video.current.currentTime = 0;
         video.current.play();
@@ -53,14 +82,16 @@ const DanceVideo = forwardRef(
 
     // 분석
     const runFrame = async () => {
-      if (video.current?.paused) {
-        alert("완료");
-        props.setPoseList(poseListTemp);
-        return;
-      }
-
-      await renderResult();
-      requestAnimationFrame(runFrame);
+      const poseDetection = setInterval(() => {
+        if (video.current?.paused) {
+          alert("완료");
+          console.log(poseListTemp);
+          props.setPoseList(poseListTemp);
+          clearInterval(poseDetection);
+        } else {
+          renderResult();
+        }
+      }, 100);
     };
 
     // 결과저장
@@ -68,71 +99,134 @@ const DanceVideo = forwardRef(
       const estimatePoseList = await props.detector.estimatePoses(
         video.current!
       );
+
       if (estimatePoseList.length > 0) {
         const newKpts: poseDetection.Keypoint[] = [];
         estimatePoseList[0].keypoints.map((kpt: poseDetection.Keypoint) => {
           newKpts.push({
-            x: kpt.x / 2,
-            y: kpt.y / 2,
+            x: (kpt.x * 450) / video.current?.videoWidth!,
+            y: (kpt.y * 800) / video.current?.videoHeight!,
             z: kpt.z,
             score: kpt.score,
           });
           return newKpts;
         });
         poseListTemp.push({ keypoints: newKpts });
+      } else {
+        poseListTemp.push({ keypoints: [] });
       }
     };
 
     const playVideo = () => {
+      if (video.current) video.current.currentTime = 0;
       video.current?.play();
     };
 
+    const changeVideoTime = (time: number) => {
+      if (video.current) video.current.currentTime = time;
+      video.current?.play();
+    };
+
+    // 비디오 재생
+    const handelPlayBtnClick = () => {
+      setIsPlaying(true);
+    };
+
+    const handelStopBtnClick = () => {
+      setIsPlaying(false);
+    };
+
+    useEffect(() => {
+      isPlaying ? video.current?.play() : video.current?.pause();
+
+      const handleEnded = () => {
+        setIsPlaying(false);
+      };
+      if (video.current) video.current.addEventListener("ended", handleEnded);
+    }, [isPlaying]);
+
+    // 비디오 속도 변경
+    const handelChangeRateBtnClick = () => {
+      if (playRate === 1.0) setPlayRate(2.0);
+      else if (playRate === 2.0) setPlayRate(0.5);
+      else setPlayRate(1.0);
+    };
+
+    useEffect(() => {
+      if (video.current) video.current.playbackRate = playRate;
+    }, [playRate]);
+
+    // 거울모드
+    const handelFlipBtnClick = () => {
+      setIsFlipped(!isFlipped);
+      if (video.current) {
+        isFlipped
+          ? (video.current.style.transform = "")
+          : (video.current.style.transform = "scaleX(-1)");
+      }
+    };
+
+    // 볼륨조절
+    const handelChangeVolumeBtnClick = () => {
+      setIsMuted(!isMuted);
+    };
+
+    useEffect(() => {
+      if (video.current) video.current.muted = isMuted!;
+    }, [isMuted]);
+
     return (
       <div>
-        <MainContainer>
-          <ChallengeVideo
-            src={videoUrl}
-            width={450}
-            height={800}
-            ref={video}
-            controls
-          />
-          <BtnContainer>
-            <CircleBtn
-              icon={MdSlowMotionVideo}
-              label={"재생 속도"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
+        {!props.myUrl ? (
+          <MainContainer style={{ position: "relative" }}>
+            {props.poseList.length === 0 && <Msg>챌린지 학습 중 🤸‍♀️</Msg>}
+            <ChallengeVideo
+              src={SERVER_URL + props.challenge?.videoPath}
+              width={450}
+              height={800}
+              ref={video}
+              controls
             />
-            <CircleBtn
-              icon={CgEditFlipH}
-              label={"좌우 반전"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
-            />
-            <CircleBtn
-              icon={MdVolumeUp}
-              label={"음량"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
-            />
-            <CircleBtn
-              icon={MdPlayArrow}
-              label={"재생"}
-              disabled={props.poseList.length === 0 ? "disabled" : ""}
-            />
-          </BtnContainer>
-        </MainContainer>
+            <BtnContainer>
+              <CircleBtn
+                icon={MdSlowMotionVideo}
+                onClick={handelChangeRateBtnClick}
+                label={"재생 속도"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+              <CircleBtn
+                icon={CgEditFlipH}
+                onClick={handelFlipBtnClick}
+                label={"좌우 반전"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+              <CircleBtn
+                icon={isMuted ? MdVolumeOff : MdVolumeUp}
+                onClick={handelChangeVolumeBtnClick}
+                label={"음량"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
 
-        <div>
-          <input
-            type="file"
-            id="videofile"
-            name="video"
-            accept="video/*"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              uploadVideo(e);
-            }}
-          />
-          <button onClick={() => startEstimate()}>시작</button>
-        </div>
+              <CircleBtn
+                icon={isPlaying ? MdStop : MdPlayArrow}
+                onClick={isPlaying ? handelStopBtnClick : handelPlayBtnClick}
+                label={isPlaying ? "정지" : "재생"}
+                disabled={props.poseList.length === 0 ? "disabled" : ""}
+              />
+            </BtnContainer>
+          </MainContainer>
+        ) : (
+          <MainContainer>
+            <ResultVideo
+              src={props.isGuide ? props.myGuideUrl : props.myUrl}
+              width={450}
+              height={800}
+              ref={video}
+              isGuide={props.isGuide}
+              controls
+            />
+          </MainContainer>
+        )}
       </div>
     );
   }

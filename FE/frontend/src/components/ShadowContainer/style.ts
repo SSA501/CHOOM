@@ -1,4 +1,3 @@
-import { wrap } from "module";
 import styled, { css } from "styled-components";
 
 export interface ShadowContainerProps {
@@ -11,6 +10,9 @@ export interface ShadowContainerProps {
   display?: string;
   flexWrap?: string;
   justifyContent?: string;
+  position?: string;
+  boxShadow?: string;
+  minHeight?: string;
 }
 
 /**
@@ -33,6 +35,9 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     display,
     flexWrap,
     justifyContent,
+    position,
+    boxShadow,
+    minHeight,
   }) => css`
     width: ${width || "100%"};
     max-width: 1728px;
@@ -42,9 +47,11 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     margin: ${margin || "0 auto 3em"};
     padding: ${padding || "3em"};
     border: 3px solid black;
-    box-shadow: 12px 12px black;
+    box-shadow: ${boxShadow || "12px 12px black"};
     display: ${display};
     flex-wrap: ${flexWrap};
     justify-content: ${justifyContent};
+    position: ${position};
+    min-height: ${minHeight};
   `}
 `;

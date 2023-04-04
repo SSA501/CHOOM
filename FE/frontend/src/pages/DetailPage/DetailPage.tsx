@@ -1,120 +1,192 @@
-import React from "react";
-import { MdOutlineMode } from "react-icons/md";
-import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
+import React, { useEffect, useState } from "react";
+import ReactPlayer from "react-player";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  ChallengeTitleContainer,
-  DetailContainer,
+  addBookmark,
+  getChallengeDetail,
+  removeBookmark,
+} from "../../apis/challenge";
+import Btn from "../../components/Btn/Btn";
+import ChallengeDetail from "../../components/ChallengeDetail/ChallengeDetail";
+import ChallengeRank from "../../components/ChallengeRank/ChallengeRank";
+import LikeBtn from "../../components/LikeBtn/LikeBtn";
+import {
+  InnerShadowContainer,
+  ChallengeDetailTitle,
   DetailPageContainer,
-  TableContainer,
   VideoContainer,
+  DetailTopContainer,
+  DetailBtnContainer,
+  DetailContainer,
+  LikeBtnContainer,
+  TextBox,
 } from "./style";
+import { SERVER_URL } from "../../constants/url";
+
+interface RankDataTypes {
+  userId: number;
+  nickname: string;
+  profileImage: string;
+  score: number;
+  videoLength: number;
+  title: string;
+  youtubeUrl: null | string;
+}
 
 function DetailPage() {
-  const videoData = {
-    dance: {
-      videoId: "khcSrutAcTo",
-      url: "https://www.youtube.com/embed/fYQxthUKung?autoplay=1&mute=1&controls=1&origin=http%3A%2F%2Flocalhost%3A3000&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&widgetid=53",
-      thumbnailPath:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-      title:
-        "#뉴진스 #하입보이 #hypeboy #newjeans #지금무슨노래 #하입보이챌린지 #쇼츠 #shorts",
-      userCount: 2,
-      likeCount: 3669,
-      status: 0,
-      sec: 56,
-      viewCount: 1426395,
-      업로드날짜: "2023.03.10",
-    },
-    myDance: [
-      {
-        userId: 1,
-        nickname: "sdfsdf",
-        score: 99,
-        videoLength: 0,
-        title: "내가",
-        youtubeUrl: null,
-        tiktokUrl:
-          "https://www.tiktok.com/@n1mbostratus/video/7208437948126153985?q=%EC%B1%8C%EB%A6%B0%EC%A7%80",
-      },
-      {
-        userId: 1,
-        nickname: "sdfsdf",
-        score: 70,
-        videoLength: 0,
-        title: "내가만든쇼츠~",
-        youtubeUrl:
-          "https://www.youtube.com/watch?v=eATSXqJ6htE&list=RDeATSXqJ6htE&start_radio=1",
-        tiktokUrl: null,
-      },
-    ],
+  const [challengeData, setChallengeData] = useState<{
+    id: number;
+    title: string;
+    url: string;
+    thumbnailPath: string;
+    sec: number;
+    likeCount: number;
+    viewCount: number;
+    userCount: number;
+    youtubeId: string;
+    status: number;
+    publishedAt: string;
+    bookmarked: boolean;
+  }>({
+    id: 0,
+    title: "",
+    url: "",
+    thumbnailPath: "",
+    sec: 0,
+    likeCount: 0,
+    viewCount: 0,
+    userCount: 0,
+    youtubeId: "",
+    status: 0,
+    publishedAt: "",
+    bookmarked: false,
+  });
+
+  const [rankData, setRankData] = useState<RankDataTypes[]>([]);
+  const [localLikeCount, setLocalLikeCount] = useState<number>(0);
+
+  const { danceId } = useParams<{ danceId: string }>();
+  const [isLiked, setIsLiked] = useState<boolean | null>(null);
+  const navigate = useNavigate();
+
+  const handleLike = () => {
+    if (danceId) {
+      addBookmark(+danceId)
+        .then(() => {
+          setIsLiked(true);
+          setLocalLikeCount((prev: number) => prev + 1);
+        })
+        .catch((err) => console.log(err));
+    }
   };
+
+  const handleLikeDelete = () => {
+    if (danceId) {
+      removeBookmark(+danceId)
+        .then(() => {
+          setIsLiked(false);
+          if (localLikeCount >= 0) {
+            setLocalLikeCount((prev: number) => prev - 1);
+          } else {
+            setLocalLikeCount(0);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "챌린지 상세보기 - CHOOM";
+
+    if (danceId) {
+      getChallengeDetail(danceId)
+        .then((res) => {
+          setChallengeData(res?.data?.dance);
+          setIsLiked(res?.data?.dance?.bookmarked);
+          setLocalLikeCount(res?.data?.dance?.likeCount);
+          setRankData(res?.data?.myDance);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [danceId]);
+
+  const { url, title, userCount, sec, viewCount, publishedAt, id } =
+    challengeData;
 
   return (
     <DetailPageContainer>
       <VideoContainer>
-        <iframe
-          src={videoData?.dance.url}
-          title={videoData?.dance.title}
+        <ReactPlayer
+          url={url}
+          controls
+          loop
+          muted
+          playing
           width="360px"
           height="640px"
         />
       </VideoContainer>
-      {/* TODO : DB 비디오 주소로 변경 */}
-      {/* <video
-            src={url}
-            autoPlay
-            controls
-            width="360px"
-            height="640px"
-          /> */}
+
       <DetailContainer>
-        <ChallengeDetail title={"detail"}>
-          <ChallengeTitleContainer>
-            <h3>{videoData?.dance.title}</h3>
-            <div>
-              <MdOutlineMode />
-              <span>제목 편집</span>
-            </div>
-          </ChallengeTitleContainer>
-          <TableContainer>
-            <div>
-              <strong>참여수</strong>
-              <p>
-                {videoData?.dance.userCount}
-                <span>명</span>
-              </p>
-            </div>
-            <div>
-              <strong>동영상 길이</strong>
-              <p>
-                {videoData?.dance.sec}
-                <span>초</span>
-              </p>
-            </div>
-            <div>
-              <strong>조회수</strong>
-              <p>{videoData?.dance.viewCount.toLocaleString("en")}</p>
-            </div>
-            <div>
-              <strong>업로드 날짜</strong>
-              <p>{videoData?.dance.업로드날짜}</p>
-            </div>
-          </TableContainer>
-        </ChallengeDetail>
-        <ChallengeDetail title={"rank"}>
-          {videoData?.myDance.length > 0 ? (
-            videoData?.myDance.map(({ userId, nickname, score }) => (
-              <div key={userId}>
-                <div>{score}</div>
-                <div>{nickname}</div>
-                {/* <div>{youtubeUrl}</div> */}
-                {/* <div>{tiktokUrl}</div> */}
-              </div>
-            ))
-          ) : (
-            <div>아직 이 챌린지를 연습한 사람이 없어요! 연습해볼까요?</div>
-          )}
-        </ChallengeDetail>
+        <DetailTopContainer>
+          <InnerShadowContainer position={"relative"}>
+            <ChallengeDetailTitle>DETAIL</ChallengeDetailTitle>
+            <ChallengeDetail
+              title={title}
+              userCount={userCount}
+              sec={sec}
+              viewCount={viewCount}
+              publishedAt={publishedAt}
+            />
+            <LikeBtnContainer>
+              <LikeBtn
+                localLikeCount={localLikeCount}
+                isLiked={isLiked}
+                setIsLiked={setIsLiked}
+                handleLike={handleLike}
+                handleLikeDelete={handleLikeDelete}
+              />
+            </LikeBtnContainer>
+          </InnerShadowContainer>
+          <InnerShadowContainer>
+            <ChallengeDetailTitle>RANK</ChallengeDetailTitle>
+            {rankData?.length > 0 ? (
+              rankData?.map(
+                ({
+                  userId,
+                  nickname,
+                  score,
+                  youtubeUrl,
+                  // tiktokUrl,
+                  profileImage,
+                }) => (
+                  <ChallengeRank
+                    key={userId}
+                    userId={userId}
+                    nickname={nickname}
+                    score={score}
+                    youtubeUrl={youtubeUrl}
+                    // tiktokUrl={tiktokUrl}
+                    profileImage={`${SERVER_URL}${profileImage}`}
+                  />
+                )
+              )
+            ) : (
+              <TextBox>
+                아직 이 챌린지를 연습한 사람이 없어요! 연습해볼까요?
+              </TextBox>
+            )}
+          </InnerShadowContainer>
+        </DetailTopContainer>
+        <DetailBtnContainer>
+          <Btn
+            btnText={"챌린지 시작하기"}
+            handleClick={() => {
+              navigate(`/dance/${id}`);
+            }}
+          />
+        </DetailBtnContainer>
       </DetailContainer>
     </DetailPageContainer>
   );
