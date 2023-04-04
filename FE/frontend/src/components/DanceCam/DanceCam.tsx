@@ -556,7 +556,6 @@ function DanceCam(props: {
             REC
           </Rec>
         )}
-        {props.poseList.length === 0 && <Rec>댄스 학습중🤸‍♀️</Rec>}
         {cameras.length > 1 && (
           <CircleBtn
             icon={MdOutlineCameraswitch}
