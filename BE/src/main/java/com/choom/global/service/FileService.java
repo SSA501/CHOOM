@@ -2,6 +2,9 @@ package com.choom.global.service;
 
 import com.choom.global.exception.FileDeleteException;
 import lombok.extern.slf4j.Slf4j;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFmpegExecutor;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +21,8 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -112,5 +117,90 @@ public class FileService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String extractAudio(String videoPath) throws IOException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        String name = videoPath.split("/")[3].split("\\.")[0] + ".mp3";
+        log.info(name);
+
+        String audioPath = "";
+        String ffmpegPath = "";
+
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            videoPath = "C:" + videoPath;
+            audioPath = "C:/choom/audio/";
+            ffmpegPath = "C:/choom/ffmpeg";
+        } else {
+            videoPath = "/var/lib/" + videoPath;
+            audioPath = "/var/lib/choom/audio/";
+            ffmpegPath = "/var/lib/choom/ffmpeg";
+        }
+        Path inputPath = Paths.get(videoPath);
+        Path outputPath = Paths.get(audioPath + name);
+        FFmpeg ffmpeg = new FFmpeg(ffmpegPath);
+
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(inputPath.toString())
+                .addOutput(outputPath.toString())
+                .setFormat("mp3")
+                .setAudioCodec("libmp3lame")
+                .setAudioSampleRate(44100)
+                .setAudioBitRate(192000)
+                .done();
+
+        ffmpeg.run(builder);
+
+        return "/choom/audio/" + name;
+    }
+
+    public String combineAudioVideo(String videoPath, String audioPath) throws IOException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        String ffmpegPath = "";
+        String name = "new" + videoPath.split("/")[3];
+        String newVideoPath = "";
+        if (hostname.substring(0, 7).equals("DESKTOP")) {
+            newVideoPath = "C:/choom/mydance/" + name;
+            videoPath = "C:" + videoPath;
+            audioPath = "C:" + audioPath;
+            ffmpegPath = "C:/choom/ffmpeg";
+        } else {
+            newVideoPath = "/var/lib/choom/mydance/" + name;
+            videoPath = "/var/lib" + videoPath;
+            audioPath = "/var/lib" + audioPath;
+            ffmpegPath = "/var/lib/choom/ffmpeg";
+        }
+        log.info("newVideoPath : " + newVideoPath);
+        log.info("video : " + videoPath);
+        log.info("audio : " + audioPath);
+        // 입력 영상 파일
+        File videoFile = new File(videoPath);
+        // 입력 오디오 파일
+        File audioFile = new File(audioPath);
+        // 출력 파일
+        File outputFile = new File(newVideoPath); // 덮어씌우기? 안되는듯?
+
+        FFmpeg ffmpeg = new FFmpeg(ffmpegPath);
+
+        // FFmpegExecutor 및 FFprobeExecutor 생성
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
+
+        // FFmpegBuilder 생성 및 병합 옵션 설정
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(videoFile.getAbsolutePath())
+                .overrideOutputFiles(true)
+                .addInput(audioFile.getAbsolutePath())
+                .addOutput(outputFile.getAbsolutePath())
+                .setFormat("mp4")
+                .setVideoCodec("copy")
+                .setAudioCodec("aac")
+                .done();
+
+        // FFmpeg를 사용하여 영상 및 오디오 파일 병합
+        executor.createJob(builder).run();
+
+        log.info("파일이 성공적으로 합쳐졌습니다: " + outputFile.getAbsolutePath());
+
+        return "/choom/mydance/" + name;
     }
 }
