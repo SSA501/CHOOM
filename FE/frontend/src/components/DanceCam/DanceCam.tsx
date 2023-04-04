@@ -95,12 +95,12 @@ function DanceCam(props: {
         setSelectedCamera(videoDevices[0].deviceId);
       }
     }
-
     fetchCameras();
-  });
+  }, []);
 
   useEffect(() => {
     if (selectedCamera) {
+      console.log("setup camera");
       setupCam(selectedCamera);
     }
   }, [selectedCamera]);
@@ -528,6 +528,7 @@ function DanceCam(props: {
     let index = camerIndex;
     if (index === cameras.length - 1) index = 0;
     else index += 1;
+    console.log(index);
     setSelectedCamera(cameras[index].deviceId);
     setcameraIndex(index);
   };
@@ -546,6 +547,14 @@ function DanceCam(props: {
           </Rec>
         )}
         {props.poseList.length === 0 && <Rec>댄스 학습중🤸‍♀️</Rec>}
+        {cameras.length > 1 && (
+          <CircleBtn
+            icon={MdOutlineCameraswitch}
+            onClick={handelCamClick}
+            label={"캠 변경"}
+            disabled={props.poseList.length === 0 ? "disabled" : ""}
+          />
+        )}
         <TimerBtn
           time={timer}
           onClick={handelTimerClick}
