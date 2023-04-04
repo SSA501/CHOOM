@@ -197,7 +197,7 @@ public class DanceService {
                 .build();
 
         } else if (status == 1) { // 분석 중인 상태
-            log.info("분석 중 인 영상!!"); // 분석 완료 될때까지 기다려야됨???
+            log.info("분석 중 인 영상!!");
             danceStatusDto = DanceStatusDto.builder()
                 .videoPath(dance.getVideoPath())
                 .status(1)
