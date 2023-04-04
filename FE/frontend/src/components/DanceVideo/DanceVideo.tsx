@@ -48,7 +48,9 @@ const DanceVideo = forwardRef(
     }));
 
     useEffect(() => {
+      console.log(props.challenge?.status);
       props.challenge?.status === 0 && startEstimate();
+      props.challenge?.status === 1 && startEstimate();
       props.challenge?.status === 2 &&
         fetch(SERVER_URL + props.challenge.jsonPath)
           .then((response) => response.json())
