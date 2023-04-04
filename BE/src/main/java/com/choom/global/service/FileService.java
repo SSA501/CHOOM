@@ -82,7 +82,7 @@ public class FileService {
             throw new FileDeleteException("파일 삭제에 실패했습니다");
     }
 
-    public static String saveProfileImage(String type, String nickname, String profileImage) {
+    public String saveProfileImage(String type, String nickname, String profileImage) {
         try {
             URL imgURL = new URL(profileImage);
             BufferedImage image = ImageIO.read(imgURL);
