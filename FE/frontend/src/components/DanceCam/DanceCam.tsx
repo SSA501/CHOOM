@@ -88,6 +88,8 @@ function DanceCam(props: {
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
 
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia();
+
     async function fetchCameras() {
       const videoDevices = await getCameras();
       setCameras(videoDevices);
@@ -525,7 +527,7 @@ function DanceCam(props: {
     }
   }
 
-  const handelCamClick = () => {
+  const handleCamClick = () => {
     let index = camerIndex;
     if (index === cameras.length - 1) index = 0;
     else index += 1;
@@ -551,7 +553,7 @@ function DanceCam(props: {
         {cameras.length > 1 && (
           <CircleBtn
             icon={MdOutlineCameraswitch}
-            onClick={handelCamClick}
+            onClick={handleCamClick}
             label={"캠 변경"}
             disabled={props.poseList.length === 0 ? "disabled" : ""}
           />
