@@ -2,11 +2,16 @@ import React, { useRef, useEffect, useState } from "react";
 import CircleBtn from "../Btn/CircleBtn";
 import TimerBtn from "../Btn/TimerBtn";
 import { MainContainer, BtnContainer } from "../Dance/style";
-import { CamContainer, MyCam, MyCanvas } from "./style";
+import { CamContainer, MyCam, MyCanvas, Rec } from "./style";
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import { MdPlayCircleOutline } from "react-icons/md";
+import {
+  MdPlayCircleOutline,
+  MdOutlineStopCircle,
+  MdFiberManualRecord,
+} from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Score, Pose } from "../../constants/types";
+import { relative } from "path";
 
 const VIDEO_CONFIG = {
   audio: false,
@@ -73,6 +78,7 @@ function DanceCam(props: {
   const similarity = require("cosine-similarity");
   const [timer, setTimer] = useState(2);
   const [isGuide, setIsGuide] = useState(true);
+  const [isStart, setIsStart] = useState(false);
 
   let ctx: CanvasRenderingContext2D = canvas.current?.getContext("2d")!;
   let mediaRecorder: MediaRecorder;
@@ -160,6 +166,7 @@ function DanceCam(props: {
   };
   // 시작버튼 누르면
   const handleStartBtnClick = async () => {
+    setIsStart(true);
     cam.current!.style.visibility = "hidden";
 
     await delay(timer * 1000);
@@ -183,7 +190,7 @@ function DanceCam(props: {
       } else {
         mediaRecorder?.stop();
         mediaRecorderGuide?.stop();
-        props.setScore(Math.round(sumScore / scoreTempList.length - noScore));
+        props.setScore(Math.round(sumScore / (scoreTempList.length - noScore)));
         props.setScoreList(scoreTempList);
         clearInterval(poseDetection);
 
@@ -202,8 +209,6 @@ function DanceCam(props: {
             canvas.current!.height
           );
           const dataURL = capCanvas?.toDataURL();
-          console.log(dataURL);
-
           // 데이터 URL에서 base64 인코딩 된 데이터 추출
           const base64Data = dataURL.split(",")[1];
 
@@ -488,17 +493,27 @@ function DanceCam(props: {
     setIsGuide(!isGuide);
   };
 
+  const handleStopBtnClick = () => {
+    window.location.reload();
+  };
+
   return (
     <MainContainer>
       <CamContainer>
         <MyCanvas width={450} height={800} ref={canvas} />
         <MyCam width={450} height={800} ref={cam} />
       </CamContainer>
-      <BtnContainer>
+      <BtnContainer style={{ position: "relative" }}>
+        {isStart && (
+          <Rec>
+            <MdFiberManualRecord />
+            REC
+          </Rec>
+        )}
         <CircleBtn
-          icon={MdPlayCircleOutline}
-          label={"녹화 시작"}
-          onClick={handleStartBtnClick}
+          icon={isStart ? MdOutlineStopCircle : MdPlayCircleOutline}
+          label={isStart ? "다시 하기" : "녹화 시작"}
+          onClick={isStart ? handleStopBtnClick : handleStartBtnClick}
           disabled={props.poseList.length === 0 ? "disabled" : ""}
         />
         <CircleBtn

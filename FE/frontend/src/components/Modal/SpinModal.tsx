@@ -15,7 +15,7 @@ function SpinModal() {
         >
           <Spinner />
           <div style={{ fontWeight: 900, fontSize: "21px" }}>
-            춤연습중... 기다려주세요💃
+            춤분석중... 기다려주세요💃
           </div>
         </ShadowContainer>
       </Modal>

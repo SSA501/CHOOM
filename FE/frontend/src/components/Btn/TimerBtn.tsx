@@ -39,7 +39,7 @@ function TimerBtn(props: {
           />
         </CircleIconBtn>
       )}
-      <CircleBtnLabel disabled={props.disabled}>{props.img}</CircleBtnLabel>
+      <CircleBtnLabel disabled={props.disabled}>타이머</CircleBtnLabel>
     </CircleBtnContainer>
   );
 }

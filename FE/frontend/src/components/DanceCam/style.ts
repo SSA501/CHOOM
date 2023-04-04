@@ -16,4 +16,14 @@ const MyCanvas = styled.canvas`
   border-radius: 1rem;
 `;
 
-export { CamContainer, MyCam, MyCanvas };
+const Rec = styled.div`
+  position: absolute;
+  right: 10px;
+  top: 20px;
+  & > svg {
+    cursor: default !important  ;
+    color: red;
+  }
+`;
+
+export { CamContainer, MyCam, MyCanvas, Rec };
