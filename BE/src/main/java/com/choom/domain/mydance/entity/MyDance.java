@@ -40,9 +40,6 @@ public class MyDance extends BaseTimeEntity {
     @Column(length = 2083)
     private String youtubeUrl;
 
-    @Column(length = 2083)
-    private String tiktokUrl;
-
     @Column(length = 2083, unique = true)
     private String thumbnailPath;
 
@@ -63,7 +60,7 @@ public class MyDance extends BaseTimeEntity {
     }
 
     @Builder
-    public MyDance(int score, String matchRate, String videoPath, int videoLength, String title, User user, Dance dance, String tiktokUrl, String youtubeUrl, String thumbnailPath) {
+    public MyDance(int score, String matchRate, String videoPath, int videoLength, String title, User user, Dance dance, String youtubeUrl, String thumbnailPath) {
         this.score = score;
         this.matchRate = matchRate;
         this.videoPath = videoPath;
@@ -71,7 +68,6 @@ public class MyDance extends BaseTimeEntity {
         this.title = title;
         this.user = user;
         this.dance = dance;
-        this.tiktokUrl = tiktokUrl;
         this.youtubeUrl = youtubeUrl;
         this.thumbnailPath = thumbnailPath;
     }
