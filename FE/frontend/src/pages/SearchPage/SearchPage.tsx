@@ -129,6 +129,7 @@ function SearchPage() {
                 <YoutubeChallengeContainer>
                   <VideoCarousel
                     videoData={shortsData}
+                    titleImg={"/assets/icon_youtube_shorts.png"}
                     title={"SHORTS"}
                     isSearch
                     text={
