@@ -24,6 +24,7 @@ public class DanceDetailsDto {
     private int status;
     private String publishedAt;
     private boolean isBookmarked;
+    private boolean isEmbeddable;
 
     public void setId(Long id) {
         this.id = id;
@@ -36,7 +37,7 @@ public class DanceDetailsDto {
     @Builder
     public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,
         String thumbnailPath, int likeCount, Long viewCount, int userCount, int status,
-        String publishedAt, boolean isBookmarked) {
+        String publishedAt, boolean isBookmarked,boolean isEmbeddable) {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
@@ -49,5 +50,6 @@ public class DanceDetailsDto {
         this.status = status;
         this.publishedAt = publishedAt;
         this.isBookmarked = isBookmarked;
+        this.isEmbeddable = isEmbeddable;
     }
 }
