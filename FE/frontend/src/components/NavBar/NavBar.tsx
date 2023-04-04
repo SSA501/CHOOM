@@ -6,7 +6,7 @@ import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
 
 function NavBar() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const isLogin = useAppSelector((state) => state.main.isLogin);
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
   const navigate = useNavigate();
 
   const showLoginModal = () => {

@@ -25,7 +25,7 @@ function SearchBar({ currentQuery }: SearchBarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const isLogin = useAppSelector(
-    (state) => state && state.main && state.main.isLogin
+    (state) => state && state.auth && state.auth.isLogin
   );
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();

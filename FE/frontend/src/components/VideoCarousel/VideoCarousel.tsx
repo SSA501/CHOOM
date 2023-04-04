@@ -41,7 +41,7 @@ function VideoCarousel({
   const [reachingFirst, setReachingFirst] = useState<boolean>(true);
   const navigate = useNavigate();
   const isLogin = useAppSelector(
-    (state) => state && state.main && state.main.isLogin
+    (state) => state && state.auth && state.auth.isLogin
   );
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
