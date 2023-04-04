@@ -55,7 +55,6 @@ function DanceResult(props: {
 
   const handleBackBtnClick = () => {
     props.setMyUrl("");
-    props.setIsGuide(true);
   };
   const goToChallenge = () => {
     navigate(`/detail/${danceId}`);
