@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NotFoundPageContainer } from "./style";
 
 function NotFoundPage() {
+  useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "잘못된 접근 - CHOOM";
+  }, []);
+
   return (
     <NotFoundPageContainer>
       <div>

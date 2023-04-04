@@ -36,6 +36,9 @@ function MyDancePage() {
     id: "",
   });
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "내 챌린지 결과 - CHOOM";
+
     getMyDanceDetail(myDanceId!)
       .then((res) => {
         console.log(res);

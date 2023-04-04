@@ -33,6 +33,9 @@ function SearchPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "챌린지 검색 - CHOOM";
+
     if (query) {
       setIsLoading(true);
       // 검색어 조회

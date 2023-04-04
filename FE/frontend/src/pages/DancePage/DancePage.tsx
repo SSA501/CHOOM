@@ -43,6 +43,9 @@ function DancePage() {
 
   // 모델 불러오기
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "챌린지 연습 - CHOOM";
+
     createDetector();
 
     getChallengeStatus(danceId!)
