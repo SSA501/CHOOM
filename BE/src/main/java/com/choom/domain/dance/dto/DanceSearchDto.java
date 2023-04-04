@@ -1,6 +1,5 @@
 package com.choom.domain.dance.dto;
 
-import com.google.api.services.youtube.model.SearchListResponse;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class DanceSearchDto {
 
-    Boolean isUrl = true;
+    Boolean isUrl;
     List<DanceDetailsDto> dbSearch;
     List<DanceDetailsDto> search;
 

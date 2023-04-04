@@ -40,7 +40,7 @@ public class YoutubeService {
 
     private static final String GOOGLE_YOUTUBE_URL = "https://www.youtube.com/shorts/";
     private static final String YOUTUBE_SEARCH_FIELDS1 = "nextPageToken, prevPageToken, pageInfo, items(id/videoId,snippet/title,snippet/channelTitle)";
-    private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration,snippet/title, snippet/description,snippet/publishedAt, snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
+    private static final String YOUTUBE_SEARCH_FIELDS2 = "items(contentDetails/duration, status/embeddable, snippet/title, snippet/description,snippet/publishedAt, snippet/thumbnails/high/url,statistics/likeCount,statistics/viewCount)";
 
     private static final String SEARCH_SUFFIX = "#챌린지 #댄스 #쇼츠 #shorts";
 
@@ -95,7 +95,7 @@ public class YoutubeService {
                 // 비동기로 검색 -> 검색 속도 향상
                 String youtubeId = video.getId().getVideoId();
                 DanceDetailsDto danceDetailDto = getVideoDetail(userId, youtubeId);
-                if (danceDetailDto != null) {
+                if (danceDetailDto != null && danceDetailDto.isEmbeddable()) {
                     danceDetailDtoList.add(danceDetailDto);
                 }
                 elapsedTime = System.currentTimeMillis() - startTime; // 경과 시간을 계산합니다.
@@ -156,7 +156,7 @@ public class YoutubeService {
         }
         videoDetails.setKey(YOUTUBE_APIKEY);
         videoDetails.setId(youtubeId);
-        videoDetails.setPart("statistics,snippet,contentDetails");
+        videoDetails.setPart("statistics,snippet,contentDetails,status");
         videoDetails.setFields(YOUTUBE_SEARCH_FIELDS2);
 
         try {
@@ -210,6 +210,8 @@ public class YoutubeService {
         if (!time.equals("PT1M")) {
             s = Integer.parseInt(time.split("T")[1].split("S")[0]);
         }
+        Boolean isEmbeddable = videoDetail.getStatus().getEmbeddable();
+
         return DanceDetailsDto.builder()
             .id(id)
             .url(url)
@@ -222,6 +224,7 @@ public class YoutubeService {
             .status(status)
             .publishedAt(publishedAt)
             .isBookmarked(isBookmarked)
+            .isEmbeddable(isEmbeddable)
             .build();
     }
 }
