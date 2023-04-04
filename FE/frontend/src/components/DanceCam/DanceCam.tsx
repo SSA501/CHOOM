@@ -93,6 +93,7 @@ function DanceCam(props: {
       setCameras(videoDevices);
       if (videoDevices.length > 0) {
         setSelectedCamera(videoDevices[0].deviceId);
+        setupCam();
       }
     }
     fetchCameras();
