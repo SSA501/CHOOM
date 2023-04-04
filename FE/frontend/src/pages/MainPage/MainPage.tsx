@@ -31,6 +31,9 @@ function MainPage() {
   const [isSecondVisible, secondRef] = useIntersectionObserver();
 
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "CHOOM";
+
     getPopularChallenge()
       .then((res) => {
         setPopularVideoData(res.data);

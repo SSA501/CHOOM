@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileVideoContainer from "../../components/ProfileVideoContainer/ProfileVideoContainer";
 import NormalModal from "../../components/Modal/NormalModal";
@@ -12,6 +12,11 @@ function ProfilePage() {
   const [normalModalOpen, setNormalModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "내 프로필 - CHOOM";
+  }, []);
 
   const showNormalModal = () => {
     document.body.style.overflow = "hidden";
