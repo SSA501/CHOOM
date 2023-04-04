@@ -72,7 +72,7 @@ function App() {
   const isLogin = useAppSelector((state) => state.auth.isLogin);
   const routeHistory = useAppSelector((state) => state.auth.routeHistory);
   const openLoginModal = useAppSelector((state) => state.auth.openLoginModal);
-  const [isOenLoginModal, setIsOpenLoginModal] = useState(false);
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
 
   const location = useLocation();
   const showLoginModal = useCallback(() => {
@@ -85,7 +85,6 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(openLoginModal);
     setIsOpenLoginModal(openLoginModal);
     const currentPath = location.pathname;
     // 로그인 안된 상태로 url 접근하면
@@ -111,7 +110,7 @@ function App() {
       }
     }
 
-    // if (!loginModalOpen) document.body.style.overflow = "auto";
+    if (!isOpenLoginModal) document.body.style.overflow = "auto";
   }, [
     dispatch,
     isLogin,
@@ -121,6 +120,7 @@ function App() {
     closeLoginModal,
     openLoginModal,
     showLoginModal,
+    isOpenLoginModal,
   ]);
 
   return (
@@ -142,7 +142,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
-      {isOenLoginModal && (
+      {isOpenLoginModal && (
         <LoginModal setLoginModalOpen={setIsOpenLoginModal} />
       )}
     </>
