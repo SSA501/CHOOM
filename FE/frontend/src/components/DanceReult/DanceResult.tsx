@@ -40,6 +40,7 @@ function DanceResult(props: {
       .then((res) => {
         console.log(res);
         setMyDanceId(res.data.id);
+        props.setMyUrl(res.data.videoPath);
       })
       .catch((error) => {
         console.error(error);

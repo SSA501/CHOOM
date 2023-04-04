@@ -88,12 +88,19 @@ function DanceCam(props: {
   const [selectedCamera, setSelectedCamera] = useState<string | null>(null);
 
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true }).then(
+      () => {},
+      () => {
+        alert("카메라 권한을 얻을 수 없습니다.");
+        window.history.back();
+      }
+    );
+
     async function fetchCameras() {
       const videoDevices = await getCameras();
       setCameras(videoDevices);
       if (videoDevices.length > 0) {
         setSelectedCamera(videoDevices[0].deviceId);
-        setupCam();
       }
     }
     fetchCameras();
