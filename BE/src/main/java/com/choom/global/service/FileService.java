@@ -142,7 +142,7 @@ public class FileService {
         ffmpegPath = setPath("ffmpeg");
         Path inputPath = Paths.get(getPath(videoPath));
         Path outputPath = Paths.get(audioPath + name);
-        FFmpeg ffmpeg = new FFmpeg(ffmpegPath);
+        FFmpeg ffmpeg = new FFmpeg(ffmpegPath + "ffmpeg");
 
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(inputPath.toString())
@@ -186,7 +186,7 @@ public class FileService {
         // 출력 파일
         File outputFile = new File(newVideoPath); // 덮어씌우기? 안되는듯?
 
-        FFmpeg ffmpeg = new FFmpeg(ffmpegPath);
+        FFmpeg ffmpeg = new FFmpeg(ffmpegPath + "ffmpeg");
 
         // FFmpegExecutor 및 FFprobeExecutor 생성
         FFmpegExecutor executor = new FFmpegExecutor(ffmpeg);
