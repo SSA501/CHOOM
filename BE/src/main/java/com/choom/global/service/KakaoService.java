@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,12 +19,12 @@ public class KakaoService {
     private final KakaoUserInfoService kakaoUserInfoService;
 
     @Value("${apikey.kakao}")
-    public void setKakaoApikey(String value){
+    public void setKakaoApikey(String value) {
         KAKAO_APIKEY = value;
     }
 
     @Value("${redirect-uri.kakao}")
-    public void setKakaoRedirectUri(String value){
+    public void setKakaoRedirectUri(String value) {
         KAKAO_REDIRECT_URI = value;
     }
 
@@ -40,7 +39,7 @@ public class KakaoService {
         return socialAccessTokenResponse.getAccess_token();
     }
 
-    public SocialUserInfoDto getUserInfoByToken(String accessToken){
+    public SocialUserInfoDto getUserInfoByToken(String accessToken) {
 
         KakaoUserInfoResponse kakaoUserInfoResponse = kakaoUserInfoService.getUserInfo("Bearer " + accessToken);
         return new SocialUserInfoDto(kakaoUserInfoResponse);
