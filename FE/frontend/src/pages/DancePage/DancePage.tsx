@@ -127,6 +127,7 @@ function DancePage() {
           <>
             <DanceVideo
               setPoseList={setPoseList}
+              setIsGuide={setIsGuide}
               poseList={poseList}
               ref={danceVideoRef}
               detector={detector!}
