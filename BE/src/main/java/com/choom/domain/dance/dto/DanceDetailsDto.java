@@ -37,7 +37,7 @@ public class DanceDetailsDto {
     @Builder
     public DanceDetailsDto(Long id, Video videoDetail, int sec, String youtubeId, String url,
         String thumbnailPath, int likeCount, Long viewCount, int userCount, int status,
-        String publishedAt, boolean isBookmarked,boolean isEmbeddable) {
+        String publishedAt, boolean isBookmarked, boolean isEmbeddable) {
         this.id = id;
         this.url = url;
         this.title = videoDetail.getSnippet().getTitle();
