@@ -97,7 +97,7 @@ function DanceCam(props: {
     }
 
     fetchCameras();
-  }, []);
+  });
 
   useEffect(() => {
     if (selectedCamera) {
