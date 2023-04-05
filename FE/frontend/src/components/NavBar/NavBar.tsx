@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../constants/types";
 import LoginModal from "../Modal/LoginModal";
 import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
@@ -8,6 +8,7 @@ function NavBar() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const isLogin = useAppSelector((state) => state.auth.isLogin);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const showLoginModal = () => {
     setLoginModalOpen(true);
@@ -31,6 +32,7 @@ function NavBar() {
           <NavLi>
             <NavBtnLink
               challenge={true}
+              active={location.pathname === "/challenge" ? true : false}
               onClick={() => {
                 if (isLogin) {
                   navigate("/challenge");
@@ -45,6 +47,8 @@ function NavBar() {
           {isLogin ? (
             <NavLi>
               <NavBtnLink
+                challenge={false}
+                active={location.pathname === "/" ? true : false}
                 onClick={() => {
                   if (isLogin) navigate("/profile");
                 }}

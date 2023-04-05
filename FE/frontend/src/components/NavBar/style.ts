@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const NavContainer = styled.nav`
@@ -24,17 +23,17 @@ const NavLi = styled.li`
   font-weight: 600;
 `;
 
-const NavBtnLink = styled.a<{ challenge?: boolean }>`
+const NavBtnLink = styled.a<{ challenge?: boolean; active: boolean }>`
   padding: 1em 0.5em 25px;
   /* & div {
     display: none;
   } */
-  &.active {
-    box-shadow: ${(props) =>
-      props.challenge
+  box-shadow: ${(props) =>
+    props.active
+      ? props.challenge
         ? "inset 0 -5px 0 0 var(--purple-color)"
-        : "inset 0 -5px 0 0 var(--green-color)"};
-  }
+        : "inset 0 -5px 0 0 var(--green-color)"
+      : ""};
   /* &.active div {
     display: block;
   } */
