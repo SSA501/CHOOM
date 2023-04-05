@@ -3,8 +3,10 @@ package com.choom.domain.mydance.entity;
 import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.user.dto.UserMyDanceDto;
 import com.choom.domain.user.entity.User;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import static com.querydsl.core.group.GroupBy.max;
 
 import java.util.List;
 
@@ -18,13 +20,15 @@ public class MyDanceCustomRepositoryImpl implements MyDanceCustomRepository {
     QMyDance myDance = QMyDance.myDance;
 
     @Override
-    public List<MyDance> findRankingUser(Dance dance) {
+    public List<Tuple> findRankingUser(Dance dance) {
         return queryFactory
-                .selectFrom(myDance)
-                .where(myDance.dance.eq(dance)) //dance로 조회 Dance로 조회          id로 조회할때랑 Dance로 조회할때 차이가 날까????????????
-                .orderBy(myDance.score.desc()) // 오름차순으로 정렬
-                .limit(3)
-                .fetch();
+            .select(myDance.user, myDance.score.max().as("max_score"))
+            .from(myDance)
+            .where(myDance.dance.eq(dance))
+            .groupBy(myDance.user)
+            .orderBy(myDance.score.max().desc())
+            .limit(3)
+            .fetch();
     }
 
     @Override
