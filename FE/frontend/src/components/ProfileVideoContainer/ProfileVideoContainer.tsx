@@ -72,7 +72,9 @@ function ProfilePage() {
             });
           }
 
-          setVideoItemList((prevList) => [...prevList, ...newData]);
+          if (page === 0) setVideoItemList(newData);
+          else setVideoItemList((prevList) => [...prevList, ...newData]);
+
           setIsLoading(false);
         }
       } catch (err) {
