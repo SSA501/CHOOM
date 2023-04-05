@@ -83,11 +83,7 @@ function DanceResult(props: {
         </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
-          <Btn
-            btnText={"챌린지 상세보기"}
-            margin="0px 30px"
-            handleClick={goToChallenge}
-          />
+          <Btn btnText={"챌린지 상세보기"} handleClick={goToChallenge} />
         </div>
       </StyleContainer>
     </DanceResultContainer>
