@@ -48,7 +48,7 @@ function NavBar() {
             <NavLi>
               <NavBtnLink
                 challenge={false}
-                active={location.pathname === "/" ? true : false}
+                active={location.pathname === "/profile" ? true : false}
                 onClick={() => {
                   if (isLogin) navigate("/profile");
                 }}
