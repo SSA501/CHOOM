@@ -12,8 +12,10 @@ import com.choom.domain.dance.entity.Dance;
 import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
+import com.choom.domain.user.entity.User;
 import com.choom.global.service.FileService;
 import com.choom.global.service.YoutubeService;
+import com.querydsl.core.Tuple;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;
@@ -146,13 +148,21 @@ public class DanceService {
 
         } else { //처음이 아닌 경우
             // 3. 상위 순위 유저 3명 (처음인 경우에는 순위가 0임)
-            List<MyDance> myDanceList = myDanceRepository.findRankingUser(dance);
-            danceRankUserDtoList = myDanceList.stream().map(myDance ->
-                DanceRankUserDto.builder()
-                    .myDance(myDance)
-                    .build()
-            ).collect(
-                Collectors.toList());
+            List<Tuple> myDanceList = myDanceRepository.findRankingUser(dance);
+
+            for(Tuple tuple : myDanceList) {
+                User user = tuple.get(0, User.class);
+                int maxScore = tuple.get(1, Integer.class);
+
+                List<MyDance> myDance = myDanceRepository.findByScoreAndUser(maxScore, user);
+                if(myDance == null){
+                    throw new IllegalArgumentException("잘못된 유저와 점수 입니다.");
+                }
+                DanceRankUserDto danceRankUserDto = DanceRankUserDto.builder()
+                    .myDance(myDance.get(0))
+                    .build();
+                danceRankUserDtoList.add(danceRankUserDto);
+            }
 
             // 찜한 첼린지 인지 체크하기
             if (bookmarkRepository.findBookmarkByUserIdAndDanceId(userId, dance.getId())
