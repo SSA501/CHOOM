@@ -55,7 +55,6 @@ function DanceResult(props: {
 
   const handleBackBtnClick = () => {
     props.setMyUrl("");
-    props.setIsGuide(true);
   };
   const goToChallenge = () => {
     navigate(`/detail/${danceId}`);
@@ -82,7 +81,7 @@ function DanceResult(props: {
             myDanceId={myDanceId}
           />
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <Btn btnText={"챌린지 다시하기"} handleClick={handleBackBtnClick} />
           <Btn btnText={"챌린지 상세보기"} handleClick={goToChallenge} />
         </div>
