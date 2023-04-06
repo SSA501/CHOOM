@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getPopularChallenge } from "../../apis/challenge";
 import MainBanner from "../../components/MainBanner/MainBanner";
 import ScrollingText from "../../components/ScrollingText/ScrollingText";
@@ -31,6 +31,9 @@ function MainPage() {
   const [isSecondVisible, secondRef] = useIntersectionObserver();
 
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "CHOOM";
+
     getPopularChallenge()
       .then((res) => {
         setPopularVideoData(res.data);

@@ -9,11 +9,13 @@ function UploadingPage() {
   const navigate = useNavigate();
   const code = searchParams?.get("code");
   const myDanceId = useSelector((state: RootState) => state.myDance.myDanceId);
-  console.log(myDanceId);
+
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "업로드 중 - CHOOM";
+
     postingChallenge(myDanceId!, code!)
       .then((res) => {
-        console.log(res);
         window.open(res.data.youtubeUrl);
         navigate(`/mydance/${myDanceId}`);
       })

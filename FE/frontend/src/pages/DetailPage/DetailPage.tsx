@@ -96,6 +96,9 @@ function DetailPage() {
   };
 
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "챌린지 상세보기 - CHOOM";
+
     if (danceId) {
       getChallengeDetail(danceId)
         .then((res) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ArrowBtn,
   ArrowBtnContainer,
@@ -25,13 +25,15 @@ import LoginModal from "../Modal/LoginModal";
 
 interface VideoCarouselProps {
   videoData: VideoDataProps[];
-  title: string | React.ReactNode;
+  title: string;
+  titleImg?: string;
   text?: string;
   isSearch?: boolean;
 }
 
 function VideoCarousel({
   videoData,
+  titleImg,
   title,
   text,
   isSearch,
@@ -71,16 +73,20 @@ function VideoCarousel({
     }
   };
 
-  useEffect(() => {
-    if (videoData?.length <= 3) setReachingEnd(true);
-  }, [videoData]);
-
   return (
     <>
       <CarouselContainer width="90%" bgColor="lightgray">
         <LeftTextContainer>
           <CarouselTitle>
-            <h2>{title}</h2>
+            {titleImg && (
+              <img
+                width={"32px"}
+                src={titleImg}
+                alt="제목 이미지"
+                style={{ marginRight: ".3em" }}
+              />
+            )}
+            <span>{title}</span>
           </CarouselTitle>
           <MiddleText>
             <p>{text}</p>
@@ -101,7 +107,7 @@ function VideoCarousel({
           <Swiper
             modules={[Navigation, A11y]}
             // loop={true}
-            width={1220}
+            width={1300}
             // spaceBetween={10}
             slidesPerView={3}
             // navigation

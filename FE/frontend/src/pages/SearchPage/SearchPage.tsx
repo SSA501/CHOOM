@@ -33,6 +33,9 @@ function SearchPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "챌린지 검색 - CHOOM";
+
     if (query) {
       setIsLoading(true);
       // 검색어 조회
@@ -129,6 +132,7 @@ function SearchPage() {
                 <YoutubeChallengeContainer>
                   <VideoCarousel
                     videoData={shortsData}
+                    titleImg={"/assets/icon_youtube_shorts.png"}
                     title={"SHORTS"}
                     isSearch
                     text={
