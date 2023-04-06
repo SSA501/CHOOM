@@ -14,7 +14,7 @@ function UploadingPage() {
     postingChallenge(myDanceId!, code!)
       .then((res) => {
         console.log(res);
-        window.open(res.youtubeUrl);
+        window.open(res.data.youtubeUrl);
         navigate(`/mydance/${myDanceId}`);
       })
       .catch((err) => {
