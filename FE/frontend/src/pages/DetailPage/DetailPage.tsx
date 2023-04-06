@@ -107,7 +107,10 @@ function DetailPage() {
           setLocalLikeCount(res?.data?.dance?.likeCount);
           setRankData(res?.data?.myDance);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          navigate("/404");
+        });
     }
   }, [danceId]);
 
