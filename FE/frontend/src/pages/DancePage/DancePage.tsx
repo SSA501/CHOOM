@@ -8,7 +8,7 @@ import SideTitle from "../../components/SideTitle/SideTitle";
 import SideSubTitle from "../../components/SideSubTitle/SideSubTitle";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import SpinModal from "../../components/Modal/SpinModal";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getChallengeStatus, updateChallenge } from "../../apis/dance";
 import { getChallengeDetail } from "../../apis/challenge";
 import { Pose, Score, Challenge, Dance } from "../../constants/types";
@@ -28,6 +28,7 @@ function DancePage() {
   const [loading, setloading] = useState<boolean>(true);
   const danceVideoRef = useRef<any>();
   const { danceId } = useParams();
+  const navigate = useNavigate();
 
   const practiceContents = [
     { icon: "1️⃣", text: "영상을 보면서 연습하세요" },
@@ -53,14 +54,20 @@ function DancePage() {
         console.log(res);
         setChallenge(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        navigate("/404");
+      });
 
     getChallengeDetail(danceId!)
       .then((res) => {
         console.log(res);
         setDance(res.data.dance);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        navigate("/404");
+      });
   }, [danceId]);
 
   // 분석 결과 저장
