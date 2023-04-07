@@ -9,9 +9,9 @@
 
 ### ****🛠️ 설치 방법****
 
-```jsx
+```
 # CLONE REPOSITORY
-git clone 레포지토리 주소
+git clone https://github.com/SSA501/CHOOM.git
 cd FE
 cd frontend
 
@@ -24,7 +24,7 @@ npm start
 
 ### ****📁 프로젝트 구조****
 
-```jsx
+```
 frontend
 ├─ src
 │  ├─ apis
