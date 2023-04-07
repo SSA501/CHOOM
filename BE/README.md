@@ -38,10 +38,10 @@
     1. 프로젝트 다운로드
         
         ```
-        git clone [https://lab.ssafy.com/s08-ai-image-sub2/S08P22A501.git](https://lab.ssafy.com/s08-ai-image-sub2/S08P22A501.git)
+        git clone [https://github.com/SSA501/CHOOM.git](https://github.com/SSA501/CHOOM.git)
         ```
         
-    2. 포팅 메뉴얼을 따라서 실행
+    2. [포팅 메뉴얼](https://github.com/SSA501/CHOOM/blob/master/exec/%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.md)을 따라서 실행
 
 <br>
 
