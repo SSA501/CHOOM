@@ -133,11 +133,11 @@
 
 ### 1. BlazePose를 이용해서 동작의 keypoints 추출
 
-- **BlazePose Keypoints: Used in MediaPipe BlazePose**
+- BlazePose Keypoints: Used in MediaPipe BlazePose
     
     ![keypoints](README_assets/13_keypoints.png)
     
-- **실제 keypoints값 예시**
+- 실제 keypoints값 예시
     
     ![keypoints_예시](README_assets/14_keypoints_예시.png)
     
@@ -150,22 +150,22 @@
 
 </aside>
 
-- **L2 Normalization: 키포인트의 좌표의 모든 벡터가 단위 norm을 갖게한다**
+- L2 Normalization: 키포인트의 좌표의 모든 벡터가 단위 norm을 갖게한다
     
     ![L2_Normalization](README_assets/15_L2_Normalization.png)
     
-                                                                   *A vector scaled with L2 normalization*
+    *A vector scaled with L2 normalization*
     
 
 <br/>
 
 ### 3. 일치율 계산
 
-- **정규화된 키포인트 좌표를 통해 Cosine Similarity 계산**
+- 정규화된 키포인트 좌표를 통해 Cosine Similarity 계산
     
     ![image.png](README_assets/16_코사인유사도.png)
     
-- **Cosine Similarity + Confidence Score**
+- Cosine Similarity + Confidence Score
     
     BlazePose를 이용하여 실제 관절이 어디에 있는지 추론할 때, 관절이 어디에 있는지 100% 확신하는 경우는 거의 없습니다. 따라서, 우리는 신뢰도가 낮은 관절이 신뢰도가 높은 관절보다 거리 메트릭에 미치는 영향이 적도록, 관절 데이터에 가중치를 부여할 수 있도록 점수를 계산했습니다.
     
