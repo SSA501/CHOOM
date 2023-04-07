@@ -1,7 +1,7 @@
 package com.choom.domain.mydance.entity;
 
+import com.choom.domain.dance.entity.Dance;
 import com.choom.global.model.BaseTimeEntity;
-import com.choom.domain.originaldance.entity.OriginalDance;
 import com.choom.domain.user.entity.User;
 import lombok.*;
 
@@ -31,7 +31,7 @@ public class MyDance extends BaseTimeEntity {
 
     @NotNull
     @Column
-    private double videoLength;
+    private int videoLength;
 
     @NotNull
     @Column(length = 100)
@@ -40,25 +40,35 @@ public class MyDance extends BaseTimeEntity {
     @Column(length = 2083)
     private String youtubeUrl;
 
-    @Column(length = 2083)
-    private String tiktokUrl;
+    @Column(length = 2083, unique = true)
+    private String thumbnailPath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORIGINALDANCE_ID")
-    private OriginalDance originalDance;
+    @JoinColumn(name = "DANCE_ID")
+    private Dance dance;
+
+    public void updateYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 
     @Builder
-    public MyDance(int score, String matchRate, String videoPath, double videoLength, String title, User user, OriginalDance originalDance) {
+    public MyDance(int score, String matchRate, String videoPath, int videoLength, String title, User user, Dance dance, String youtubeUrl, String thumbnailPath) {
         this.score = score;
         this.matchRate = matchRate;
         this.videoPath = videoPath;
         this.videoLength = videoLength;
         this.title = title;
         this.user = user;
-        this.originalDance = originalDance;
+        this.dance = dance;
+        this.youtubeUrl = youtubeUrl;
+        this.thumbnailPath = thumbnailPath;
     }
 }

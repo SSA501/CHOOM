@@ -1,50 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getPopularChallenge } from "../../apis/challenge";
+import MainBanner from "../../components/MainBanner/MainBanner";
+import ScrollingText from "../../components/ScrollingText/ScrollingText";
+import SearchArea from "../../components/SearchArea/SearchArea";
 import VideoCarousel from "../../components/VideoCarousel/VideoCarousel";
+import { AnimatedComponent, TopContainer } from "./style";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
-export interface videoData {
-  id: number;
-  videoSrc: string;
-  thumbnailSrc: string;
+export interface VideoDataProps {
+  id: number | null;
+  title: string;
+  url?: string;
+  thumbnailPath: string;
+  sec?: number;
+  likeCount?: number;
+  viewCount?: number;
+  userCount: number;
+  youtubeId: string;
+  status: number;
+  videoPath?: string;
+  publishedAt?: string;
+  bookmarked?: boolean;
 }
 
 function MainPage() {
-  const videoData: videoData[] = [
-    {
-      id: 1,
-      videoSrc: "https://www.youtube.com/shorts/fYQxthUKung",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-    },
-    {
-      id: 2,
-      videoSrc: "https://www.youtube.com/shorts/8P7BoKIcEMM",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/8P7BoKIcEMM/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAkOrwDKfR9IJ-Eg3-wu_Gc0IOSbw",
-    },
-    {
-      id: 3,
-      videoSrc: "https://www.youtube.com/shorts/fYQxthUKung",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/fYQxthUKung/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLCWglyEsDggRm3EeUuUFrcT5b7iBA",
-    },
-    {
-      id: 4,
-      videoSrc: "https://www.youtube.com/shorts/8P7BoKIcEMM",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/8P7BoKIcEMM/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAkOrwDKfR9IJ-Eg3-wu_Gc0IOSbw",
-    },
-    {
-      id: 5,
-      videoSrc: "https://www.youtube.com/shorts/8P7BoKIcEMM",
-      thumbnailSrc:
-        "https://i.ytimg.com/vi/8P7BoKIcEMM/hq720_2.jpg?sqp=-oaymwEdCJUDENAFSFXyq4qpAw8IARUAAIhCcAHAAQbQAQE=&rs=AOn4CLAkOrwDKfR9IJ-Eg3-wu_Gc0IOSbw",
-    },
-  ];
+  const [popularVideoData, setPopularVideoData] = useState<VideoDataProps[]>(
+    []
+  );
+  const [isFirstVisible, firstRref] = useIntersectionObserver();
+  const [isSecondVisible, secondRef] = useIntersectionObserver();
+
+  useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "CHOOM";
+
+    getPopularChallenge()
+      .then((res) => {
+        setPopularVideoData(res.data);
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>
-      메인페이지
-      <VideoCarousel videoData={videoData} />
+      <AnimatedComponent isVisible={isFirstVisible} ref={firstRref}>
+        <TopContainer>
+          <MainBanner />
+          <SearchArea />
+        </TopContainer>
+      </AnimatedComponent>
+      <AnimatedComponent isVisible={isSecondVisible} ref={secondRef}>
+        <ScrollingText />
+        <VideoCarousel
+          title={"요즘 인기있는 챌린지 🔥"}
+          text={
+            "최근 가장 인기있는 챌린지를 모아봤어요 어떤 챌린지를 할지 고민된다면 시도해보는 건 어때요? 😆"
+          }
+          videoData={popularVideoData}
+        />
+      </AnimatedComponent>
     </>
   );
 }

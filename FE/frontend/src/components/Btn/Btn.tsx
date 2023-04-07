@@ -1,34 +1,40 @@
 import React from "react";
 import { LoginBtn, Icon, NomalBtn } from "./style";
 
-type BtnProps = {
+export type BtnProps = {
   login?: boolean;
-  loginType?: "kakao" | "google" | "tiktok";
-  background?: "blue" | "yellow";
-  children: string;
+  loginType?: "kakao" | "google" | "tiktok" | "youtube_shorts";
+  btnText?: string;
   handleClick: () => void;
+  width?: string;
+  padding?: string;
+  margin?: string;
+  className?: string;
 };
 
-function Btn(props: BtnProps) {
-  return props.login ? (
-    <LoginBtn loginType={props.loginType} onClick={props.handleClick}>
-      <Icon
-        src={`/assets/icon_${props.loginType}.png`}
-        alt="이미지"
-        height="22px"
-      />
-      <p>
-        {props.loginType === "kakao"
-          ? "카카오 "
-          : props.loginType === "google"
-          ? "구글 "
-          : "틱톡 "}
-        로그인
-      </p>
+function Btn({
+  login,
+  loginType,
+  btnText,
+  handleClick,
+  width,
+  padding,
+  margin,
+  className,
+}: BtnProps) {
+  return login ? (
+    <LoginBtn loginType={loginType} onClick={handleClick}>
+      <Icon src={`/assets/icon_${loginType}.png`} alt="이미지" height="45px" />
     </LoginBtn>
   ) : (
-    <NomalBtn background={props.background} onClick={props.handleClick}>
-      {props.children}
+    <NomalBtn
+      className={className}
+      width={width}
+      padding={padding}
+      margin={margin}
+      onClick={handleClick}
+    >
+      {btnText}
     </NomalBtn>
   );
 }

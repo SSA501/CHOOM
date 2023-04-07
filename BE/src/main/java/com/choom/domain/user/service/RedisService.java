@@ -1,5 +1,6 @@
 package com.choom.domain.user.service;
 
+import com.choom.domain.user.entity.BlacklistRedisRepository;
 import com.choom.domain.user.entity.RefreshToken;
 import com.choom.domain.user.entity.RefreshTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,28 +18,25 @@ public class RedisService {
 
     @Transactional
     public void saveToken(Long userId, String refreshToken) {
-        try {
-            refreshTokenRedisRepository.save(RefreshToken.builder()
-                    .userId(userId)
-                    .refreshToken(refreshToken)
-                    .build());
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        RefreshToken token = refreshTokenRedisRepository.findById(userId).orElse(null);
+        if (token != null) {
+            deleteToken(token);
         }
-    }
-
-    public String getRefreshToken(Long userId) {
-        return refreshTokenRedisRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new)
-                .getRefreshToken();
+        refreshTokenRedisRepository.save(RefreshToken.builder()
+                .userId(userId)
+                .token(refreshToken)
+                .build());
     }
 
     @Transactional
-    public void deleteToken(RefreshToken token) {
+    public String deleteToken(RefreshToken token) {
         try {
+            String refreshToken = token.getToken();
             refreshTokenRedisRepository.delete(token);
+            return refreshToken;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+        return null;
     }
 }

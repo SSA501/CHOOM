@@ -1,63 +1,70 @@
 import React, { useState } from "react";
-import { ReactPlayerStyled, ThumbnailImg, VideoContainer } from "./style";
+import ReactPlayer from "react-player";
+import { BtnDetail, ThumbnailImg, VideoContainer } from "./style";
 
 interface VideoProps {
-  id: number;
-  videoSrc: string;
-  thumbnailSrc: string;
-  playbackRate?: number; // 유튜브만 적용됨, 틱톡은 따로 코드 추가해야함
-  volume?: number;
-  bgFrame?: string; // 테두리 색상, 적용안하면 비디오만 표시
+  normalVideo?: boolean;
+  id: number | null;
+  youtubeId?: string;
+  url?: string;
+  videoPath: string;
+  thumbnailPath: string;
+  title: string;
+  width?: string;
+  height?: string;
+  handleClickVideo: () => void;
 }
 
-/**
- * 우리 서버에서 주는 url로는 ReactPlayer 안될수도 있음
- */
-
 function Video({
-  id,
-  thumbnailSrc,
-  videoSrc,
-  playbackRate,
-  volume,
-  bgFrame,
+  url,
+  youtubeId,
+  thumbnailPath,
+  videoPath,
+  width,
+  height,
+  handleClickVideo,
 }: VideoProps) {
-  const [playingVideoId, setPlayingVideoId] = useState<number | null>(null);
-  const initial = 333;
-  const borderSize = 12;
-  const width = bgFrame ? initial + borderSize * 2 : initial; // Replace with the actual width of your element
-  const height = bgFrame ? initial * 1.7 + borderSize * 2 : initial * 1.7; // Replace with the actual height of your element
-  const ratio = (height / width) * 100;
+  const [playingVideoId, setPlayingVideoId] = useState<string>("");
 
   return (
     <VideoContainer
-      key={id}
-      onMouseEnter={(): void => setPlayingVideoId(id)}
-      onMouseLeave={(): void => setPlayingVideoId(null)}
-      bgFrame={bgFrame}
-      ratio={ratio}
+      key={videoPath}
+      width={width ?? "360px"}
+      height={height ?? "640px"}
+      onMouseEnter={(): void => setPlayingVideoId(videoPath)}
+      onMouseLeave={(): void => setPlayingVideoId("")}
     >
-      {playingVideoId === id ? (
-        <ReactPlayerStyled
-          url={videoSrc}
-          playing={playingVideoId === id}
-          controls={true}
-          muted={true}
-          playbackRate={playbackRate}
-          volume={volume}
-          loop={true}
-          width="100%"
-          height="100%"
-          key={id}
-          tabIndex={-1}
-        />
+      {playingVideoId === videoPath ? (
+        <>
+          {url ? (
+            <ReactPlayer
+              url={url}
+              controls
+              loop
+              muted
+              playing
+              width={width ?? "360px"}
+              height={height ?? "640px"}
+              key={youtubeId}
+            />
+          ) : (
+            <video
+              src={videoPath}
+              autoPlay
+              controls
+              width={width ?? "360px"}
+              height={height ?? "640px"}
+              controlsList="nodownload"
+            />
+          )}
+          <BtnDetail btnText="상세보기" handleClick={handleClickVideo} />
+        </>
       ) : (
-        // <iframe src={videoSrc} title={videoSrc} />
         <ThumbnailImg
-          src={thumbnailSrc}
+          src={thumbnailPath}
           alt="썸네일이미지"
-          width="100%"
-          height="100%"
+          width={width ?? "360px"}
+          height={height ?? "640px"}
         />
       )}
     </VideoContainer>

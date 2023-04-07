@@ -1,66 +1,85 @@
 package com.choom.domain.mydance.service;
 
-import com.choom.domain.mydance.dto.AddMyDanceRequestDto;
-import com.choom.domain.mydance.dto.AddMyDanceResponseDto;
+import com.choom.domain.dance.entity.Dance;
+import com.choom.domain.mydance.dto.*;
 import com.choom.domain.mydance.entity.MyDance;
 import com.choom.domain.mydance.entity.MyDanceRepository;
-import com.choom.domain.originaldance.entity.OriginalDance;
-import com.choom.domain.originaldance.entity.OriginalDanceRepository;
+import com.choom.domain.dance.entity.DanceRepository;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
-import com.choom.domain.user.service.UserService;
 import com.choom.global.service.FileService;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.choom.global.service.GoogleService;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
 public class MyDanceService {
 
-    private final UserService userService;
+    private final GoogleService googleService;
     private final FileService fileService;
     private final UserRepository userRepository;
     private final MyDanceRepository myDanceRepository;
-    private final OriginalDanceRepository originalDanceRepository;
+    private final DanceRepository danceRepository;
 
-    public AddMyDanceResponseDto addMyDance(AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile jsonFile) throws IOException {
-        // 내 챌린지 영상 업로드
+    @Transactional
+    public AddMyDanceResponseDto addMyDance(Long userId, AddMyDanceRequestDto myDanceAddRequestDto, MultipartFile videoFile, MultipartFile thumbnail) throws IOException {
+        // 원본 영상 오디오 존재 여부 확인
+        Dance dance = danceRepository.findById(myDanceAddRequestDto.getDanceId())
+                .orElseThrow(() -> new IllegalArgumentException("챌린지를 찾을 수 없습니다"));
+        String audioPath = dance.getAudioPath();
+        log.info("이미 있는 audioPath : " + audioPath);
+
+        // 없으면 오디오 추출하고 저장
+        if (audioPath == null) {
+            audioPath = fileService.extractAudio(dance.getVideoPath());
+            log.info("새로 만든 audioPath : " + audioPath);
+            dance.updateAudioPath(audioPath);
+        }
+
+        // 내 챌린지 영상 (오디오 X) 파일 업로드
         String videoPath = fileService.fileUpload("mydance", videoFile);
+        log.info("합치기 전 videoPath : " + videoPath);
 
-        // 내 챌린지 좌표 업로드
-        String jsonPath = fileService.fileUpload("mycoordinate", jsonFile);
+        // 내 챌린지 영상 + 원본 오디오
+        videoPath = fileService.combineAudioVideo(videoPath, audioPath);
+        log.info("합치기 후 videoPath : " + videoPath);
 
-        // 일치율 계산
-        HashMap<String, Object> result = calculate(1L, jsonPath);
-        log.info(String.valueOf(result));
+        // 내 챌린지 영상 썸네일 업로드
+        String thumbnailPath = fileService.fileUpload("mydance/thumbnail", thumbnail);
 
         // MY_DANCE insert
-        // user, originalDance 더미데이터
-        User user = userRepository.findById(1L).get();
-        OriginalDance originalDance = originalDanceRepository.findById(1L).get();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         MyDance myDance = MyDance.builder()
-                .score((int) result.get("score"))
-                .matchRate((String) result.get("matchRate"))
-                .videoPath(videoPath)
+                .score(myDanceAddRequestDto.getScore())
+                .matchRate(myDanceAddRequestDto.getMatchRate())
                 .videoLength(myDanceAddRequestDto.getVideoLength())
                 .title(myDanceAddRequestDto.getTitle())
+                .videoPath(videoPath)
+                .thumbnailPath(thumbnailPath)
                 .user(user)
-                .originalDance(originalDance)
+                .dance(dance)
                 .build();
         MyDance insertResult = myDanceRepository.save(myDance);
+
+        // DANCE userCount 증가
+        dance.updateUserCount(dance.getUserCount() + 1);
 
         return AddMyDanceResponseDto.builder()
                 .myDance(insertResult)
@@ -68,9 +87,16 @@ public class MyDanceService {
 
     }
 
-    public Resource downloadMyDance(Long myDanceId, HttpHeaders headers) throws IOException {
+    public Resource downloadMyDance(Long userId, Long myDanceId, HttpHeaders headers) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        // 내 챌린지 영상
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+
         // 내 챌린지 영상 경로 찾기
-        String videoPath = myDanceRepository.findById(myDanceId).get().getVideoPath();
+        String videoPath = myDance.getVideoPath();
         log.info(videoPath);
 
         // file -> Resource
@@ -79,168 +105,118 @@ public class MyDanceService {
         return resource;
     }
 
-    private HashMap<String, Object> calculate(Long originalDanceId, String myDanceCoordinatePath) throws IOException {
-        HashMap<String, Object> result = new HashMap<>();
-        ArrayList<Double> matchRates = new ArrayList<Double>();
-        double similaritySum = 0.0;
+    @Transactional
+    public void removeMyDance(Long userId, Long myDanceId) throws UnknownHostException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
-        /*
-        coordinate에서 result를 가져오는 code
-        String originalDanceJsonFile = originalDanceService.findById(originalDanceId);
-         */
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
 
-        // 현재는 그냥 더미 데이터로 테스트
-        Reader originalDanceCoordinate = new FileReader("C:\\Users\\SSAFY\\Downloads\\jsonexample.json");
-        Reader myDanceCoordinate = new FileReader(myDanceCoordinatePath);
+        // 내 챌린지 영상 삭제
+        fileService.fileDelete(myDance.getVideoPath());
 
-        JsonParser parser = new JsonParser();
-        JsonArray originalResult = parser.parse(originalDanceCoordinate).getAsJsonArray();
-        JsonArray myResult = parser.parse(myDanceCoordinate).getAsJsonArray();
+        // 내 챌린지 영상 썸네일 삭제
+        fileService.fileDelete(myDance.getThumbnailPath());
 
-        // JsonArray에서 하나씩 처리
-        if (myResult.size() > 0) {
-            // 내 챌린지 영상 frame 개수만큼 반복
-            // 원본 영상보다 내 챌린지 영상이 긴 경우는 없다고 가정
-            for (int i = 0; i < myResult.size(); i++) {
-                // keypoints 배열
-                JsonArray originalKeypoints = originalResult.get(i).getAsJsonObject().get("keypoints").getAsJsonArray();
-                JsonArray myKeypoints = myResult.get(i).getAsJsonObject().get("keypoints").getAsJsonArray();
+        // MY_DANCE delete
+        myDanceRepository.deleteById(myDanceId);
+    }
 
-                double similarity = calculate(originalKeypoints, myKeypoints);
+    public FindMyDanceResponseDto findMyDance(Long myDanceId) {
+        MyDance myDance = myDanceRepository.findById(myDanceId)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+        return FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build();
+    }
 
-                similaritySum += similarity;
-                matchRates.add(similarity);
+    public Page<FindMyDanceResponseDto> findAllMyDance(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 
+        Page<MyDance> myDancePage = myDanceRepository.findPageByUser(user, pageable);
+
+        // MyDance -> FindMyDanceResponseDto
+        return myDancePage.map(myDance -> FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build());
+    }
+
+    @Transactional
+    public FindMyDanceResponseDto modifyTitle(Long userId, Long myDanceId, ModifyMyDanceRequestDto modifyMyDanceRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+
+        myDance.updateTitle(modifyMyDanceRequestDto.getTitle());
+
+        return FindMyDanceResponseDto.builder()
+                .myDance(myDance)
+                .build();
+    }
+
+    @Transactional
+    public AddShortsResponseDto addShorts(Long userId, Long myDanceId, String code) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        MyDance myDance = myDanceRepository.findByIdAndUser(myDanceId, user)
+                .orElseThrow(() -> new IllegalArgumentException("내 챌린지를 찾을 수 없습니다"));
+
+        String youtubeId = uploadVideo(myDance.getVideoPath(), myDance.getTitle(), code);
+        String youtubeUrl = "https://youtube.com/shorts/" + youtubeId;
+
+        myDance.updateYoutubeUrl(youtubeUrl);
+
+        return AddShortsResponseDto.builder()
+                .youtubeUrl(youtubeUrl)
+                .build();
+    }
+
+    private String uploadVideo(String videoPath, String title, String code) {
+        try {
+            // Authorization.
+            String accessToken = googleService.getAccessToken("UPLOAD", code);
+            Credential credential = googleService.getCredential(accessToken);
+            log.info("token : " + credential.getAccessToken());
+
+            // 인증 정보를 파일로 저장합니다.
+            // saveCredentialsToFile(credential);
+
+            String hostname = InetAddress.getLocalHost().getHostName();
+            if (hostname.substring(0, 7).equals("DESKTOP")) {
+                videoPath = "C:" + videoPath;
+            } else {
+                videoPath = "/var/lib" + videoPath;
             }
+            File videoFile = new File(videoPath);
+            log.info("You chose " + videoFile + " to upload.");
+
+            return googleService.youtubeInsert(credential, videoFile, title);
+
+        } catch (GoogleJsonResponseException e) {
+            log.info("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
+                    + e.getDetails().getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.info("IOException: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Throwable t) {
+            log.info("Throwable: " + t.getMessage());
+            t.printStackTrace();
         }
 
-        // mycoordinate 파일 삭제
-        myDanceCoordinate.close();
-        File file = new File(myDanceCoordinatePath);
-        file.delete();
-
-        result.put("matchRate", matchRates.toString());
-        result.put("score", (int) similaritySum / myResult.size());
-        return result;
+        return null;
     }
 
-    private double calculate(JsonArray originalKeypoints, JsonArray myKeypoints) {
-        // 관절 벡터 배열
-        int[][] joints = {
-                {8, 12},
-                {7, 11},
-                {8, 7},
-                {12, 14},
-                {16, 14},
-                {16, 20},
-                {16, 18},
-                {11, 13},
-                {13, 15},
-                {15, 19},
-                {15, 17},
-                {12, 11},
-                {12, 24},
-                {11, 23},
-                {24, 23},
-                {24, 26},
-                {26, 28},
-                {28, 32},
-                {28, 30},
-                {23, 25},
-                {25, 27},
-                {27, 29},
-                {27, 31},
-        };
-
-        double sum = 0;
-        double accuracySum = 0;
-
-        for (int[] joint : joints) {
-            JsonObject originalKeypoint1 = originalKeypoints.get(joint[0]).getAsJsonObject();
-            JsonObject originalKeypoint2 = originalKeypoints.get(joint[1]).getAsJsonObject();
-
-            JsonObject myKeypoint1 = myKeypoints.get(joint[0]).getAsJsonObject();
-            JsonObject myKeypoint2 = myKeypoints.get(joint[1]).getAsJsonObject();
-
-            Map<String, Double> originalVector = Map.of(
-                    "x", originalKeypoint1.get("x").getAsDouble() - originalKeypoint2.get("x").getAsDouble(),
-                    "y", originalKeypoint1.get("y").getAsDouble() - originalKeypoint2.get("y").getAsDouble(),
-                    "z", originalKeypoint1.get("z").getAsDouble() - originalKeypoint2.get("z").getAsDouble()
-            );
-
-            Map<String, Double> myVector = Map.of(
-                    "x", myKeypoint1.get("x").getAsDouble() - myKeypoint2.get("x").getAsDouble(),
-                    "y", myKeypoint1.get("y").getAsDouble() - myKeypoint2.get("y").getAsDouble(),
-                    "z", myKeypoint1.get("z").getAsDouble() - myKeypoint2.get("z").getAsDouble()
-            );
-
-            double accuracy = (originalKeypoint1.get("score").getAsDouble() + originalKeypoint2.get("score").getAsDouble()) / 2;
-
-            accuracySum += accuracy;
-
-            // 벡터 정규화
-            Map<String, Double> originalNorm = normalization(originalVector);
-            Map<String, Double> myNorm = normalization(myVector);
-
-            // 코사인 유사도 계산
-            double result = cosineSimilarity(originalNorm, myNorm) * accuracy;
-            sum += result;
-
+    private static void saveCredentialsToFile(Credential credentials) throws IOException {
+        try (FileOutputStream outputStream = new FileOutputStream(new File(System.getProperty("user.home"), ".credentials/youtube-api-uploadvideo.json"))) {
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+            writer.write(credentials.getAccessToken());
+            writer.close();
         }
-
-        double avg = sum / accuracySum;
-        if (avg < 0)
-            return 0;
-        else
-            return Math.round(avg * 100);
-    }
-
-    private double cosineSimilarity(Map<String, Double> originalNorm, Map<String, Double> myNorm) {
-        if (originalNorm == null || myNorm == null) {
-            throw new IllegalArgumentException("Vectors must not be null");
-        }
-
-        final Set<String> intersection = getIntersection(originalNorm, myNorm);
-
-        final double dotProduct = dot(originalNorm, myNorm, intersection);
-
-        double d1 = 0.0d;
-        for (final Double value : originalNorm.values()) {
-            d1 += Math.pow(value, 2);
-        }
-        double d2 = 0.0d;
-        for (final Double value : myNorm.values()) {
-            d2 += Math.pow(value, 2);
-        }
-        double cosineSimilarity;
-        if (d1 <= 0.0 || d2 <= 0.0) {
-            cosineSimilarity = 0.0;
-        } else {
-            cosineSimilarity = (double) (dotProduct / (double) (Math.sqrt(d1) * Math.sqrt(d2)));
-        }
-        return cosineSimilarity;
-    }
-
-    private Set<String> getIntersection(Map<String, Double> originalNorm, Map<String, Double> myNorm) {
-        final Set<String> intersection = new HashSet<>(originalNorm.keySet());
-        intersection.retainAll(myNorm.keySet());
-        return intersection;
-    }
-
-    private double dot(Map<String, Double> originalNorm, Map<String, Double> myNorm, Set<String> intersection) {
-        double dotProduct = 0;
-        for (final String key : intersection) {
-            dotProduct += originalNorm.get(key) * myNorm.get(key);
-        }
-        return dotProduct;
-    }
-
-    private Map<String, Double> normalization(Map<String, Double> vector) {
-        double norm = Math.sqrt(vector.get("x") * vector.get("x") + vector.get("y") * vector.get("y") + vector.get("z") * vector.get("z"));
-        return Map.of(
-                "x", vector.get("x") / norm,
-                "y", vector.get("y") / norm,
-                "z", vector.get("z") / norm
-        );
     }
 }

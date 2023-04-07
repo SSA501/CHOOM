@@ -1,54 +1,66 @@
 package com.choom.domain.user.service;
 
-import com.choom.domain.user.dto.KakaoOAuth2Dto;
-import com.choom.domain.user.dto.KakaoUserInfoDto;
-import com.choom.domain.user.dto.TokenDto;
-import com.choom.domain.user.entity.SocialType;
+import com.choom.domain.mydance.entity.MyDanceRepository;
+import com.choom.domain.user.dto.UserDetailsDto;
+import com.choom.domain.user.dto.UserMyDanceDto;
 import com.choom.domain.user.entity.User;
 import com.choom.domain.user.entity.UserRepository;
-import com.choom.global.util.JwtTokenUtil;
+import com.choom.global.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
-    private final KakaoOAuth2Dto kakaoOAuth2Dto;
+    private final FileService fileService;
     private final UserRepository userRepository;
-    private final RedisService redisService;
+    private final MyDanceRepository myDanceRepository;
 
     public Optional<User> findUserByIdentifier(String identifier) {
         return userRepository.findByIdentifier(identifier);
     }
 
-    public TokenDto kakaoLogin(String code) {
-        KakaoUserInfoDto userInfo = kakaoOAuth2Dto.getUserInfo(code);
-        String identifier = userInfo.getIdentifier();
-        String nickname = userInfo.getNickname();
-        String profileImage = userInfo.getProfileImage();
+    @Transactional
+    public UserDetailsDto findUserDetails(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        UserMyDanceDto userMyDanceDto = myDanceRepository.findMyDanceInfoByUser(user);
+        return UserDetailsDto.builder()
+                .user(user)
+                .userMyDanceDto(userMyDanceDto)
+                .build();
+    }
 
-        User user = userRepository.findByIdentifierAndSocialType(identifier, SocialType.KAKAO).orElse(null);
+    public boolean isNicknameAvailable(String nickname) {
+        return userRepository.findByNickname(nickname).isEmpty();
+    }
 
-        if (user == null) {
-            user = User.builder()
-                    .identifier(identifier)
-                    .nickname(nickname)
-                    .profileImage(profileImage)
-                    .socialType(SocialType.KAKAO)
-                    .build();
-            userRepository.save(user);
-        }
+    @Transactional
+    public void modifyUserProfileImage(Long userId, MultipartFile profileImage) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        String profileImagePath = user.getProfileImage();
+        log.info(profileImagePath);
+        fileService.fileDelete(profileImagePath);
+        String newProfileImagePath = fileService.fileUpload("user", profileImage);
+        user.updateProfileImage(newProfileImagePath);
+        return;
+    }
 
-        TokenDto token = JwtTokenUtil.getToken(identifier);
-
-        redisService.saveToken(user.getId(), token.getRefreshToken());
-
-        return token;
+    @Transactional
+    public void modifyUserNickname(Long userId, String nickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        user.updateNickname(nickname);
+        return;
     }
 }

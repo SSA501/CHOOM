@@ -1,51 +1,70 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../constants/types";
 import LoginModal from "../Modal/LoginModal";
-import { ActiveBar, NavBtnLink, NavContainer, NavLi } from "./style";
+import { NavBtnLink, NavContainer, NavLi, NavUl, LoginBtn } from "./style";
 
 function NavBar() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const isLogin = useAppSelector((state) => state.auth.isLogin);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const showLoginModal = () => {
     setLoginModalOpen(true);
+    document.body.style.overflow = "hidden";
   };
 
-  const navigate = useNavigate();
   return (
-    <div>
+    <header>
       <NavContainer>
         <div>
           <Link to="/">
             <img
               src="/assets/logo.png"
               alt="로고이미지"
-              width="60px"
+              width="135px"
               onClick={() => navigate("/")}
             />
           </Link>
         </div>
-        <ul>
+        <NavUl>
           <NavLi>
-            <NavBtnLink to="/challenge">
-              <ActiveBar challenge />
+            <NavBtnLink
+              challenge={true}
+              active={location.pathname === "/challenge" ? true : false}
+              onClick={() => {
+                if (isLogin) {
+                  navigate("/challenge");
+                } else {
+                  showLoginModal();
+                }
+              }}
+            >
               챌린지
             </NavBtnLink>
           </NavLi>
-          <NavLi>
-            <NavBtnLink to="/profile">
-              <ActiveBar />
-              프로필
-            </NavBtnLink>
-          </NavLi>
-          <NavLi>
-            <NavBtnLink to="" onClick={showLoginModal}>
-              로그인
-            </NavBtnLink>
-          </NavLi>
-        </ul>
+          {isLogin ? (
+            <NavLi>
+              <NavBtnLink
+                challenge={false}
+                active={location.pathname === "/profile" ? true : false}
+                onClick={() => {
+                  if (isLogin) navigate("/profile");
+                }}
+              >
+                프로필
+              </NavBtnLink>
+            </NavLi>
+          ) : (
+            <NavLi>
+              <LoginBtn onClick={showLoginModal}>로그인</LoginBtn>
+            </NavLi>
+          )}
+        </NavUl>
       </NavContainer>
       {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
-    </div>
+    </header>
   );
 }
 

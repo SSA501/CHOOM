@@ -1,88 +1,52 @@
-import React, { useState } from "react";
-import SmallMenu from "../../components/SmallMenu/SmallMenu";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ProfileVideoContainer from "../../components/ProfileVideoContainer/ProfileVideoContainer";
 import NormalModal from "../../components/Modal/NormalModal";
-import { Header, SettingBtn, DropBtn } from "./style";
-import { FiSettings } from "react-icons/fi";
-import { TbTriangle, TbTriangleInverted } from "react-icons/tb";
+import ProfileCard from "../../components/ProfileCard/ProfileCard";
+import { ProfileContainer } from "./style";
+import { useAppDispatch } from "../../constants/types";
+import { withdraw } from "../../apis/user";
+import { updateAccessToken, updateLoginStatus } from "../../store/authReducer";
 
 function ProfilePage() {
-  const [smallMenuOpen, setSmallMenuOpen] = useState(false);
-  const [selectedDropMenu, setSelectedDropMenu] = useState("높은 등급순");
-  const [dropMenuOpen, setDropMenuOpen] = useState(false);
-  const [normalModalOpen, setNormalModalOpen] = useState(false);
+  const [normalModalOpen, setNormalModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const showSmallMenu = () => {
-    setSmallMenuOpen(!smallMenuOpen);
-  };
-
-  const showDropMenu = () => {
-    setDropMenuOpen(!dropMenuOpen);
-  };
+  useEffect(() => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle!.innerHTML = "내 프로필 - CHOOM";
+  }, []);
 
   const showNormalModal = () => {
+    document.body.style.overflow = "hidden";
     setNormalModalOpen(true);
   };
 
-  const menuItemList = [
-    { name: "프로필 편집", handleClick: () => alert("프로필 편집!!") },
-    { name: "로그아웃", handleClick: () => alert("로그아웃!!") },
-    { name: "탈퇴하기", handleClick: () => showNormalModal() },
-  ];
-
-  const dropMenuItemList = [
-    {
-      name: "높은 등급순",
-      handleClick: () => {
-        setSelectedDropMenu("높은 등급순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
-    },
-    {
-      name: "낮은 등급순",
-      handleClick: () => {
-        setSelectedDropMenu("낮은 등급순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
-    },
-    {
-      name: "최신순",
-      handleClick: () => {
-        setSelectedDropMenu("최신순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
-    },
-    {
-      name: "오래된순",
-      handleClick: () => {
-        setSelectedDropMenu("오래된순");
-        setDropMenuOpen(!dropMenuOpen);
-      },
-    },
-  ];
+  const withdrawMember = () => {
+    document.body.style.overflow = "auto";
+    withdraw()
+      .then(() => {
+        dispatch(updateLoginStatus(false));
+        dispatch(updateAccessToken(""));
+        alert("탈퇴 완료되었습니다.");
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
-    <div>
-      <Header>My Profile</Header>
-      <SettingBtn onClick={showSmallMenu}>
-        <FiSettings fontSize={"29px"} />
-      </SettingBtn>
-      {smallMenuOpen && <SmallMenu itemList={menuItemList}></SmallMenu>}
-
-      <br />
-      <DropBtn onClick={showDropMenu}>
-        {dropMenuOpen && <TbTriangle />}
-        {!dropMenuOpen && <TbTriangleInverted />}
-        {selectedDropMenu}
-      </DropBtn>
-      {dropMenuOpen && <SmallMenu itemList={dropMenuItemList}></SmallMenu>}
-
+    <ProfileContainer>
+      <ProfileCard showNormalModal={showNormalModal} />
+      <ProfileVideoContainer />
       {normalModalOpen && (
         <NormalModal
+          modalText={"정말 탈퇴할까요?"}
           setNormalModalOpen={setNormalModalOpen}
-          acceptModal={() => alert("탈퇴하기!!")}
+          acceptModal={() => withdrawMember()}
         />
       )}
-    </div>
+    </ProfileContainer>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import { ShadowContainer } from "../ShadowContainer/style";
 import {
   Background,
   Modal,
@@ -8,14 +9,15 @@ import {
   CancelBtn,
   LogoImg,
 } from "./style";
-import { RxSlash } from "react-icons/rx";
 
 function NormalModal(props: {
+  modalText: string;
   setNormalModalOpen: (normalModalOpen: boolean) => void;
   acceptModal: () => void;
 }) {
   const closeModal = () => {
     props.setNormalModalOpen(false);
+    document.body.style.overflow = "auto";
   };
 
   const acceptModal = () => {
@@ -28,7 +30,7 @@ function NormalModal(props: {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (modalRef.current && !modalRef.current.contains(target)) {
-        props.setNormalModalOpen(false);
+        closeModal();
       }
     };
 
@@ -42,14 +44,21 @@ function NormalModal(props: {
   return (
     <div>
       <Background />
-      <Modal ref={modalRef} width={400} height={300}>
-        <ModalContent>정말 탈퇴할까요?</ModalContent>
-        <BtnDiv>
-          <CancelBtn onClick={closeModal}>No</CancelBtn>
-          <RxSlash fontSize={"20px"} />
-          <AcceptBtn onClick={acceptModal}>Yes</AcceptBtn>
-        </BtnDiv>
-        <LogoImg src="/assets/logo.png" alt="로고이미지" />
+      <Modal ref={modalRef} width={"400px"} height={"300px"}>
+        <ShadowContainer
+          width={"400px"}
+          height={"300px"}
+          bgColor={"white"}
+          padding={"3em 0px"}
+        >
+          <ModalContent>{props.modalText}</ModalContent>
+          <BtnDiv>
+            <CancelBtn onClick={closeModal}>No</CancelBtn>
+            <span>/</span>
+            <AcceptBtn onClick={acceptModal}>Yes</AcceptBtn>
+          </BtnDiv>
+          <LogoImg src="/assets/logo.png" alt="로고이미지" />
+        </ShadowContainer>
       </Modal>
     </div>
   );

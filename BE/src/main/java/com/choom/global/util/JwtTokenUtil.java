@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
 import com.choom.domain.user.dto.TokenDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Date;
 /**
  * jwt 토큰 유틸 정의.
  */
+@Slf4j
 @Component
 public class JwtTokenUtil {
     private static String secretKey;
@@ -30,19 +32,13 @@ public class JwtTokenUtil {
         this.refreshTokenExpirationTime = refreshTokenExpirationTime;
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
-    public void setExpirationTime() {
-        //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);
-        JwtTokenUtil.refreshTokenExpirationTime = refreshTokenExpirationTime;
-        JwtTokenUtil.accessTokenExpirationTime = accessTokenExpirationTime;
 
-    }
     public static JWTVerifier getVerifier() {
         return JWT
                 .require(Algorithm.HMAC512(secretKey.getBytes()))
                 .withIssuer(ISSUER)
                 .build();
     }
-    // expires 계산한 후에 getToken(expires, identifier) 메서드로 토큰 만드는게 나을까? 중복되는 느낌이라 고민
     public static String getAccessToken(String identifier) {
         Date expires = JwtTokenUtil.getTokenExpiration(accessTokenExpirationTime);
         return JWT.create()
@@ -64,6 +60,7 @@ public class JwtTokenUtil {
     public static TokenDto getToken(String identifier) {
         String accessToken = getAccessToken(identifier);
         String refreshToken = getRefreshToken(identifier);
+        log.info("accessToken 발급 : " + accessToken);
         return TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
