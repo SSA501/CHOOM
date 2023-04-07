@@ -40,7 +40,6 @@ function ProfilePage() {
   }, [target]);
 
   useEffect(() => {
-    console.log(page + "번 페이지 호출 -> 정렬: " + sort.sort);
     setIsLoading(true);
 
     const fetchData = async () => {
@@ -73,7 +72,9 @@ function ProfilePage() {
             });
           }
 
-          setVideoItemList((prevList) => [...prevList, ...newData]);
+          if (page === 0) setVideoItemList(newData);
+          else setVideoItemList((prevList) => [...prevList, ...newData]);
+
           setIsLoading(false);
         }
       } catch (err) {
@@ -82,7 +83,13 @@ function ProfilePage() {
     };
 
     fetchData();
-  }, [page, sort, selectHistory]);
+  }, [page, selectHistory]);
+
+  useEffect(() => {
+    setPage(0);
+    setVideoItemList([]);
+    setDropMenuOpen(false);
+  }, [sort]);
 
   const updatePage = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
@@ -107,12 +114,6 @@ function ProfilePage() {
       dropMenuItemList[2].handleClick();
     }
   };
-
-  useEffect(() => {
-    setPage(0);
-    setVideoItemList([]);
-    setDropMenuOpen(false);
-  }, [sort]);
 
   const dropMenuItemList: {
     name: "높은 등급순" | "낮은 등급순" | "최신순" | "오래된순";

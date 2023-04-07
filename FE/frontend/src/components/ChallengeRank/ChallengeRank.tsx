@@ -42,6 +42,7 @@ function ChallengeRank({
               width="60px"
               height="60px"
               alt={`${nickname}님의 프로필 사진`}
+              style={{ cursor: "pointer" }}
             />
           </ProfilePicContainer>
           <ProfileDetailContainer>
