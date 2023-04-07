@@ -127,7 +127,7 @@
 
 ![데이터플로우](README_assets/12_데이터플로우.png)
 
-- **BlazePose를 이용해서 동작의 keypoints 추출 → 전처리(Resize and Scale, L2 Normalization) → 일치율 계산(Cosine Similarity) → 점수출력**
+- BlazePose를 이용해서 동작의 keypoints 추출 → 전처리(Resize and Scale, L2 Normalization) → 일치율 계산(Cosine Similarity) → 점수출력
 
 <br/>
 
@@ -163,13 +163,13 @@
 
 - **정규화된 키포인트 좌표를 통해 Cosine Similarity 계산**
     
-    ![일치율계산_1](README_assets/16_일치율계산_1.png)
+    ![image.png](README_assets/16_코사인유사도.png)
     
 - **Cosine Similarity + Confidence Score**
     
-    BlazePose를 이용하여 실제 관절이 어디에 있는지 추론할 때, 관절이 어디에 있는지 100% 확신하는 경우는 거의 없습니다. 따라서, 우리는 신뢰도가 낮은 관절이 신뢰도가 높은 관절보다 거리 메트릭에 미치는 영향이 적도록, 관절 데이터에 가중치를 부여할 수 있도록 구글 연구원인 [George Papandreou](https://research.google.com/pubs/GeorgePapandreou.html)와 [Tyler Zhu](https://research.google.com/pubs/TylerZhu.html)는 정확히 위와 같은 작업을 수행할 수 있는 공식을 만들었습니다.
+    BlazePose를 이용하여 실제 관절이 어디에 있는지 추론할 때, 관절이 어디에 있는지 100% 확신하는 경우는 거의 없습니다. 따라서, 우리는 신뢰도가 낮은 관절이 신뢰도가 높은 관절보다 거리 메트릭에 미치는 영향이 적도록, 관절 데이터에 가중치를 부여할 수 있도록 점수를 계산했습니다.
     
-    ![일치율계산_2](README_assets/17_일치율계산_2.png)
+    ![image.png](README_assets/17_점수계산.png)
     
 
 ### 참조
