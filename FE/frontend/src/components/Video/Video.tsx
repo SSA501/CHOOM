@@ -51,6 +51,7 @@ function Video({
             <video
               src={videoPath}
               autoPlay
+              muted
               controls
               width={width ?? "360px"}
               height={height ?? "640px"}
